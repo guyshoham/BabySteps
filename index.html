@@ -55,7 +55,7 @@
             color: #fff;
             font-weight: 700;
             letter-spacing: 0.02em;
-            padding: 16px 36px;
+            padding: 14px 28px;
             border-radius: 6px;
             transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
             border: 2px solid var(--brand-brown);
@@ -73,7 +73,7 @@
             color: var(--brand-brown);
             font-weight: 700;
             letter-spacing: 0.02em;
-            padding: 14px 34px;
+            padding: 12px 24px;
             border-radius: 6px;
             border: 2px solid var(--brand-brown);
             transition: background 0.2s, transform 0.2s;
@@ -203,8 +203,6 @@
         .proof-bar {
             background: var(--brand-brown);
             color: rgba(255,255,255,0.9);
-            padding: 14px 0;
-            font-size: 14px;
             font-weight: 500;
             letter-spacing: 0.04em;
             text-align: center;
@@ -218,19 +216,80 @@
             right: 0;
             z-index: 50;
             background: var(--brand-brown);
-            padding: 14px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 -4px 20px rgba(0,0,0,0.12);
         }
 
-        /* ─── Responsive helpers ──────────────── */
-        @media (max-width: 767px) {
-            .hero-title { font-size: 2rem; line-height: 1.25; }
-            .hide-mobile { display: none !important; }
-            .about-grid { grid-template-columns: 1fr !important; }
-            .about-photo { display: none !important; }
+        /* ─── Mobile-first: defaults are mobile ───── */
+        .hero-title { font-size: 1.75rem; line-height: 1.25; }
+        .section-heading { font-size: 1.5rem; }
+        .section-wrap { max-width: 900px; margin: 0 auto; padding: 0 16px; }
+        .section-pad { padding: 48px 16px; }
+        .hero-pad { padding: 48px 16px 56px; }
+        .content-box { padding: 24px 20px; }
+        .content-box .feature-row-highlight { margin: 0 -20px; padding: 24px 20px; }
+        .about-grid { display: grid; grid-template-columns: 1fr; gap: 32px; align-items: center; }
+        .about-photo { display: block; order: 2; }
+        .about-photo img { width: 100%; max-width: 280px; height: 300px; }
+        .nav-inner { padding: 0 16px; height: 56px; }
+        .price-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        .problem-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+        .hero-subtitle { font-size: 1rem; }
+        .hero-buttons { gap: 10px; }
+        .hero-buttons .btn-primary,
+        .hero-buttons .btn-outline { width: 100%; text-align: center; font-size: 1rem; }
+        .trust-signals { gap: 20px; }
+        .proof-bar { font-size: 13px; padding: 12px 16px; }
+        .footer-inner { padding: 40px 16px 32px; }
+        .price-card-body { padding: 24px 24px 28px; }
+        .price-card-header { padding: 24px 24px 20px; }
+        .highlight-box { padding: 20px 24px; }
+        .sticky-cta { padding: 12px 16px; }
+        .hide-mobile { display: none !important; }
+
+        /* ─── Tablet and up (min-width: 768px) ───── */
+        @media (min-width: 768px) {
+            .hero-title { font-size: 2.5rem; line-height: 1.2; }
+            .section-heading { font-size: 1.85rem; }
+            .section-wrap { padding: 0 24px; }
+            .section-pad { padding: 80px 24px; }
+            .hero-pad { padding: 64px 24px 72px; }
+            .content-box { padding: 36px 40px; }
+            .content-box .feature-row-highlight { margin: 0 -40px; padding: 24px 40px; }
+            .about-grid { grid-template-columns: 1fr 1fr; gap: 48px; }
+            .about-photo { order: 0; }
+            .about-photo img { max-width: 320px; height: 380px; }
+            .nav-inner { padding: 0 24px; height: 64px; }
+            .price-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+            .problem-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+            .hero-subtitle { font-size: 1.1rem; }
+            .hero-buttons { gap: 12px; }
+            .hero-buttons .btn-primary,
+            .hero-buttons .btn-outline { width: auto; font-size: 1.05rem; }
+            .trust-signals { gap: 32px; }
+            .proof-bar { font-size: 14px; padding: 14px 24px; }
+            .footer-inner { padding: 56px 24px 40px; }
+            .price-card-body { padding: 28px 36px 36px; }
+            .price-card-header { padding: 28px 36px 24px; }
+            .highlight-box { padding: 28px 32px; }
+            .sticky-cta { padding: 14px 24px; }
+            .hide-mobile { display: inline-block !important; }
+            .btn-primary { padding: 16px 36px; }
+            .btn-outline { padding: 14px 34px; }
+        }
+
+        /* ─── Desktop (min-width: 1024px) ───────── */
+        @media (min-width: 1024px) {
+            .hero-title { font-size: 3rem; }
+            .section-heading { font-size: 2rem; }
+            .content-box { padding: 40px 44px; }
+            .content-box .feature-row-highlight { margin: 0 -44px; padding: 24px 44px; }
+            .about-grid { gap: 56px; }
+            .about-photo img { max-width: 340px; height: 400px; }
+            .nav-inner { padding: 0 24px; height: 68px; }
+            .hero-pad { padding: 72px 24px 80px; }
         }
 
         /* ─── Scroll animations ───────────────── */
@@ -294,7 +353,7 @@
 <!-- ░░ NAV ░░ -->
 <nav class="site-nav">
     <div class="nav-progress" id="navProgress" style="width:0%"></div>
-    <div style="max-width:1100px; margin:0 auto; padding:0 24px; height:68px; display:flex; align-items:center; justify-content:space-between;">
+    <div class="nav-inner" style="max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;">
         <!-- Logo placeholder — replace src with your actual logo -->
         <div style="display:flex; align-items:center; gap:10px;">
             <img src="logo.png" alt="מתחילים בקטן - ירדן שוהם" style="width:52px; height:52px; border-radius:50%; object-fit:cover;">
@@ -308,7 +367,7 @@
 </nav>
 
 <!-- ░░ HERO ░░ -->
-<header style="background:var(--brand-peach); padding:72px 24px 80px; overflow:hidden; position:relative;">
+<header class="hero-pad" style="background:var(--brand-peach); overflow:hidden; position:relative;">
 
     <!-- Subtle background accent -->
     <div style="position:absolute; top:-80px; left:-80px; width:400px; height:400px; border-radius:50%; background:rgba(252,210,170,0.4); pointer-events:none;"></div>
@@ -319,22 +378,22 @@
             <span class="hero-tag">קורס דיגיטלי · צפייה מיידית</span>
         </div>
 
-        <h1 class="hero-title" style="font-size:3rem; font-weight:800; line-height:1.2; color:var(--text-dark); margin-bottom:20px;">
+        <h1 class="hero-title" style="font-weight:800; color:var(--text-dark); margin-bottom:20px;">
             לעזור לבייבי שלך להתהפך —<br>
             <span style="color:var(--brand-brown); font-weight:300;">בצורה רגועה, מאורגנת ומקצועית</span>
         </h1>
 
-        <p style="font-size:1.15rem; line-height:1.8; color:var(--text-mid); max-width:580px; margin:0 auto 40px; font-weight:400;">
+        <p class="hero-subtitle" style="line-height:1.8; color:var(--text-mid); max-width:580px; margin:0 auto 32px; font-weight:400;">
             היי אהובה, כאן ירדן. בניתי עבורך קורס דיגיטלי ממוקד שייתן לך את כל הכלים לעזור לתינוק שלך לעבור את שלב ההתהפכות — בביטחון מלא.
         </p>
 
-        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px;">
+        <div class="hero-buttons" style="display:flex; flex-wrap:wrap; justify-content:center;">
             <a href="#register" class="btn-primary" style="font-size:1.05rem;">רכישה וגישה מיידית ←</a>
             <a href="#about" class="btn-outline" style="font-size:1.05rem;">מה יש בקורס?</a>
         </div>
 
         <!-- Trust signals -->
-        <div style="margin-top:40px; display:flex; justify-content:center; gap:32px; flex-wrap:wrap;">
+        <div class="trust-signals" style="margin-top:32px; display:flex; justify-content:center; flex-wrap:wrap;">
             <div style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-mid);">
                 <span style="color:var(--brand-brown); font-size:16px;">✓</span> 8 סרטוני הדרכה
             </div>
@@ -346,16 +405,16 @@
 </header>
 
 <!-- ░░ FOR WHOM ░░ -->
-<section style="padding:80px 24px; background:#fff;">
+<section class="section-pad" style="background:#fff;">
     <div style="max-width:900px; margin:0 auto;">
 
         <div style="text-align:center; margin-bottom:56px;">
             <p style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brand-brown); font-weight:700; margin-bottom:12px;">מזהה את עצמך?</p>
-            <h2 style="font-size:2rem; font-weight:800; color:var(--text-dark); margin-bottom:0;">האם זה המצב אצלכם כרגע?</h2>
+            <h2 class="section-heading" style="font-weight:800; color:var(--text-dark); margin-bottom:0;">האם זה המצב אצלכם כרגע?</h2>
             <div class="section-divider"></div>
         </div>
 
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:20px;">
+        <div class="problem-grid">
 
             <div class="problem-card reveal reveal-delay-1">
                 <div class="icon-wrap bg-peach">🙆</div>
@@ -377,7 +436,7 @@
 
         </div>
 
-        <div style="margin-top:32px; padding:28px 32px; background:var(--brand-mint); border-radius:12px; border-right:4px solid var(--brand-mint-dark);">
+        <div class="highlight-box" style="margin-top:24px; background:var(--brand-mint); border-radius:12px; border-right:4px solid var(--brand-mint-dark);">
             <p style="font-size:1rem; line-height:1.8; color:var(--text-mid); margin:0;">
                 <strong style="color:var(--text-dark);">אם הכרת לפחות אחד מהמצבים האלה —</strong> הקורס הזה נבנה בדיוק בשבילך. בצעדים קטנים, עם ידיים, מהסלון שלך.
             </p>
@@ -387,16 +446,16 @@
 </section>
 
 <!-- ░░ COURSE CONTENT ░░ -->
-<section id="about" style="padding:80px 24px; background:var(--brand-peach);">
+<section id="about" class="section-pad" style="background:var(--brand-peach);">
     <div style="max-width:900px; margin:0 auto;">
 
         <div style="text-align:center; margin-bottom:56px;">
             <p style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brand-brown); font-weight:700; margin-bottom:12px;">תוכן הקורס</p>
-            <h2 style="font-size:2rem; font-weight:800; color:var(--text-dark); margin-bottom:0;">מה מחכה לך בפנים?</h2>
+            <h2 class="section-heading" style="font-weight:800; color:var(--text-dark); margin-bottom:0;">מה מחכה לך בפנים?</h2>
             <div class="section-divider"></div>
         </div>
 
-        <div style="background:#fff; border-radius:16px; padding:40px 44px; box-shadow:0 4px 32px rgba(112,66,41,0.08);" class="reveal">
+        <div class="content-box reveal" style="background:#fff; border-radius:16px; box-shadow:0 4px 32px rgba(112,66,41,0.08);">
 
             <div class="feature-row">
                 <div class="feature-num">1</div>
@@ -414,7 +473,7 @@
                 </div>
             </div>
 
-            <div class="feature-row" style="background:var(--brand-peach); margin:0 -44px; padding:24px 44px; border-bottom:1px solid rgba(112,66,41,0.07);">
+            <div class="feature-row feature-row-highlight" style="background:var(--brand-peach); border-bottom:1px solid rgba(112,66,41,0.07);">
                 <div class="feature-num">3</div>
                 <div style="flex:1; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
                     <div>
@@ -431,26 +490,26 @@
 </section>
 
 <!-- ░░ PRICING ░░ -->
-<section id="register" style="padding:80px 24px; background:#fff;">
+<section id="register" class="section-pad" style="background:#fff;">
     <div style="max-width:860px; margin:0 auto;">
 
         <div style="text-align:center; margin-bottom:56px;">
             <p style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brand-brown); font-weight:700; margin-bottom:12px;">הצטרפות לקורס</p>
-            <h2 style="font-size:2rem; font-weight:800; color:var(--text-dark); margin-bottom:8px;">בחרי את הדרך הנוחה לך</h2>
+            <h2 class="section-heading" style="font-weight:800; color:var(--text-dark); margin-bottom:8px;">בחרי את הדרך הנוחה לך</h2>
             <p style="font-size:0.95rem; color:#7a5a48; margin:0;">שתי האפשרויות כוללות גישה מלאה לאותו תוכן</p>
             <div class="section-divider"></div>
         </div>
 
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:24px; align-items:stretch;">
+        <div class="price-grid" style="align-items:stretch;">
 
             <!-- PayPal -->
             <div class="price-card price-card-featured reveal reveal-delay-1">
-                <div style="background:var(--brand-brown); padding:28px 36px 24px; color:#fff;">
+                <div class="price-card-header" style="background:var(--brand-brown); color:#fff;">
                     <span class="price-badge" style="background:rgba(255,255,255,0.2); margin-bottom:16px; display:inline-block;">גישה מיידית</span>
                     <div style="font-size:2.8rem; font-weight:800; line-height:1; margin-bottom:4px;">₪105</div>
                     <div style="font-size:0.85rem; opacity:0.75;">תשלום חד-פעמי</div>
                 </div>
-                <div style="padding:28px 36px 36px; background:#fff;">
+                <div class="price-card-body" style="background:#fff;">
                     <h3 style="font-size:1.1rem; font-weight:700; margin:0 0 12px;">תשלום דרך PayPal</h3>
                     <p style="font-size:0.9rem; color:#7a5a48; line-height:1.8; margin-bottom:28px;">
                         הדרך המהירה ביותר: משלמות דרך PayPal ומקבלות מייל עם פרטי גישה — מיד אחרי התשלום.
@@ -469,12 +528,12 @@
 
             <!-- Bit / Pepper -->
             <div class="price-card price-card-plain reveal reveal-delay-2">
-                <div style="background:var(--brand-mint); padding:28px 36px 24px;">
+                <div class="price-card-header" style="background:var(--brand-mint);">
                     <span class="price-badge-soft" style="margin-bottom:16px; display:inline-block;">העברה ידנית</span>
                     <div style="font-size:2.8rem; font-weight:800; line-height:1; margin-bottom:4px; color:var(--text-dark);">₪105</div>
                     <div style="font-size:0.85rem; color:var(--text-mid);">תשלום חד-פעמי</div>
                 </div>
-                <div style="padding:28px 36px 36px;">
+                <div class="price-card-body">
                     <h3 style="font-size:1.1rem; font-weight:700; margin:0 0 12px;">ביט / Paybox</h3>
                     <p style="font-size:0.9rem; color:#7a5a48; line-height:1.8; margin-bottom:20px;">
                         מעבירות את הסכום לנייד שלמטה ושולחות לי הודעת אישור בווטסאפ.
@@ -485,7 +544,7 @@
                         <p style="font-size:1.3rem; font-weight:800; color:var(--text-dark); margin:0; letter-spacing:0.05em;">054-236-6243</p>
                     </div>
 
-                    <a href="https://wa.me/972542366243?text=היי ירדן, העברתי תשלום לקורס ההתהפכות, אשמח לקבלת גישה!"
+                    <a href="https://wa.me/972542366243?text=היי ירדן, העברתי תשלום לקורס מתהפכים, אשמח לקבלת גישה!"
                        class="btn-outline" style="width:100%; text-align:center; display:block; font-size:1rem;">
                         שלחי אישור בווטסאפ ←
                     </a>
@@ -503,13 +562,13 @@
 </section>
 
 <!-- ░░ ABOUT ░░ -->
-<section style="padding:80px 24px; background:var(--brand-peach);">
+<section class="section-pad" style="background:var(--brand-peach);">
     <div style="max-width:860px; margin:0 auto;">
-        <div class="about-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;">
+        <div class="about-grid">
 
             <!-- Photo -->
             <div class="reveal about-photo" style="display:flex; justify-content:center;">
-                <img src="about.jpg" alt="ירדן שוהם עם תינוק" style="width:100%; max-width:340px; height:400px; object-fit:cover; object-position:top center; border-radius:16px; box-shadow:0 8px 32px rgba(112,66,41,0.12);">
+                <img src="about.jpg" alt="ירדן שוהם עם תינוק" style="width:100%; object-fit:cover; object-position:top center; border-radius:16px; box-shadow:0 8px 32px rgba(112,66,41,0.12);">
             </div>
 
             <!-- Text -->
@@ -542,7 +601,7 @@
 
 
 <!-- ░░ FOOTER ░░ -->
-<footer style="background:var(--brand-brown); color:rgba(255,255,255,0.9); padding:56px 24px 40px; text-align:center;">
+<footer class="footer-inner" style="background:var(--brand-brown); color:rgba(255,255,255,0.9); text-align:center;">
     <div style="max-width:600px; margin:0 auto;">
         <img src="logo.png" alt="מתחילים בקטן" style="width:80px; height:80px; border-radius:50%; object-fit:cover; margin:0 auto 16px; display:block; opacity:0.9;">
         <div style="font-size:1.1rem; font-weight:800; letter-spacing:0.05em; margin-bottom:6px;">ירדן שוהם — מתחילים בקטן</div>
@@ -584,7 +643,7 @@
 <!-- ░░ STICKY MOBILE CTA ░░ -->
 <div class="sticky-cta" id="stickyCta" style="display:none;">
     <div style="color:#fff;">
-        <div style="font-weight:700; font-size:15px;">קורס ההתהפכות</div>
+        <div style="font-weight:700; font-size:15px;">קורס מתהפכים</div>
         <div style="font-size:12px; opacity:0.7;">₪105 · גישה מיידית</div>
     </div>
     <a href="#register" style="background:#fff; color:var(--brand-brown); padding:10px 22px; border-radius:6px; font-weight:700; font-size:14px; text-decoration:none;">לרכישה ←</a>
