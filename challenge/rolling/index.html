@@ -140,12 +140,12 @@
         .problem-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
         .hero-buttons { gap: 10px; }
         .hero-buttons .btn-primary,
-        .hero-buttons .btn-outline { width: 100%; text-align: center; font-size: 1rem; }
+        .hero-buttons .btn-outline { width: 100%; text-align: center; font-size: 0.9rem; padding-right: 16px; padding-left: 16px; }
         .trust-signals { gap: 20px; }
         .proof-bar { font-size: 13px; padding: 12px 16px; }
         .price-card-body { padding: 24px 24px 28px; }
         .price-card-header { padding: 24px 24px 20px; }
-        .sticky-cta { padding: 12px 16px; }
+        .sticky-cta { padding: 12px 16px max(12px, env(safe-area-inset-bottom)); }
         .hide-mobile { display: none !important; }
 
         /* ─── Page-specific: tablet (min-width: 768px) ───── */
@@ -281,6 +281,44 @@
     </div>
 </section>
 
+<!-- ░░ ABOUT ░░ -->
+<section class="section-pad" style="background:#fff;">
+    <div style="max-width:860px; margin:0 auto;">
+        <div class="about-grid">
+
+            <!-- Photo -->
+            <div class="reveal about-photo" style="display:flex; justify-content:center;">
+                <img src="../../assets/about.jpg" alt="ירדן שוהם עם תינוק" style="width:100%; object-fit:cover; object-position:top center; border-radius:16px; box-shadow:0 8px 32px rgba(112,66,41,0.12);">
+            </div>
+
+            <!-- Text -->
+            <div class="reveal reveal-delay-1">
+                <p style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brand-brown); font-weight:700; margin:0 0 12px;">מי אני?</p>
+                <h2 style="font-size:1.8rem; font-weight:800; color:var(--text-dark); margin:0 0 24px; line-height:1.25;">ירדן שוהם</h2>
+
+                <p style="font-size:1rem; line-height:1.9; color:var(--text-mid); margin:0 0 18px;">
+                    אמא לשניים ומלווה התפתחותית מוסמכת מטעם <strong style="color:var(--text-dark);">"צעד ראשון"</strong>. אני מדריכת בייבי יוגה ועיסוי תינוקות, ועובדת עם הורים ותינוקות כבר שנים.
+                </p>
+
+                <p style="font-size:1rem; line-height:1.9; color:var(--text-mid); margin:0 0 18px;">
+                    אני מגיעה מעולם החינוך, לאחר כ-6 שנים כאשת חינוך והוראה. מאז ומתמיד עולם התינוקות ריתק אותי, ריגש אותי, סיקרן אותי ומשך אותי אליו. הקסם שקורה במפגש עם תינוק והוריו גורם ללב שלי להתרחב ולחייך מאוזן לאוזן.
+                </p>
+
+                <p style="font-size:1rem; line-height:1.9; color:var(--text-mid); margin:0 0 28px;">
+                    הקורס הזה מבוסס על הכלים המקצועיים שאני מלמדת בסדנאות שלי — ועכשיו ארזתי אותם בפורמט שאת יכולה לצרוך מהבית, בזמן שמתאים לך.
+                </p>
+
+                <div style="display:flex; flex-wrap:wrap; gap:10px;">
+                    <span style="background:#fff; border:1.5px solid var(--brand-peach-dark); color:var(--brand-brown); font-size:13px; font-weight:600; padding:6px 14px; border-radius:6px;">מלווה התפתחותית מוסמכת</span>
+                    <span style="background:#fff; border:1.5px solid var(--brand-peach-dark); color:var(--brand-brown); font-size:13px; font-weight:600; padding:6px 14px; border-radius:6px;">מדריכת בייבי יוגה</span>
+                    <span style="background:#fff; border:1.5px solid var(--brand-peach-dark); color:var(--brand-brown); font-size:13px; font-weight:600; padding:6px 14px; border-radius:6px;">עיסוי תינוקות</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
 <!-- ░░ FOR WHOM ░░ -->
 <section class="section-pad" style="background:#fff;">
     <div style="max-width:900px; margin:0 auto;">
@@ -374,83 +412,6 @@
     </div>
 </section>
 
-<!-- ░░ PRICING ░░ -->
-<section id="register" class="section-pad" style="background:#fff;">
-    <div style="max-width:860px; margin:0 auto;">
-
-        <div style="text-align:center; margin-bottom:56px;">
-            <p style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brand-brown); font-weight:700; margin-bottom:12px;">הצטרפות לקורס</p>
-            <h2 class="section-heading" style="font-weight:800; color:var(--text-dark); margin-bottom:8px;">בחרי את הדרך הנוחה לך</h2>
-            <p style="font-size:0.95rem; color:#7a5a48; margin:0;">שתי האפשרויות כוללות גישה מלאה לאותו תוכן</p>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="price-grid" style="align-items:stretch;">
-
-            <!-- PayPal -->
-            <div class="reveal reveal-delay-1" style="display:flex; flex-direction:column;">
-            <div style="text-align:center; margin-bottom:10px;">
-                <span style="display:inline-block; background:linear-gradient(135deg,#f5a623,#e8920e); color:#fff; font-size:11px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; padding:5px 22px; border-radius:20px; box-shadow:0 2px 10px rgba(245,166,35,0.4);">⭐ הכי מומלץ</span>
-            </div>
-            <div class="price-card price-card-featured" style="flex:1;">
-                <div class="price-card-header" style="background:var(--brand-brown); color:#fff;">
-                    <span class="price-badge" style="background:rgba(255,255,255,0.2); margin-bottom:16px; display:inline-block;">גישה מיידית</span>
-                    <div style="font-size:2.8rem; font-weight:800; line-height:1; margin-bottom:4px;"><span style="text-decoration:line-through; opacity:0.5; font-size:1.6rem;">₪205</span> ₪175</div>
-                    <div style="font-size:0.85rem; opacity:0.75;">תשלום חד-פעמי</div>
-                </div>
-                <div class="price-card-body" style="background:#fff;">
-                    <h3 style="font-size:1.1rem; font-weight:700; margin:0 0 12px;">תשלום דרך PayPal</h3>
-                    <p style="font-size:0.9rem; color:#7a5a48; line-height:1.8; margin-bottom:28px;">
-                        הדרך המהירה ביותר: משלמות דרך PayPal ומקבלות מייל עם פרטי גישה — מיד אחרי התשלום.
-                    </p>
-                    <ul style="list-style:none; padding:0; margin:0 0 32px; display:flex; flex-direction:column; gap:10px;">
-                        <li style="display:flex; align-items:center; gap:10px; font-size:0.88rem; color:var(--text-mid);">
-                            <span style="color:var(--brand-brown); font-weight:700;">✓</span> גישה מלאה לכל הסרטונים
-                        </li>
-                        <li style="display:flex; align-items:center; gap:10px; font-size:0.88rem; color:var(--text-mid);">
-                            <span style="color:var(--brand-brown); font-weight:700;">✓</span> ליווי אישי בווטסאפ
-                        </li>
-                    </ul>
-                    <a href="https://www.paypal.com/ncp/payment/SDBZ5YS6JNKLQ" target="_blank" rel="noopener" class="btn-primary btn-pulse" style="width:100%; text-align:center; display:block; font-size:1rem;">שלמי וקבלי גישה מיידית ←</a>
-                </div>
-            </div>
-            </div>
-
-            <!-- Bit / Pepper -->
-            <div class="price-card price-card-plain reveal reveal-delay-2">
-                <div class="price-card-header" style="background:var(--brand-mint);">
-                    <span class="price-badge-soft" style="margin-bottom:16px; display:inline-block;">העברה ידנית</span>
-                    <div style="font-size:2.8rem; font-weight:800; line-height:1; margin-bottom:4px; color:var(--text-dark);"><span style="text-decoration:line-through; opacity:0.5; font-size:1.6rem;">₪205</span> ₪175</div>
-                    <div style="font-size:0.85rem; color:var(--text-mid);">תשלום חד-פעמי</div>
-                </div>
-                <div class="price-card-body">
-                    <h3 style="font-size:1.1rem; font-weight:700; margin:0 0 12px;">ביט / Paybox</h3>
-                    <p style="font-size:0.9rem; color:#7a5a48; line-height:1.8; margin-bottom:20px;">
-                        מעבירות את הסכום לנייד שלמטה ושולחות לי הודעת אישור בווטסאפ.
-                    </p>
-
-                    <div style="background:var(--brand-peach); border-radius:8px; padding:16px 20px; margin-bottom:28px;">
-                        <p style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--brand-brown); font-weight:700; margin:0 0 4px;">מספר להעברה:</p>
-                        <p style="font-size:1.3rem; font-weight:800; color:var(--text-dark); margin:0; letter-spacing:0.05em;">054-236-6243</p>
-                    </div>
-
-                    <a href="https://wa.me/972542366243?text=היי ירדן, העברתי תשלום לקורס מתהפכים, אשמח לקבלת גישה!"
-                       class="btn-outline" style="width:100%; text-align:center; display:block; font-size:1rem;">
-                        שלחי אישור בווטסאפ ←
-                    </a>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Guarantee note -->
-        <p style="text-align:center; font-size:0.85rem; color:#9a7a68; margin-top:28px;">
-            יש שאלה לפני הרכישה? <a href="https://wa.me/972542366243" style="color:var(--brand-brown); font-weight:600; text-decoration:underline;">דברי איתי ישירות בווטסאפ</a>
-        </p>
-
-    </div>
-</section>
-
 <!-- ░░ TESTIMONIALS ░░ -->
 <section class="section-pad" style="background:var(--brand-peach);">
     <div style="max-width:860px; margin:0 auto;">
@@ -486,44 +447,81 @@
     </div>
 </section>
 
-<!-- ░░ ABOUT ░░ -->
-<section class="section-pad" style="background:#fff;">
+<!-- ░░ PRICING ░░ -->
+<section id="register" class="section-pad" style="background:#fff;">
     <div style="max-width:860px; margin:0 auto;">
-        <div class="about-grid">
 
-            <!-- Photo -->
-            <div class="reveal about-photo" style="display:flex; justify-content:center;">
-                <img src="../../assets/about.jpg" alt="ירדן שוהם עם תינוק" style="width:100%; object-fit:cover; object-position:top center; border-radius:16px; box-shadow:0 8px 32px rgba(112,66,41,0.12);">
+        <div style="text-align:center; margin-bottom:56px;">
+            <p style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brand-brown); font-weight:700; margin-bottom:12px;">הצטרפות לקורס</p>
+            <h2 class="section-heading" style="font-weight:800; color:var(--text-dark); margin-bottom:8px;">בחרי את הדרך הנוחה לך</h2>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="price-grid" style="align-items:stretch;">
+
+            <!-- PayPal -->
+            <div class="reveal reveal-delay-1" style="display:flex; flex-direction:column;">
+            <div style="text-align:center; margin-bottom:10px;">
+                <span style="display:inline-block; background:linear-gradient(135deg,#f5a623,#e8920e); color:#fff; font-size:11px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; padding:5px 22px; border-radius:20px; box-shadow:0 2px 10px rgba(245,166,35,0.4);">⭐ הכי מומלץ</span>
+            </div>
+            <div class="price-card price-card-featured" style="flex:1;">
+                <div class="price-card-header" style="background:var(--brand-brown); color:#fff;">
+                    <span class="price-badge" style="background:rgba(255,255,255,0.2); margin-bottom:16px; display:inline-block;">גישה מיידית</span>
+                    <div style="font-size:2.8rem; font-weight:800; line-height:1; margin-bottom:4px;"><span style="text-decoration:line-through; opacity:0.5; font-size:1.6rem;">₪205</span> ₪175</div>
+                    <div style="font-size:0.85rem; opacity:0.75;">תשלום חד-פעמי</div>
+                </div>
+                <div class="price-card-body" style="background:#fff;">
+                    <h3 style="font-size:1.1rem; font-weight:700; margin:0 0 12px;">תשלום דרך PayPal</h3>
+                    <p style="font-size:0.9rem; color:#7a5a48; line-height:1.8; margin-bottom:12px;">
+                        הדרך המהירה ביותר: משלמות דרך PayPal ומקבלות מייל עם פרטי גישה — מיד אחרי התשלום.
+                    </p>
+                    <p style="font-size:0.82rem; color:#7a5a48; line-height:1.6; margin-bottom:20px;">✓ גישה מיידית &nbsp;·&nbsp; ✓ ללא עיכובים &nbsp;·&nbsp; ✓ מאובטח</p>
+                    <ul style="list-style:none; padding:0; margin:0 0 32px; display:flex; flex-direction:column; gap:10px;">
+                        <li style="display:flex; align-items:center; gap:10px; font-size:0.88rem; color:var(--text-mid);">
+                            <span style="color:var(--brand-brown); font-weight:700;">✓</span> גישה מלאה לכל הסרטונים
+                        </li>
+                        <li style="display:flex; align-items:center; gap:10px; font-size:0.88rem; color:var(--text-mid);">
+                            <span style="color:var(--brand-brown); font-weight:700;">✓</span> ליווי אישי בווטסאפ
+                        </li>
+                    </ul>
+                    <a href="https://www.paypal.com/ncp/payment/SDBZ5YS6JNKLQ" target="_blank" rel="noopener" class="btn-primary btn-pulse" style="width:100%; text-align:center; display:block; font-size:1rem;">שלמי וקבלי גישה מיידית ←</a>
+                </div>
+            </div>
             </div>
 
-            <!-- Text -->
-            <div class="reveal reveal-delay-1">
-                <p style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brand-brown); font-weight:700; margin:0 0 12px;">מי אני?</p>
-                <h2 style="font-size:1.8rem; font-weight:800; color:var(--text-dark); margin:0 0 24px; line-height:1.25;">ירדן שוהם</h2>
+            <!-- Bit / Pepper -->
+            <div class="price-card price-card-plain reveal reveal-delay-2">
+                <div class="price-card-header" style="background:var(--brand-mint);">
+                    <span class="price-badge-soft" style="margin-bottom:16px; display:inline-block;">העברה ידנית</span>
+                    <div style="font-size:2.8rem; font-weight:800; line-height:1; margin-bottom:4px; color:var(--text-dark);"><span style="text-decoration:line-through; opacity:0.5; font-size:1.6rem;">₪205</span> ₪175</div>
+                    <div style="font-size:0.85rem; color:var(--text-mid);">תשלום חד-פעמי</div>
+                </div>
+                <div class="price-card-body">
+                    <h3 style="font-size:1.1rem; font-weight:700; margin:0 0 12px;">ביט / Paybox</h3>
+                    <p style="font-size:0.9rem; color:#7a5a48; line-height:1.8; margin-bottom:12px;">
+                        מעבירות את הסכום לנייד שלמטה ושולחות לי הודעת אישור בווטסאפ.
+                    </p>
+                    <div style="background:var(--brand-peach); border-radius:8px; padding:16px 20px; margin-bottom:28px;">
+                        <p style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--brand-brown); font-weight:700; margin:0 0 4px;">מספר להעברה:</p>
+                        <p style="font-size:1.3rem; font-weight:800; color:var(--text-dark); margin:0; letter-spacing:0.05em;">054-236-6243</p>
+                    </div>
 
-                <p style="font-size:1rem; line-height:1.9; color:var(--text-mid); margin:0 0 18px;">
-                    אמא לשניים ומלווה התפתחותית מוסמכת מטעם <strong style="color:var(--text-dark);">"צעד ראשון"</strong>. אני מדריכת בייבי יוגה ועיסוי תינוקות, ועובדת עם הורים ותינוקות כבר שנים.
-                </p>
-
-                <p style="font-size:1rem; line-height:1.9; color:var(--text-mid); margin:0 0 18px;">
-                    אני מגיעה מעולם החינוך, לאחר כ-6 שנים כאשת חינוך והוראה. מאז ומתמיד עולם התינוקות ריתק אותי, ריגש אותי, סיקרן אותי ומשך אותי אליו. הקסם שקורה במפגש עם תינוק והוריו גורם ללב שלי להתרחב ולחייך מאוזן לאוזן.
-                </p>
-
-                <p style="font-size:1rem; line-height:1.9; color:var(--text-mid); margin:0 0 28px;">
-                    הקורס הזה מבוסס על הכלים המקצועיים שאני מלמדת בסדנאות שלי — ועכשיו ארזתי אותם בפורמט שאת יכולה לצרוך מהבית, בזמן שמתאים לך.
-                </p>
-
-                <div style="display:flex; flex-wrap:wrap; gap:10px;">
-                    <span style="background:#fff; border:1.5px solid var(--brand-peach-dark); color:var(--brand-brown); font-size:13px; font-weight:600; padding:6px 14px; border-radius:6px;">מלווה התפתחותית מוסמכת</span>
-                    <span style="background:#fff; border:1.5px solid var(--brand-peach-dark); color:var(--brand-brown); font-size:13px; font-weight:600; padding:6px 14px; border-radius:6px;">מדריכת בייבי יוגה</span>
-                    <span style="background:#fff; border:1.5px solid var(--brand-peach-dark); color:var(--brand-brown); font-size:13px; font-weight:600; padding:6px 14px; border-radius:6px;">עיסוי תינוקות</span>
+                    <a href="https://wa.me/972542366243?text=היי ירדן, העברתי תשלום לקורס מתהפכים, אשמח לקבלת גישה!"
+                       class="btn-outline" style="width:100%; text-align:center; display:block; font-size:1rem;">
+                        שלחי אישור בווטסאפ ←
+                    </a>
                 </div>
             </div>
 
         </div>
+
+        <!-- Guarantee note -->
+        <p style="text-align:center; font-size:0.85rem; color:#9a7a68; margin-top:28px;">
+            יש שאלה לפני הרכישה? <a href="https://wa.me/972542366243" style="color:var(--brand-brown); font-weight:600; text-decoration:underline;">דברי איתי ישירות בווטסאפ</a>
+        </p>
+
     </div>
 </section>
-
 
 <!-- ░░ FOOTER ░░ -->
 <footer class="footer-inner" style="background:var(--brand-brown); color:rgba(255,255,255,0.9); text-align:center;">
@@ -656,7 +654,7 @@
     const stickyCta = document.getElementById('stickyCta');
     function checkScroll() {
         updateProgress();
-        if (window.innerWidth < 768 && window.scrollY > 400) {
+        if (window.innerWidth < 768 && window.scrollY > 150) {
             stickyCta.style.display = 'flex';
         } else {
             stickyCta.style.display = 'none';
