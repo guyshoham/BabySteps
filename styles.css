@@ -18,7 +18,7 @@
 * { box-sizing: border-box; }
 
 body {
-    font-family: 'Assistant', sans-serif;
+    font-family: 'Rubik', sans-serif;
     scroll-behavior: smooth;
     color: var(--text-dark);
     background: #fff;
@@ -262,7 +262,7 @@ body {
     text-decoration: none;
     position: relative;
     overflow: hidden;
-    font-family: 'Assistant', sans-serif;
+    font-family: 'Rubik', sans-serif;
     font-size: 1rem;
 }
 .btn-whatsapp:hover {
