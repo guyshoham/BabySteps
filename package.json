@@ -1,0 +1,16 @@
+{
+  "name": "babysteps-courses",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.600.0",
+    "@aws-sdk/s3-request-presigner": "^3.600.0",
+    "firebase-admin": "^12.1.0"
+  },
+  "devDependencies": {
+    "vitest": "^2.0.0"
+  }
+}

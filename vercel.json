@@ -1,0 +1,8 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/app/course/:slug", "destination": "/app/course.html" },
+    { "source": "/app/lesson/:id", "destination": "/app/lesson.html" }
+  ]
+}
