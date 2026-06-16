@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>שיעור — מתחילים בקטן</title>
+  <link rel="icon" type="image/png" href="/assets/logos/logo-peach.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>body{font-family:'Rubik',sans-serif}</style>
+</head>
+<body class="min-h-screen bg-[#fdf6f0] p-4">
+  <header class="max-w-3xl mx-auto py-4">
+    <a id="back" href="/app/my-courses" class="text-sm underline text-[#704229]">← חזרה לקורס</a>
+    <h1 id="title" class="text-2xl font-bold mt-2"></h1>
+  </header>
+  <main class="max-w-3xl mx-auto">
+    <video id="video" class="w-full rounded-2xl shadow bg-black" controls playsinline
+           controlsList="nodownload" oncontextmenu="return false"></video>
+    <p id="msg" class="text-center text-red-600 mt-3"></p>
+  </main>
+
+  <script type="module">
+    import { requireAuth, db } from "/app/firebase-client.js";
+    import { doc, getDoc, setDoc }
+      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const lessonId = decodeURIComponent(location.pathname.split("/").pop());
+    const user = await requireAuth();
+    const msg = document.getElementById("msg");
+    const video = document.getElementById("video");
+
+    const lessonSnap = await getDoc(doc(db, "lessons", lessonId));
+    if (!lessonSnap.exists()) { msg.textContent = "השיעור לא נמצא"; throw new Error("no lesson"); }
+    const lesson = lessonSnap.data();
+    document.getElementById("title").textContent = lesson.title;
+
+    const progSnap = await getDoc(doc(db, "users", user.uid, "progress", lessonId));
+    const startAt = progSnap.exists() ? (progSnap.data().lastPositionSec || 0) : 0;
+
+    const token = await user.getIdToken();
+    const resp = await fetch(`/api/video-url?lessonId=${encodeURIComponent(lessonId)}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (resp.status === 403) { msg.textContent = "אין לך גישה לשיעור הזה"; throw new Error("403"); }
+    if (!resp.ok) { msg.textContent = "שגיאה בטעינת הסרטון"; throw new Error("video-url failed"); }
+    const { url } = await resp.json();
+    video.src = url;
+    video.addEventListener("loadedmetadata", () => { if (startAt > 0) video.currentTime = startAt; });
+
+    let lastSaved = 0;
+    const save = (extra) => setDoc(
+      doc(db, "users", user.uid, "progress", lessonId),
+      { lastPositionSec: Math.floor(video.currentTime), updatedAt: new Date().toISOString(), ...extra },
+      { merge: true }
+    );
+    video.addEventListener("timeupdate", () => {
+      if (video.currentTime - lastSaved > 10) { lastSaved = video.currentTime; save({}); }
+    });
+    video.addEventListener("ended", () => save({ completed: true }));
+  </script>
+</body>
+</html>
