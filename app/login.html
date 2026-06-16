@@ -37,6 +37,7 @@
 
     document.getElementById("login-form").addEventListener("submit", async (e) => {
       e.preventDefault();
+      msg.className = "text-sm text-red-600 mt-3 text-center";
       msg.textContent = "";
       try {
         await signIn(document.getElementById("email").value.trim(),
@@ -48,6 +49,7 @@
     });
 
     document.getElementById("reset").addEventListener("click", async () => {
+      msg.className = "text-sm text-red-600 mt-3 text-center";
       const email = document.getElementById("email").value.trim();
       if (!email) { msg.textContent = "הזינו אימייל ואז לחצו שכחתי סיסמה"; return; }
       try {

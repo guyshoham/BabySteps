@@ -7,7 +7,9 @@ export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "method not allowed" });
   }
-  if (req.headers["x-enroll-secret"] !== process.env.ENROLL_SECRET) {
+  // Fail closed: if the secret isn't configured, reject everything rather than
+  // letting `undefined === undefined` leave the endpoint open.
+  if (!process.env.ENROLL_SECRET || req.headers["x-enroll-secret"] !== process.env.ENROLL_SECRET) {
     return res.status(401).json({ error: "unauthorized" });
   }
   try {

@@ -50,13 +50,16 @@
       const l = d.data();
       const done = completed.has(d.id);
       const a = document.createElement("a");
-      a.href = `/app/lesson/${d.id}`;
+      a.href = `/app/lesson/${encodeURIComponent(d.id)}`;
       a.className = "flex items-center gap-3 bg-white rounded-xl shadow px-4 py-3 hover:shadow-md transition";
-      a.innerHTML = `
-        <span class="w-6 h-6 flex items-center justify-center rounded-full ${done ? "bg-green-500 text-white" : "bg-gray-200 text-gray-600"} text-sm">
-          ${done ? "✓" : (i + 1)}
-        </span>
-        <span class="font-medium">${l.title}</span>`;
+      // Build with DOM APIs — never innerHTML with Firestore data.
+      const badge = document.createElement("span");
+      badge.className = `w-6 h-6 flex items-center justify-center rounded-full ${done ? "bg-green-500 text-white" : "bg-gray-200 text-gray-600"} text-sm`;
+      badge.textContent = done ? "✓" : String(i + 1);
+      const label = document.createElement("span");
+      label.className = "font-medium";
+      label.textContent = l.title ?? "";
+      a.append(badge, label);
       wrap.appendChild(a);
     });
   </script>
