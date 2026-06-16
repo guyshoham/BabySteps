@@ -115,12 +115,15 @@ video at any realistic volume.
 Vanilla HTML + Tailwind + Firebase JS SDK via CDN — no build step, matches the current
 site.
 
+All gated app pages live under an **`/app/` prefix**, cleanly separated from the
+public marketing site.
+
 - **Public (unchanged):** home + challenge landing pages.
-- `/login` — email + password (Firebase Auth client SDK).
-- `/my-courses` — list of courses the student is enrolled in.
-- `/course/{slug}` — lesson list with progress checkmarks + "resume."
-- `/lesson/{id}` — video player; marks complete; saves last position.
-  - Guard: not-logged-in → redirect to `/login`; logged-in-but-not-enrolled →
+- `/app/login` — email + password (Firebase Auth client SDK).
+- `/app/my-courses` — list of courses the student is enrolled in.
+- `/app/course/{slug}` — lesson list with progress checkmarks + "resume."
+- `/app/lesson/{id}` — video player; marks complete; saves last position.
+  - Guard: not-logged-in → redirect to `/app/login`; logged-in-but-not-enrolled →
     "you don't have access" message.
 
 Progress is written client-side directly to Firestore (rules enforce owner-only), so no
@@ -160,6 +163,5 @@ cleanly addable later.
 ## Open Items for Implementation Planning
 
 - Exact Vercel project layout (static files + `/api` functions in one project).
-- Whether the app pages live under a path prefix (e.g. `/app/...`) or at root.
 - Firebase project + R2 bucket provisioning and the env vars/secrets each function
   needs (Firebase Admin credentials, R2 keys, the `/api/enroll` shared secret).
