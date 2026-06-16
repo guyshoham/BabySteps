@@ -66,16 +66,20 @@ video at any realistic volume.
 ## Data Model (Firestore)
 
 - `courses/{courseId}` → `{ title, slug, description, coverImage, order, published }`
-- `courses/{courseId}/lessons/{lessonId}` →
-  `{ title, order, r2Key, posterKey, durationSec, description }`
-  — stores the **R2 object key only**, never a playable URL.
+- `lessons/{lessonId}` →
+  `{ courseId, title, order, r2Key, posterKey, durationSec, description }`
+  — top-level collection (not a subcollection) so the gatekeeper can resolve a
+  lesson with a single direct read. Stores the **R2 object key only**, never a
+  playable URL.
 - `users/{uid}` → `{ email, createdAt }`
 - `users/{uid}/enrollments/{courseId}` → `{ grantedAt, source: 'paypal', paymentRef }`
 - `users/{uid}/progress/{lessonId}` → `{ completed, lastPositionSec, updatedAt }`
 
 ### Firestore security rules
 
-- Course/lesson **metadata**: readable by any authenticated user (so they can browse).
+- `courses` and `lessons` **metadata**: readable by any authenticated user (so they
+  can browse). Exposing a lesson's `r2Key` is harmless — it is useless without a
+  server-signed URL against the private bucket.
 - `enrollments`: readable only by the owner; **never** client-writable (only the
   server `/api/enroll` writes them, via Firebase Admin which bypasses rules).
 - `progress`: read/write only by its owner.
