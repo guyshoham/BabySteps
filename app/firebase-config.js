@@ -2,9 +2,9 @@
 // Public Firebase Web config — copy from Firebase console:
 // Project settings → General → Your apps → Web app → SDK setup and configuration.
 export const firebaseConfig = {
-  apiKey: "PASTE_API_KEY",
-  authDomain: "PASTE_PROJECT.firebaseapp.com",
-  projectId: "PASTE_PROJECT_ID",
-  storageBucket: "PASTE_PROJECT.appspot.com",
-  appId: "PASTE_APP_ID",
+  apiKey: "AIzaSyAP89jvkejQd7HVgvBEbilyiKFyXKG84n8",
+  authDomain: "babysteps-courses.firebaseapp.com",
+  projectId: "babysteps-courses",
+  storageBucket: "babysteps-courses.firebasestorage.app",
+  appId: "1:334096920409:web:ca8297357ef760096c2648",
 };
