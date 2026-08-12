@@ -17,6 +17,7 @@
   <main class="max-w-3xl mx-auto">
     <video id="video" class="w-full rounded-2xl shadow bg-black" controls playsinline
            controlsList="nodownload" oncontextmenu="return false"></video>
+    <img id="image" class="w-full rounded-2xl shadow hidden" alt="" oncontextmenu="return false" />
     <p id="msg" class="text-center text-red-600 mt-3"></p>
   </main>
 
@@ -30,34 +31,51 @@
     const msg = document.getElementById("msg");
     const video = document.getElementById("video");
 
+    const image = document.getElementById("image");
+
     const lessonSnap = await getDoc(doc(db, "lessons", lessonId));
     if (!lessonSnap.exists()) { msg.textContent = "השיעור לא נמצא"; throw new Error("no lesson"); }
     const lesson = lessonSnap.data();
     document.getElementById("title").textContent = lesson.title;
+    // Lessons are videos unless marked otherwise; older docs have no `kind`.
+    const isImage = lesson.kind === "image";
 
     const progSnap = await getDoc(doc(db, "users", user.uid, "progress", lessonId));
     const startAt = progSnap.exists() ? (progSnap.data().lastPositionSec || 0) : 0;
+
+    const save = (extra) => setDoc(
+      doc(db, "users", user.uid, "progress", lessonId),
+      { updatedAt: new Date().toISOString(), ...extra },
+      { merge: true }
+    );
 
     const token = await user.getIdToken();
     const resp = await fetch(`/api/video-url?lessonId=${encodeURIComponent(lessonId)}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     if (resp.status === 403) { msg.textContent = "אין לך גישה לשיעור הזה"; throw new Error("403"); }
-    if (!resp.ok) { msg.textContent = "שגיאה בטעינת הסרטון"; throw new Error("video-url failed"); }
+    if (!resp.ok) { msg.textContent = isImage ? "שגיאה בטעינת הטיפ" : "שגיאה בטעינת הסרטון"; throw new Error("video-url failed"); }
     const { url } = await resp.json();
-    video.src = url;
-    video.addEventListener("loadedmetadata", () => { if (startAt > 0) video.currentTime = startAt; });
 
-    let lastSaved = 0;
-    const save = (extra) => setDoc(
-      doc(db, "users", user.uid, "progress", lessonId),
-      { lastPositionSec: Math.floor(video.currentTime), updatedAt: new Date().toISOString(), ...extra },
-      { merge: true }
-    );
-    video.addEventListener("timeupdate", () => {
-      if (video.currentTime - lastSaved > 10) { lastSaved = video.currentTime; save({}); }
-    });
-    video.addEventListener("ended", () => save({ completed: true }));
+    if (isImage) {
+      // Tips are images: show them instead of the player, and count as done once seen.
+      video.classList.add("hidden");
+      image.classList.remove("hidden");
+      image.setAttribute("alt", lesson.title ?? "");
+      image.addEventListener("load", () => save({ completed: true }));
+      image.setAttribute("src", url);
+    } else {
+      image.remove();
+      video.src = url;
+      video.addEventListener("loadedmetadata", () => { if (startAt > 0) video.currentTime = startAt; });
+
+      let lastSaved = 0;
+      const savePosition = (extra) => save({ lastPositionSec: Math.floor(video.currentTime), ...extra });
+      video.addEventListener("timeupdate", () => {
+        if (video.currentTime - lastSaved > 10) { lastSaved = video.currentTime; savePosition({}); }
+      });
+      video.addEventListener("ended", () => savePosition({ completed: true }));
+    }
   </script>
 </body>
 </html>
