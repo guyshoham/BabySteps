@@ -70,15 +70,21 @@ Keep these in a password manager as you go. Every one of them goes into Vercel
       `r2.dev` domain — the whole gating model assumes the bucket is private.
 - [x] **R2 → Manage API tokens → Create API token**, permission **Object Read & Write**,
       scoped to that bucket. Save the access key id + secret.
-- [ ] Upload the rolling-course videos with keys matching `scripts/seed.js`:
+- [ ] Upload the rolling-course videos with **`scripts/upload-videos.js`**, which takes the
+      keys straight from `scripts/course-data.js` so the bucket can't drift from Firestore:
 
-      rolling/lesson-01.mp4 … rolling/lesson-10.mp4
-      rolling/tip-01.mp4 … rolling/tip-06.mp4
-      rolling/bonus-crawling.mp4
+      node --env-file=.env scripts/upload-videos.js ~/path/to/videos --dry-run
+      node --env-file=.env scripts/upload-videos.js ~/path/to/videos
+      node --env-file=.env scripts/upload-videos.js --verify   # check anytime
 
-      Keys are case-sensitive and include the `rolling/` prefix. If you'd rather keep the
-      filenames you already have, change `r2Key` in the seed script instead of renaming —
-      just make the two sides identical.
+      A local file matches a lesson when its filename equals the last part of the r2Key
+      (`lesson-01.mp4` → `rolling/lesson-01.mp4`); subfolders are searched. Expected names:
+
+      lesson-01.mp4 … lesson-10.mp4,  tip-01.mp4 … tip-06.mp4,  bonus-crawling.mp4
+
+      The dry run lists every unmatched lesson and every ignored file, so fix names before
+      uploading. Re-runs skip files already present at the same size (`--force` overrides),
+      and files over 64 MB upload in parts, so the 300 MB dashboard limit doesn't apply.
 - [ ] Encode for web before uploading if the source files are large: H.264 + AAC in `.mp4`,
       and `-movflags +faststart` so playback can start before the file is fully downloaded.
 
@@ -109,11 +115,11 @@ Keep these in a password manager as you go. Every one of them goes into Vercel
 
 ## 4. Seed Firestore
 
-- [ ] `cp .env.example .env` and fill in the real `FIREBASE_*` values. `.env` is
+- [x] `cp .env.example .env` and fill in the real `FIREBASE_*` values. `.env` is
       gitignored — keep it that way.
-- [ ] Open `scripts/seed.js` and replace the placeholder lesson titles (`שיעור 1`,
-      `טיפ זהב 1`, …) with the real video titles. Confirm each `r2Key` matches what you
-      uploaded.
+- [ ] Open `scripts/course-data.js` and replace the placeholder lesson titles (`שיעור 1`,
+      `טיפ זהב 1`, …) with the real video titles. This one file feeds both the seeder and the
+      uploader.
 - [ ] Preview without writing: `node --env-file=.env scripts/seed.js --dry-run`
 - [ ] Write it: `node --env-file=.env scripts/seed.js` → prints each id, then
       `seed complete`. Re-running is safe (merge on fixed ids — no duplicates).
