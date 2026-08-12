@@ -6,3 +6,5 @@ node_modules/
 .vercel
 
 .claude/worktrees/
+.env*
+!.env.example
