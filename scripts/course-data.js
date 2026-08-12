@@ -56,12 +56,20 @@ export const DATA = {
     { id: "rolling-tip-05", courseId: "rolling", order: 15, kind: "image", title: "טיפ זהב 5", r2Key: "rolling/tip-05.png", description: "" },
     { id: "rolling-tip-06", courseId: "rolling", order: 16, kind: "image", title: "טיפ זהב 6", r2Key: "rolling/tip-06.png", description: "" },
 
-    // — בונוס —
+    // — בונוסים, בסוף הקורס —
     {
       id: "rolling-bonus-crawling", courseId: "rolling", order: 17, kind: "video",
       title: "בונוס: הכנה לשלב הזחילה",
       r2Key: "rolling/bonus-crawling.mp4", durationSec: 0,
       description: "סרטון ייחודי שבונה את התשתית המוטורית לשלב ההתפתחותי הבא.",
+    },
+    {
+      id: "rolling-appendix", courseId: "rolling", order: 18, kind: "video",
+      title: "נספח",
+      r2Key: "rolling/appendix.mp4", durationSec: 0,
+      description: "",
+      // No leading number in the source filename, so pin it explicitly.
+      sourceName: "נספח.mp4",
     },
 
     // tummy-time lessons go here once the course is filmed (set published: true above).

@@ -35,7 +35,8 @@ for (const c of DATA.courses) {
   console.log("course:", id);
 }
 for (const l of DATA.lessons) {
-  const { id, ...rest } = l;
+  // sourceName is a local build hint for prepare-videos.js — not app data.
+  const { id, sourceName, ...rest } = l;
   await db.collection("lessons").doc(id).set(rest, { merge: true });
   console.log("lesson:", id);
 }

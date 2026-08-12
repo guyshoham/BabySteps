@@ -96,8 +96,16 @@ for (const l of imageLessons) {
 // The highest lesson number + 1 is the bonus, by the source's own numbering.
 const BONUS_NUMBER = Math.max(...lessonByNumber.keys()) + 1;
 
+// Lessons may pin their source file by name, for originals that don't follow the
+// "N - title" convention.
+const lessonBySourceName = new Map(
+  DATA.lessons.filter((l) => l.sourceName).map((l) => [l.sourceName, l])
+);
+
 function place(file) {
   const name = basename(file);
+  const pinned = lessonBySourceName.get(name);
+  if (pinned) return pinned;
   const ext = extname(name).toLowerCase();
   // Match against the stem only — otherwise ".mp4" donates a stray "4".
   const stem = name.slice(0, name.length - ext.length);
