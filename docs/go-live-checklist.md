@@ -53,9 +53,12 @@ Keep these in a password manager as you go. Every one of them goes into Vercel
 - [x] **Project settings → General → Your apps → Web app (`</>`)** → register an app →
       copy the config object into `app/firebase-config.js`, replacing the `PASTE_*`
       placeholders. This config is public by design — commit it.
-- [ ] **Authentication → Settings → Authorized domains** → add the Vercel domain once you
-      have it (step 3). `*.vercel.app` is pre-authorized, but a custom domain is not, and
-      login fails with `auth/unauthorized-domain` until it's added.
+- [x] **Authentication → Settings → Authorized domains** — done 2026-08-13 (Vercel domain
+      added). *Not strictly required today:* This list
+      gates OAuth popup/redirect sign-in and password-reset continue URLs. `firebase-client.js`
+      uses plain email/password sign-in and a `sendPasswordResetEmail` with no continue URL, so
+      neither applies. Add the production domain here only if you later add Google/Facebook
+      sign-in or a custom redirect after reset.
 
 > Note: anyone holding the public web API key can self-register an account, which lets them
 > read the `courses` and `lessons` documents (titles and `r2Key` strings). That's harmless —
@@ -81,21 +84,25 @@ Keep these in a password manager as you go. Every one of them goes into Vercel
 
 ## 3. Vercel
 
-- [ ] Log into Vercel with the GitHub account **`guyshoham`** — this repo lives on the
+- [x] Log into Vercel with the GitHub account **`guyshoham`** — this repo lives on the
       personal account (`git@github-personal:guyshoham/BabySteps.git`). If Vercel is signed
       in as the work account it won't see the repo.
-- [ ] **Add New → Project → Import `guyshoham/BabySteps`.** Framework preset: **Other**.
+- [x] **Add New → Project → Import `guyshoham/BabySteps`.** Framework preset: **Other**.
       Leave build/output settings empty — it's a static site plus `/api` functions.
-- [ ] **Settings → Environment Variables** → add all nine vars from the table
+- [x] **Settings → Environment Variables** → add all nine vars from the table
       (Production **and** Preview).
       - `FIREBASE_PRIVATE_KEY`: paste the key with its real line breaks. The code also
         accepts the `\n`-escaped single-line form (`lib/firebase-admin.js` un-escapes it),
         but don't mix the two — no surrounding quotes either way.
-- [ ] Deploy, then open `https://<project>.vercel.app/app/login` — the login form should
+- [x] Deploy, then open `https://<project>.vercel.app/app/login` — the login form should
       render (you can't log in yet; no accounts exist).
-- [ ] Go back and add that domain to Firebase **Authorized domains** (step 1).
-- [ ] Decide the cutover: the marketing site is still live at
-      `guyshoham.github.io/BabySteps`. Simplest path is to leave Pages alone for now, run
+- [x] Go back and add that domain to Firebase **Authorized domains** (step 1).
+- [x] Cutover **done 2026-08-13**: everything runs on `https://baby-steps-murex.vercel.app`
+      and GitHub Pages was disabled (`guyshoham.github.io/BabySteps` now 404s). Old
+      `/challenge/rolling/` links 308-redirect to the clean URL and still work; links pointing
+      at the **github.io host** are dead and need updating (Instagram bio, Linktree).
+      Attach a custom domain before updating those links, to avoid doing it twice.
+      *(original note: the marketing site was live at `guyshoham.github.io/BabySteps`.)* Simplest path is to leave Pages alone for now, run
       the course area on the Vercel domain, and move the whole site (plus a custom domain)
       once enrollment is proven. Whatever you choose, the PayPal buy link on
       `challenge/rolling/index.html` must lead buyers to whichever host is authoritative.
@@ -142,8 +149,8 @@ The existing scenario runs PayPal → systeme.io. Replace the systeme.io module.
 
 ## 6. Verify end to end
 
-- [ ] `npm test` → all unit tests pass.
-- [ ] Enrollment creates an account:
+- [x] `npm test` → all unit tests pass.
+- [x] Enrollment creates an account:
 
       curl -s -X POST https://<domain>/api/enroll \
         -H "Content-Type: application/json" \
@@ -152,9 +159,9 @@ The existing scenario runs PayPal → systeme.io. Replace the systeme.io module.
 
       Expect `200` with `created:true`, `courseId:"rolling"`, and a `password`. Confirm the
       user in Firebase Auth and `users/<uid>/enrollments/rolling` in Firestore.
-- [ ] Idempotency: re-run the identical curl → `200`, `created:false`, `password:null`,
+- [x] Idempotency: re-run the identical curl → `200`, `created:false`, `password:null`,
       no second user.
-- [ ] Wrong secret → `401`. Missing header → `401`.
+- [x] Wrong secret → `401`. Missing header → `401`.
 - [ ] Log in at `/app/login` with that email + password → `/app/my-courses` shows the
       rolling course → open it → all 17 lessons listed in order (if the list is empty,
       it's the missing composite index from step 1).
@@ -167,10 +174,17 @@ The existing scenario runs PayPal → systeme.io. Replace the systeme.io module.
 - [ ] Expiry: signed URLs last 2h (`DEFAULT_EXPIRES_SECONDS` in `lib/r2.js`). To test
       quickly, lower it, redeploy, and re-request an old URL → R2 returns
       `Request has expired`. Put it back afterwards.
-- [ ] Delete the test user from Firebase Auth and its `users/<uid>` document.
+- [x] Delete the test user from Firebase Auth and its `users/<uid>` document.
 
 ## After go-live
 
 - [ ] Send one real customer through the full PayPal flow and watch the Make execution.
 - [ ] Update `CLAUDE.md` — move the course platform from "built, not yet provisioned" to
       live, and record the production domain.
+
+**Verified 2026-08-13** against `https://baby-steps-murex.vercel.app`: bad/missing secret →
+401, GET → 405, missing fields → 400, unknown product → 400, real enroll → 200 `created:true`
+with a generated password, repeat call → `created:false` (idempotent), Auth user + `users/{uid}`
++ `enrollments/rolling` all written, a real web ID token reached `/api/video-url` and returned
+`404 lesson not found` (correct — Firestore isn't seeded yet). Test user and docs deleted;
+Auth and Firestore are empty again. Remaining boxes need seeded data and uploaded videos.
