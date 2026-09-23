@@ -83,7 +83,7 @@ PayPal ──▶ Make ──▶ POST /api/enroll ──▶ emails student their 
 
 ## Testing
 
-- `npm test` → Vitest (16 tests). Run before committing changes to `lib/` or `api/`.
+- `npm test` → Vitest (19 tests). Run before committing changes to `lib/` or `api/`.
 - Smoke-check handlers/libs import: `node -e "import('./api/enroll.js').then(()=>console.log('ok'))"`
 
 ## Running locally
@@ -92,6 +92,9 @@ PayPal ──▶ Make ──▶ POST /api/enroll ──▶ emails student their 
   and a filled-in `app/firebase-config.js`. Without provisioning, gated pages redirect to login.
 - Static-only visual check: `python3 -m http.server 8000`, open `/app/login.html` (note: clean
   URLs and `/api` won't work under a plain static server).
+- Tester login: `node --env-file=.env scripts/create-tester.js` creates `TESTER_EMAIL` (default
+  `tester@babysteps.test`) enrolled in all courses. Re-run to reset its password to `TESTER_PASSWORD`
+  in `.env` (generated and appended there if missing). `--dry-run` shows what it would do.
 
 ## Environment variables (set in Vercel; see `.env.example`)
 
