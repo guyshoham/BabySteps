@@ -10,13 +10,15 @@ what is still open.
 
 ## Go-live
 
-- [ ] **[G1] P1 — Wire Make to `/api/enroll`.** `docs/go-live-checklist.md:128`. Buyers pay but
-  no account is created: the PayPal scenario still enrolls into systeme.io. **Fix:** export the
-  Make blueprint + one execution bundle (no Make API token). Find the product field PayPal sends
-  (likely `SDBZ5YS6JNKLQ`), set `COURSE_MAP` in Vercel to map it to `rolling`, add the
-  HTTP → `POST /api/enroll` step with `x-enroll-secret`, then the welcome email with the login.
+- [ ] **[G1] P1 — Wire Make to `/api/enroll`.** `docs/go-live-checklist.md` step 5. Buyers pay
+  but no account is created: the PayPal scenario still enrolls into systeme.io. **Fix:** import
+  `docs/make/paypal-enroll.blueprint.json`: PayPal → filter (`paymentStatus`=Completed AND `raw`
+  contains `course_2`) → HTTP `POST /api/enroll` with `x-enroll-secret` and
+  `paypalProductId` = the constant `course_2`. Add `"course_2":"rolling"` to `COURSE_MAP` in
+  Vercel. No email step in Make: Firebase sends the welcome (set your password) email. Then
+  customize the Firebase password reset template in Hebrew.
 - [ ] **[G2] P1 — Run one real payment end to end.** `docs/go-live-checklist.md:187`. Depends on
-  G1. **Fix:** buy once through PayPal, watch the Make execution, log in with the emailed password.
+  G1. **Fix:** buy once through PayPal, watch the Make execution, set a password from the Firebase email and log in.
 
 ## UI/UX
 

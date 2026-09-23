@@ -1,0 +1,277 @@
+{
+  "name": "PayPal -> Enroll (Vercel)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "paypal:HookNewNotification",
+      "version": 1,
+      "parameters": {
+        "hook": 1982981,
+        "maxResults": 5
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 300
+        },
+        "restore": {
+          "parameters": {
+            "hook": {
+              "data": {
+                "editable": "false"
+              },
+              "label": "My paypal webhook"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "hook",
+            "type": "hook:paypal",
+            "label": "Webhook",
+            "required": true
+          },
+          {
+            "name": "maxResults",
+            "type": "uinteger",
+            "label": "Maximum number of returned notifications",
+            "required": true
+          }
+        ],
+        "interface": [
+          {
+            "name": "paymentStatus",
+            "type": "text",
+            "label": "Payment status"
+          },
+          {
+            "name": "paymentDate",
+            "type": "text",
+            "label": "Payment date"
+          },
+          {
+            "name": "timeCreated",
+            "type": "text",
+            "label": "Date created"
+          },
+          {
+            "name": "ipnTrackId",
+            "type": "text",
+            "label": "IPN Track ID"
+          },
+          {
+            "name": "payer",
+            "spec": [
+              {
+                "name": "id",
+                "type": "text",
+                "label": "ID"
+              },
+              {
+                "name": "email",
+                "type": "email",
+                "label": "E-mail"
+              },
+              {
+                "name": "firstName",
+                "type": "text",
+                "label": "First name"
+              },
+              {
+                "name": "lastName",
+                "type": "text",
+                "label": "Last name"
+              },
+              {
+                "name": "address",
+                "spec": [
+                  {
+                    "name": "name",
+                    "type": "text",
+                    "label": "Name"
+                  },
+                  {
+                    "name": "street",
+                    "type": "text",
+                    "label": "Street"
+                  },
+                  {
+                    "name": "city",
+                    "type": "text",
+                    "label": "City"
+                  },
+                  {
+                    "name": "zip",
+                    "type": "text",
+                    "label": "ZIP"
+                  },
+                  {
+                    "name": "state",
+                    "type": "text",
+                    "label": "State"
+                  },
+                  {
+                    "name": "country",
+                    "type": "text",
+                    "label": "Country"
+                  }
+                ],
+                "type": "collection",
+                "label": "Address"
+              }
+            ],
+            "type": "collection",
+            "label": "Payer"
+          },
+          {
+            "name": "itemName",
+            "type": "text",
+            "label": "Item name"
+          },
+          {
+            "name": "itemNumber",
+            "type": "text",
+            "label": "Item number"
+          },
+          {
+            "name": "quantity",
+            "type": "number",
+            "label": "Quantity"
+          },
+          {
+            "name": "shipping",
+            "type": "number",
+            "label": "Shipping costs"
+          },
+          {
+            "name": "tax",
+            "type": "number",
+            "label": "Tax"
+          },
+          {
+            "name": "currency",
+            "type": "text",
+            "label": "Currency"
+          },
+          {
+            "name": "fee",
+            "type": "number",
+            "label": "Fee"
+          },
+          {
+            "name": "gross",
+            "type": "number",
+            "label": "Gross amount"
+          },
+          {
+            "name": "invoice",
+            "type": "number",
+            "label": "Invoice"
+          },
+          {
+            "name": "txnType",
+            "type": "text",
+            "label": "Transaction type"
+          },
+          {
+            "name": "recurringPaymentId",
+            "type": "text",
+            "label": "Recurring payment ID"
+          },
+          {
+            "name": "txnId",
+            "type": "text",
+            "label": "Transaction ID"
+          },
+          {
+            "name": "custom",
+            "type": "text",
+            "label": "Custom"
+          },
+          {
+            "name": "raw",
+            "type": "text",
+            "label": "Received JSON"
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "module": "http:ActionSendData",
+      "version": 3,
+      "parameters": {
+        "handleErrors": false,
+        "useNewZLibDeCompress": true
+      },
+      "filter": {
+        "name": "תשלום הושלם + קורס מתהפכים",
+        "conditions": [
+          [
+            {
+              "a": "{{1.paymentStatus}}",
+              "b": "Completed",
+              "o": "text:equal"
+            },
+            {
+              "a": "{{1.raw}}",
+              "b": "course_2",
+              "o": "text:contain"
+            }
+          ]
+        ]
+      },
+      "mapper": {
+        "url": "https://baby-steps-murex.vercel.app/api/enroll",
+        "method": "post",
+        "headers": [
+          {
+            "name": "x-enroll-secret",
+            "value": "PASTE_ENROLL_SECRET_HERE"
+          }
+        ],
+        "qs": [],
+        "bodyType": "raw",
+        "contentType": "application/json",
+        "data": "{\"email\":\"{{1.payer.email}}\",\"paypalProductId\":\"course_2\",\"paymentRef\":\"{{1.txnId}}\"}",
+        "parseResponse": true,
+        "serializeUrl": false,
+        "shareCookies": false,
+        "rejectUnauthorized": true,
+        "followRedirect": true,
+        "useQuerystring": false,
+        "gzip": true,
+        "useMtls": false,
+        "timeout": "30"
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 300
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "instant": true,
+    "version": 1,
+    "scenario": {
+      "roundtrips": 1,
+      "maxErrors": 3,
+      "autoCommit": true,
+      "autoCommitTriggerLast": true,
+      "sequential": true,
+      "slots": null,
+      "confidential": false,
+      "dataloss": false,
+      "dlq": true,
+      "freshVariables": false
+    },
+    "designer": {
+      "orphans": []
+    },
+    "zone": "us2.make.com",
+    "notes": []
+  }
+}

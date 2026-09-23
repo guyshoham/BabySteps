@@ -127,31 +127,33 @@ Keep these in a password manager as you go. Every one of them goes into Vercel
 
 ## 5. Make: point the PayPal scenario at `/api/enroll`
 
-The existing scenario runs PayPal → systeme.io. Replace the systeme.io module.
+Make only forwards the payment. Firebase sends the welcome email, so Make has no email step
+(no Gmail or SMTP). Blueprint: `docs/make/paypal-enroll.blueprint.json`.
 
-- [ ] Run one real (or sandbox) payment through the existing scenario first and **look at
-      the PayPal bundle in Make's execution history**. Find a field that identifies *which
-      course was bought* and is stable across payments — the item name, the button/link id,
-      or the item number. The current buy link is a PayPal no-code checkout,
-      `paypal.com/ncp/payment/SDBZ5YS6JNKLQ`, so `SDBZ5YS6JNKLQ` is the likely candidate,
-      but confirm it actually appears in the payload rather than assuming.
-- [ ] Set `COURSE_MAP` in Vercel to map that exact string to the course id, e.g.
-      `{"SDBZ5YS6JNKLQ":"rolling"}`. An unmapped value makes `/api/enroll` return
-      `400 unknown product`, so this must match character for character.
-- [ ] Add **HTTP → Make a request**:
-      - URL `https://<your-vercel-domain>/api/enroll`, method **POST**, body type **JSON**
-      - Header `x-enroll-secret: <ENROLL_SECRET>`
-      - Body: `{ "email": "<buyer email>", "paypalProductId": "<that field>", "paymentRef": "<txn id>" }`
-      - Turn on "Parse response" so the next module can branch on the result.
-- [ ] Add the welcome email after it, branching on the response:
-      - `created: true` → email the buyer their login: the `email` they paid with and the
-        `password` from the response, plus the link to `/app/login`. **This is the only
-        time that password is ever shown** — if the email fails, they have to use "forgot
-        password".
-      - `created: false` → they already had an account: email "you now have access, log in
-        as usual" with no password.
-- [ ] Note the manual Bit/Paybox path on the sales page — those buyers never touch PayPal,
-      so enroll them by hand with the curl in step 6 (same command, real email).
+Scenario: **PayPal (new notification) → filter → HTTP**.
+
+- [x] Product field found: the PayPal payload carries `course_2` in its raw data. The HTTP
+      module sends `paypalProductId` as the constant `course_2`.
+- [ ] Set `COURSE_MAP` in Vercel to include `"course_2":"rolling"` (keep the existing keys).
+      An unmapped value makes `/api/enroll` return `400 unknown product`. (Local `.env` done.)
+- [ ] Filter on the link into HTTP: `paymentStatus` equals `Completed` **AND** `raw`
+      contains `course_2`.
+- [ ] **HTTP → Make a request**:
+      - URL `https://baby-steps-murex.vercel.app/api/enroll`, method **POST**, body raw JSON
+      - Header `x-enroll-secret: <ENROLL_SECRET>` (replace `PASTE_ENROLL_SECRET_HERE`)
+      - Body: `{"email":"{{1.payer.email}}","paypalProductId":"course_2","paymentRef":"{{1.txnId}}"}`
+- [ ] Welcome email: `/api/enroll` asks Firebase to send its password reset email (Hebrew,
+      `X-Firebase-Locale: he`) to any buyer who has **never signed in**. The link lets her
+      choose a password, then goes to `/app/login`. Buyers who already log in get no email.
+      No password is ever returned or emailed.
+- [ ] If the email fails, `/api/enroll` still saves the enrollment but returns `502`, so Make
+      marks the run as failed. Re-run it from Make's history: enroll is idempotent and the
+      email is sent again.
+- [ ] Customize the Firebase template (Authentication → Templates → Password reset): sender
+      name, subject and Hebrew body. Keep the `%LINK%` placeholder.
+- [ ] Note the manual Bit/Paybox path on the sales page. Those buyers never touch PayPal,
+      so enroll them by hand with the curl in step 6 (same command, real email). They get
+      the same Firebase welcome email.
 
 ## 6. Verify end to end
 
@@ -163,10 +165,10 @@ The existing scenario runs PayPal → systeme.io. Replace the systeme.io module.
         -H "x-enroll-secret: <ENROLL_SECRET>" \
         -d '{"email":"test+1@example.com","paypalProductId":"SDBZ5YS6JNKLQ","paymentRef":"TEST1"}'
 
-      Expect `200` with `created:true`, `courseId:"rolling"`, and a `password`. Confirm the
-      user in Firebase Auth and `users/<uid>/enrollments/rolling` in Firestore.
-- [x] Idempotency: re-run the identical curl → `200`, `created:false`, `password:null`,
-      no second user.
+      Expect `200` with `created:true`, `courseId:"rolling"`, `welcomeSent:true` (no
+      `password` since the Firebase welcome email change). Confirm the user in Firebase Auth
+      and `users/<uid>/enrollments/rolling` in Firestore.
+- [x] Idempotency: re-run the identical curl → `200`, `created:false`, no second user.
 - [x] Wrong secret → `401`. Missing header → `401`.
 - [ ] Log in at `/app/login` with that email + password → `/app/my-courses` shows the
       rolling course → open it → all 17 lessons listed in order (if the list is empty,
