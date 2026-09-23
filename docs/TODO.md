@@ -22,8 +22,10 @@ what is still open.
   (`cmd=_notify-validate`) before enrolling, in Make or in `/api/enroll`.
 - [ ] **[G4] P2 — Better welcome email.** Firebase refuses custom subject/body
   (`EMAIL_TEMPLATE_UPDATE_NOT_ALLOWED`), so buyers get the stock Hebrew "reset password" email,
-  and the link opens an English Firebase page. **Fix:** set Firebase Public-facing name to
-  `מתחילים בקטן` now; later send our own email and host a Hebrew `/app/set-password` page.
+  and the link opens an English Firebase page. The console is locked too ("Email template updates
+  are currently unavailable"; only Firebase Support can lift it). Project name must be English, so
+  `%APP_NAME%` stays `babysteps-courses` for now. **Fix:** send our own email and host a Hebrew
+  `/app/set-password` page.
 
 ## UI/UX
 
