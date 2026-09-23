@@ -29,11 +29,11 @@ what is still open.
 
 ## Dev tooling
 
-- [ ] **[D1] P2 — Tester account.** `lib/firebase-admin.js:29` (`ensureUser`),
+- [x] **[D1] P2 — Tester account.** `lib/firebase-admin.js:29` (`ensureUser`),
   `lib/firebase-admin.js:46` (`ensureEnrollment`). Testing the courses page needs a real login.
   **Fix:** add `scripts/create-tester.js` that creates a fixed tester email with a known password
   (from `.env`, not committed) and enrolls it in all courses with `source: "tester"`. Idempotent,
-  so re-running resets the password.
+  so re-running resets the password. → done: 63b7d3e
 
 ## Housekeeping
 
