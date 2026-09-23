@@ -240,7 +240,11 @@
         "shareCookies": false,
         "rejectUnauthorized": true,
         "followRedirect": true,
+        "followAllRedirects": false,
         "useQuerystring": false,
+        "authUser": "",
+        "authPass": "",
+        "ca": "",
         "gzip": true,
         "useMtls": false,
         "timeout": "30"

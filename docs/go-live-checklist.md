@@ -134,14 +134,17 @@ Scenario: **PayPal (new notification) → filter → HTTP**.
 
 - [x] Product field found: the PayPal payload carries `course_2` in its raw data. The HTTP
       module sends `paypalProductId` as the constant `course_2`.
-- [ ] Set `COURSE_MAP` in Vercel to include `"course_2":"rolling"` (keep the existing keys).
-      An unmapped value makes `/api/enroll` return `400 unknown product`. (Local `.env` done.)
+- [x] Set `COURSE_MAP` in Vercel to include `"course_2":"rolling"` (keep the existing keys).
+      An unmapped value makes `/api/enroll` return `400 unknown product`. (Done 2026-09-24,
+      all three environments.)
 - [ ] Filter on the link into HTTP: `paymentStatus` equals `Completed` **AND** `raw`
       contains `course_2`.
 - [ ] **HTTP → Make a request**:
       - URL `https://baby-steps-murex.vercel.app/api/enroll`, method **POST**, body raw JSON
       - Header `x-enroll-secret: <ENROLL_SECRET>` (replace `PASTE_ENROLL_SECRET_HERE`)
       - Body: `{"email":"{{1.payer.email}}","paypalProductId":"course_2","paymentRef":"{{1.txnId}}"}`
+      - "Follow all redirects" must have a value (set it to **No**). If it is empty, the run
+        fails with `Missing value of required parameter 'followAllRedirects'` before any call.
 - [ ] Welcome email: `/api/enroll` asks Firebase to send its password reset email (Hebrew,
       `X-Firebase-Locale: he`) to any buyer who has **never signed in**. The link lets her
       choose a password, then goes to `/app/login`. Buyers who already log in get no email.
@@ -149,8 +152,11 @@ Scenario: **PayPal (new notification) → filter → HTTP**.
 - [ ] If the email fails, `/api/enroll` still saves the enrollment but returns `502`, so Make
       marks the run as failed. Re-run it from Make's history: enroll is idempotent and the
       email is sent again.
-- [ ] Customize the Firebase template (Authentication → Templates → Password reset): sender
-      name, subject and Hebrew body. Keep the `%LINK%` placeholder.
+- [x] Firebase template (Authentication → Templates → Password reset): default language set
+      to Hebrew and sender name to `ירדן - מתחילים בקטן` (2026-09-24). Firebase refuses to
+      change the subject and body (`EMAIL_TEMPLATE_UPDATE_NOT_ALLOWED`, an anti-spam rule),
+      so the email uses Firebase's built-in Hebrew reset text. `%APP_NAME%` in that text is
+      the project's public-facing name (Project settings → General).
 - [ ] Note the manual Bit/Paybox path on the sales page. Those buyers never touch PayPal,
       so enroll them by hand with the curl in step 6 (same command, real email). They get
       the same Firebase welcome email.
@@ -183,6 +189,20 @@ Scenario: **PayPal (new notification) → filter → HTTP**.
       quickly, lower it, redeploy, and re-request an old URL → R2 returns
       `Request has expired`. Put it back afterwards.
 - [x] Delete the test user from Firebase Auth and its `users/<uid>` document.
+
+### Fake a payment
+
+Tests the whole chain without paying: Make → `/api/enroll` → Firebase user + welcome email.
+
+    scripts/fake-payment.sh guyshoham28+fake1@gmail.com
+
+It posts a fake PayPal IPN (`payment_status=Completed`, `item_number=course_2`) to
+`MAKE_HOOK_URL` (from the environment, else from `.env`). Make answers `Accepted` at once; the result is in the scenario History.
+Then check Firebase Auth for the email and `users/<uid>/enrollments/rolling`.
+
+**Security:** Make accepts IPNs without checking them with PayPal. Keep `MAKE_HOOK_URL`
+private (only in `.env`, never in the repo). If it leaks, regenerate the webhook in Make and
+update PayPal's IPN URL.
 
 ## After go-live
 
