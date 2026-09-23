@@ -14,10 +14,11 @@ what is still open.
   AND `raw` contains `course_2`) → HTTP `POST /api/enroll`. Firebase sends the welcome email.
   → done 2026-09-24: fake IPN via `scripts/fake-payment.sh` created the user, the email link set
   a password, login and video playback worked.
-- [ ] **[G2] P1 — Run one real payment end to end.** `docs/go-live-checklist.md:187`. Depends on
-  G1. **Fix:** buy once through PayPal, watch the Make execution, set a password from the Firebase email and log in.
-
-- [ ] **[G3] P1 — Stop fake payments.** The Make PayPal webhook accepts unverified IPNs, so
+- [ ] **[G2] P1 — Run one real payment end to end.** G1 is done. **Fix:** in PayPal
+  (`paypal.com/ncp/links/SDBZ5YS6JNKLQ/edit`) set the price to ₪1, keep Product ID `course_2`, pay
+  once, watch the Make run, set a password from the email, log in. Then set the price back to ₪175
+  right away (a real buyer in that window would pay ₪1) and delete the test user.
+- [ ] **[G3] P3 — Stop fake payments.** Low priority until sales grow. The Make PayPal webhook accepts unverified IPNs, so
   anyone with the hook URL gets free access. **Fix:** verify each IPN with PayPal
   (`cmd=_notify-validate`) before enrolling, in Make or in `/api/enroll`.
 - [ ] **[G4] P2 — Better welcome email.** Firebase refuses custom subject/body
