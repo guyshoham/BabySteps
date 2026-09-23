@@ -10,11 +10,7 @@ what is still open.
 
 ## Go-live
 
-- [x] **[G1] P1 — Wire Make to `/api/enroll`.** Make is PayPal → filter (`paymentStatus`=Completed
-  AND `raw` contains `course_2`) → HTTP `POST /api/enroll`. Firebase sends the welcome email.
-  → done 2026-09-24: fake IPN via `scripts/fake-payment.sh` created the user, the email link set
-  a password, login and video playback worked.
-- [ ] **[G2] P1 — Run one real payment end to end.** G1 is done. **Fix:** in PayPal
+- [ ] **[G2] P1 — Run one real payment end to end.** **Fix:** in PayPal
   (`paypal.com/ncp/links/SDBZ5YS6JNKLQ/edit`) set the price to ₪1, keep Product ID `course_2`, pay
   once, watch the Make run, set a password from the email, log in. Then set the price back to ₪175
   right away (a real buyer in that window would pay ₪1) and delete the test user.
@@ -37,17 +33,9 @@ what is still open.
   `app/lesson.html`. Depends on U1. **Fix:** review the student pages and the landing pages
   against the synced design, list concrete issues, then fix them one by one.
 
-## Dev tooling
-
-- [x] **[D1] P2 — Tester account.** `lib/firebase-admin.js:29` (`ensureUser`),
-  `lib/firebase-admin.js:46` (`ensureEnrollment`). Testing the courses page needs a real login.
-  **Fix:** add `scripts/create-tester.js` that creates a fixed tester email with a known password
-  (from `.env`, not committed) and enrolls it in all courses with `source: "tester"`. Idempotent,
-  so re-running resets the password. → done: 63b7d3e
-
 ## Housekeeping
 
 - [ ] **[H1] P3 — Delete `staging/`.** 748 MB of transcoded videos, gitignored. **Fix:** once R2
   playback is confirmed good, `rm -rf staging/`.
 - [ ] **[H2] P3 — Update `CLAUDE.md` status.** `CLAUDE.md` still says "built, not yet
-  provisioned". **Fix:** mark the platform live and trim the "Remaining work" section to G1/G2.
+  provisioned". **Fix:** mark the platform live and trim the "Remaining work" section to the open items here.
