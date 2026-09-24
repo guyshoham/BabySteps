@@ -68,6 +68,22 @@
             justify-content: center;
             font-size: 64px;
             position: relative;
+            overflow: hidden;
+        }
+        .course-card-photo {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 60%;
+        }
+        .course-card.coming-soon .course-card-photo {
+            opacity: 0.8;
+        }
+        .course-card-image-area .badge-live,
+        .course-card-image-area .badge-coming-soon {
+            z-index: 1;
         }
         .course-card-body {
             padding: 24px 24px 28px;
@@ -181,7 +197,7 @@
 
         <!-- Profile photo -->
         <div style="margin-bottom:24px;">
-            <img src="assets/logos/logo-peach.png" alt="ירדן שוהם" style="width:88px; height:88px; border-radius:50%; object-fit:cover; box-shadow:0 4px 24px rgba(112,66,41,0.18); border:3px solid #fff;">
+            <img src="assets/yarden-portrait.jpg" alt="ירדן שוהם, מלווה התפתחותית, מחייכת" width="88" height="88" style="display:block; margin:0 auto; width:88px; height:88px; border-radius:50%; object-fit:cover; box-shadow:0 4px 24px rgba(112,66,41,0.18); border:3px solid #fff;">
         </div>
 
         <p class="hero-brand-tagline" style="margin-bottom:12px;">מתחילים בקטן</p>
@@ -219,7 +235,7 @@
             <!-- Card 1: Rolling — LIVE -->
             <a href="challenge/rolling/" style="text-decoration:none;" class="course-card active reveal reveal-delay-1">
                 <div class="course-card-image-area" style="background:var(--brand-peach);">
-                    <span>🔄</span>
+                    <img class="course-card-photo" src="assets/card-rolling.jpg" alt="ירדן שוהם מסבירה בסרטון מקורס ההתהפכות" width="800" height="356" loading="lazy" decoding="async">
                     <span class="badge-live">זמין עכשיו</span>
                 </div>
                 <div class="course-card-body">
@@ -243,7 +259,7 @@
             <!-- Card 2: Tummy Time — COMING SOON -->
             <a href="challenge/tummy-time/" style="text-decoration:none;" class="course-card coming-soon reveal reveal-delay-2">
                 <div class="course-card-image-area" style="background:var(--brand-mint);">
-                    <span>🤱</span>
+                    <img class="course-card-photo" src="assets/card-tummy-time.jpg" alt="תינוק שוכב על כרית הנקה ומחייך" width="800" height="356" loading="lazy" decoding="async">
                     <span class="badge-coming-soon">בקרוב</span>
                 </div>
                 <div class="course-card-body">
