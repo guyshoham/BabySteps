@@ -242,12 +242,6 @@ what is still open.
 
 ## Architecture
 
-- [ ] **[A1] P1 — Open redirect on the login page.** `app/login.html:33`. `next` comes straight
-  from the URL and goes to `location.replace(next)` (`:36`, `:45`). A signed-in student is sent on
-  at once, so `/app/login?next=https://evil.example` lands her on a phishing page, and a
-  `javascript:` value can run code on the site, where the Firebase session lives. **Fix:** accept
-  `next` only if it matches `/^\/app\/[^/]/`, else use `/app/my-courses`. Keep the same check in the
-  React router. **[CONFIRMED]**
 - [ ] **[A2] P2 — The live site serves the repo's source and docs.** `vercel.json:1`. There is no
   output directory, so the repo root is public: `/docs/TODO.md`, `/CLAUDE.md`,
   `/docs/make/paypal-enroll.blueprint.json`, `/lib/firebase-admin.js` and `/firestore.rules` all
