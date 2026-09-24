@@ -1,0 +1,26 @@
+{
+  "projectId": "a873ec7d-965f-4642-a52c-5507e9d16764",
+  "shape": "storybook",
+  "storybookConfigDir": "packages/ui/.storybook",
+  "storybookStatic": ".design-sync/sb-reference",
+  "pkg": "@babysteps/ui",
+  "globalName": "BabyStepsUI",
+  "buildCmd": "npm run ui:build",
+  "titleMap": {
+    "Tokens": null,
+    "LandingPage": null,
+    "AppScreens": null
+  },
+  "provider": {
+    "component": "BsRoot"
+  },
+  "overrides": {
+    "Section": {
+      "viewport": "900x1000"
+    },
+    "CourseCard": {
+      "viewport": "900x800"
+    }
+  },
+  "readmeHeader": ".design-sync/conventions.md"
+}
