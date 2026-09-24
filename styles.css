@@ -201,13 +201,14 @@ body {
 }
 
 /* ─── Fade-in on scroll ───────────────── */
-.reveal {
+/* Hidden only when JS runs (site.js and an inline <head> script add .js to <html>). */
+.js .reveal {
     opacity: 0;
     transform: translateY(28px);
     transition: opacity 0.6s cubic-bezier(0.22,1,0.36,1),
                 transform 0.6s cubic-bezier(0.22,1,0.36,1);
 }
-.reveal.visible {
+.js .reveal.visible {
     opacity: 1;
     transform: translateY(0);
 }
@@ -222,6 +223,24 @@ body {
     60%       { box-shadow: 0 0 0 12px rgba(112,66,41,0); }
 }
 .btn-pulse { animation: ctaPulse 2.2s ease-in-out infinite; }
+
+/* ─── Reduced motion ──────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    .js .reveal,
+    .js .reveal.visible {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+    .btn-pulse,
+    html .check-icon, /* beats the thank-you page's own <style> */
+    .confetti-piece,
+    .ripple-circle {
+        animation: none;
+    }
+    .confetti-piece,
+    .ripple-circle { display: none; }
+}
 
 /* ─── Video play overlay ──────────────── */
 .video-wrap { position: relative; cursor: pointer; }

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
+    <script>document.documentElement.classList.add('js')</script>
     <link rel="icon" type="image/png" href="../../assets/logos/logo-peach.png">
     <link rel="apple-touch-icon" href="../../assets/logos/logo-peach.png">
     <meta charset="UTF-8">
@@ -229,11 +230,13 @@
     </div>
 </footer>
 
+<script src="/site.js" defer></script>
 <script>
-    /* ── Confetti burst ──────────────────────────────────────────── */
+    /* ── Confetti burst (skipped under reduced motion) ───────────── */
     (function spawnConfetti() {
         const container = document.getElementById('confettiContainer');
         if (!container) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         const colors = ['#704229','#FCE7D6','#f5a623','#E8F3EF','#c8e3da','#f5c9a7','#fff'];
         for (let i = 0; i < 40; i++) {
             const piece = document.createElement('div');
@@ -249,31 +252,6 @@
             container.appendChild(piece);
         }
     })();
-
-    /* ── Ripple effect on buttons ────────────────────────────────── */
-    document.querySelectorAll('.btn-primary, .btn-outline').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            const rect   = this.getBoundingClientRect();
-            const circle = document.createElement('span');
-            circle.classList.add('ripple-circle');
-            circle.style.top  = (e.clientY - rect.top)  + 'px';
-            circle.style.right = (rect.right - e.clientX) + 'px';
-            this.appendChild(circle);
-            setTimeout(() => circle.remove(), 600);
-        });
-    });
-
-    /* ── Reveal on scroll (IntersectionObserver) ─────────────────── */
-    const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                revealObserver.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.12 });
-
-    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 </script>
 
 </body>
