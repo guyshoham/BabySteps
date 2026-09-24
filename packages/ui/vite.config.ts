@@ -4,6 +4,8 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
+  // Relative asset URLs, so styles.css finds its fonts wherever dist/ is served.
+  base: './',
   build: {
     lib: {
       entry: 'src/index.ts',
@@ -13,6 +15,12 @@ export default defineConfig({
     },
     rollupOptions: {
       external: ['react', 'react-dom', 'react/jsx-runtime'],
+      output: {
+        assetFileNames: (asset) =>
+          asset.names.some((n) => n.endsWith('.woff2'))
+            ? 'fonts/[name][extname]'
+            : '[name][extname]',
+      },
     },
     cssCodeSplit: false,
     sourcemap: true,
