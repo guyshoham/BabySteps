@@ -8,54 +8,63 @@
   <link rel="icon" type="image/png" href="/assets/logos/logo-peach.png" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <style>body{font-family:'Rubik',sans-serif}</style>
+  <link rel="stylesheet" href="/app/app.css" />
+  <link rel="manifest" href="/app/manifest.webmanifest" />
+  <meta name="theme-color" content="#704229" />
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="מתחילים בקטן" />
 </head>
-<body class="min-h-screen bg-[#fdf6f0] p-4">
-  <header class="max-w-2xl mx-auto py-4">
-    <!-- ?all=1 shows the list even with one course, so sign-out stays reachable. -->
-    <a href="/app/my-courses?all=1" class="text-sm underline text-[#704229]">→ הקורסים שלי</a>
+<body class="min-h-screen p-4">
+  <div class="max-w-2xl mx-auto py-4">
+    <!-- ?all=1 shows the list even with one course. -->
+    <a href="/app/my-courses?all=1" class="text-sm app-link">→ הקורסים שלי</a>
     <h1 id="title" class="text-2xl font-bold mt-2"></h1>
-    <p id="desc" class="text-gray-600"></p>
-  </header>
+    <p id="desc" class="app-mid mt-1"></p>
+  </div>
   <div id="loading" role="status" aria-live="polite"
        class="max-w-2xl mx-auto flex items-center justify-center gap-3 py-12 text-[#704229]">
     <span class="w-6 h-6 border-4 border-[#704229]/20 border-t-[#704229] rounded-full animate-spin" aria-hidden="true"></span>
     <span>טוען...</span>
   </div>
-  <section id="progress-box" class="max-w-2xl mx-auto bg-white rounded-2xl shadow p-4 mb-4 hidden">
+  <section id="progress-box" class="max-w-2xl mx-auto app-card p-5 mb-4 hidden">
     <p id="progress-text" class="font-medium text-[#704229]"></p>
     <div id="progress-bar" role="progressbar" aria-valuemin="0" aria-label="התקדמות בקורס"
          class="mt-2 h-2 w-full bg-[#704229]/15 rounded-full overflow-hidden">
       <div id="progress-fill" class="h-full bg-[#704229] rounded-full" style="width:0%"></div>
     </div>
     <a id="continue" href="#"
-       class="mt-4 block text-center bg-[#704229] text-white rounded-lg px-4 py-3 font-semibold"></a>
+       class="mt-4 block app-btn px-4 py-3"></a>
   </section>
   <main id="lessons" class="max-w-2xl mx-auto space-y-2"></main>
-  <section id="feedback" class="max-w-2xl mx-auto bg-white rounded-2xl shadow p-4 mt-6 text-center hidden">
+  <section id="feedback" class="max-w-2xl mx-auto app-card p-5 mt-6 text-center hidden">
     <p class="font-bold text-[#704229]">צלמי את התרגול ושלחי לי לפידבק אישי</p>
-    <p class="text-sm text-gray-600 mt-1">סרטון קצר מהבית מספיק. אני אחזור אלייך עם טיפים שמתאימים לתינוק שלך.</p>
+    <p class="text-sm app-muted mt-1">סרטון קצר מהבית מספיק. אני אחזור אלייך עם טיפים שמתאימים לתינוק שלך.</p>
     <a id="feedback-link" href="#" target="_blank" rel="noopener"
-       class="inline-block mt-3 border border-[#704229] text-[#704229] rounded-lg px-4 py-2 font-semibold">שלחי לי בוואטסאפ</a>
+       class="mt-3 app-btn-outline px-5 py-2">שלחי לי בוואטסאפ</a>
   </section>
-  <div id="problem" class="max-w-2xl mx-auto text-center bg-white rounded-2xl shadow p-6 hidden">
+  <div id="problem" class="max-w-2xl mx-auto text-center app-card p-6 hidden">
     <p id="problem-title" class="font-bold text-lg text-[#704229]"></p>
-    <p id="problem-text" class="text-sm text-gray-600 mt-2"></p>
+    <p id="problem-text" class="text-sm app-mid mt-2"></p>
     <div class="mt-4 flex flex-wrap justify-center gap-3">
-      <a href="/app/my-courses" class="bg-[#704229] text-white rounded-lg px-4 py-2 font-semibold">לקורסים שלי</a>
+      <a href="/app/my-courses" class="app-btn px-4 py-2">לקורסים שלי</a>
       <a href="https://wa.me/972542366243" target="_blank" rel="noopener"
-         class="border border-[#704229] text-[#704229] rounded-lg px-4 py-2 font-semibold">כתבי לנו בוואטסאפ</a>
+         class="app-btn-outline px-4 py-2">כתבי לנו בוואטסאפ</a>
     </div>
   </div>
 
   <script type="module">
     import {
-      requireAuth, db, collection, query, where, orderBy, getDocs, doc, getDoc,
+      requireAuth, db, signOut, collection, query, where, orderBy, getDocs, doc, getDoc,
     } from "/app/firebase-client.js";
     import { courseProgress, continueLabel, whatsAppCourseFeedbackUrl } from "/app/course-progress.js";
+    import { mountAppHeader } from "/app/app-shell.js";
 
     const slug = decodeURIComponent(location.pathname.split("/").pop());
+    const shell = mountAppHeader();
     const user = await requireAuth();
+    shell.showUser(user.email, async () => {
+      await signOut(); location.replace("/app/login");
+    });
 
     const PROBLEMS = {
       notFound: ["הקורס לא נמצא", "אולי הקישור לא מדויק. חזרי לרשימת הקורסים שלך ובחרי משם."],
@@ -134,11 +143,11 @@
         const current = d.id === currentId;
         const a = document.createElement("a");
         a.href = lessonHref(d.id);
-        a.className = `flex items-center gap-3 bg-white rounded-xl shadow px-4 py-3 hover:shadow-md transition border-2 ${current ? "border-[#704229]" : "border-transparent"}`;
+        a.className = `flex items-center gap-3 bg-white app-row px-4 py-3 border-2 ${current ? "border-[#704229]" : "border-transparent"}`;
         if (current) a.setAttribute("aria-current", "step");
         // Build with DOM APIs — never innerHTML with Firestore data.
         const badge = document.createElement("span");
-        badge.className = `w-6 h-6 flex items-center justify-center rounded-full ${done ? "bg-[#2f9e6b] text-white" : "bg-gray-200 text-gray-600"} text-sm`;
+        badge.className = `w-6 h-6 flex items-center justify-center rounded-full ${done ? "bg-[#2f9e6b] text-white" : "app-badge"} text-sm font-medium`;
         badge.textContent = done ? "✓" : String(i + 1);
         const label = document.createElement("span");
         label.className = "font-medium";

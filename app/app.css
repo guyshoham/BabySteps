@@ -1,0 +1,146 @@
+/* Course app brand styles. Same colors and feel as the sales page (styles.css).
+   Colors follow docs/design/2026-09-25-color-decision.md.
+   Tailwind still does the layout; this file holds the brand parts. */
+
+:root {
+  --app-brown: #704229;
+  --app-brown-light: #8a5438;
+  --app-peach: #FCE7D6;
+  --app-cream: #fdf6f0;
+  --app-text: #2d1a0e;
+  --app-text-mid: #5a3820;
+  --app-text-muted: #7a5a48;
+  --app-done: #2f9e6b;
+  --app-line: #9a7864; /* input borders, 4.0:1 on white */
+  --app-shadow: 0 8px 24px rgba(112, 66, 41, 0.10);
+  --app-shadow-hover: 0 16px 48px rgba(112, 66, 41, 0.14);
+  --app-radius-sm: 8px;
+  --app-radius-md: 14px;
+  --app-radius-lg: 22px;
+}
+
+body {
+  font-family: 'Rubik', sans-serif;
+  background: var(--app-cream);
+  color: var(--app-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Text */
+.app-mid { color: var(--app-text-mid); }
+.app-muted { color: var(--app-text-muted); }
+.app-brown { color: var(--app-brown); }
+.app-link { color: var(--app-brown); text-decoration: underline; text-underline-offset: 3px; }
+
+/* Surfaces */
+.app-card {
+  background: #fff;
+  border-radius: var(--app-radius-lg);
+  box-shadow: var(--app-shadow);
+}
+.app-shadow { box-shadow: var(--app-shadow); }
+a.app-card, a.app-row { transition: box-shadow 0.2s, transform 0.2s; }
+a.app-card:hover, a.app-row:hover { box-shadow: var(--app-shadow-hover); transform: translateY(-1px); }
+.app-row { border-radius: var(--app-radius-md); box-shadow: var(--app-shadow); }
+.app-rounded { border-radius: var(--app-radius-md); }
+.app-rounded-lg { border-radius: var(--app-radius-lg); }
+
+/* Buttons */
+.app-btn,
+.app-btn-outline {
+  display: inline-block;
+  border-radius: var(--app-radius-md);
+  font-weight: 600;
+  text-align: center;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+.app-btn { background: var(--app-brown); color: #fff; }
+.app-btn:hover { background: var(--app-brown-light); box-shadow: 0 8px 24px rgba(112, 66, 41, 0.22); }
+.app-btn:disabled { opacity: 0.7; cursor: default; }
+.app-btn-outline { background: #fff; color: var(--app-brown); border: 1.5px solid var(--app-brown); }
+.app-btn-outline:hover { background: var(--app-peach); }
+
+/* Form fields */
+.app-input {
+  border: 1.5px solid var(--app-line);
+  border-radius: var(--app-radius-md);
+  background: #fff;
+  color: var(--app-text);
+}
+.app-input::placeholder { color: #a88a76; }
+.app-input:focus { outline: 2px solid var(--app-brown); outline-offset: 1px; border-color: var(--app-brown); }
+
+/* Lesson number badge (not done yet) */
+.app-badge { background: var(--app-peach); color: var(--app-brown); }
+
+/* Keyboard focus, brown like the brand */
+a:focus-visible, button:focus-visible { outline: 2px solid var(--app-brown); outline-offset: 2px; }
+
+/* ─── Shared header (app/app-shell.js) ─── */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  align-self: stretch;
+  /* Bleed over the page's 1rem (Tailwind p-4) padding. */
+  margin: -1rem -1rem 1rem;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(112, 66, 41, 0.08);
+}
+.app-header-inner {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 8px 16px;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.app-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.app-brand-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.app-brand-name {
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--app-text);
+  line-height: 1;
+}
+.app-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.app-user-email {
+  font-size: 12px;
+  color: var(--app-text-muted);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.app-signout {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--app-brown);
+  padding: 6px 12px;
+  border-radius: var(--app-radius-sm);
+  border: 1.5px solid rgba(112, 66, 41, 0.35);
+  background: transparent;
+  white-space: nowrap;
+}
+.app-signout:hover { background: var(--app-peach); }
