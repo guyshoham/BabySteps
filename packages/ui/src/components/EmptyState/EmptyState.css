@@ -1,0 +1,45 @@
+.bs-empty-state {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  padding-block: var(--space-7);
+  padding-inline: var(--space-5);
+  border: 1.5px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-card);
+  text-align: center;
+}
+
+.bs-empty-state__icon {
+  display: grid;
+  place-items: center;
+  inline-size: 72px;
+  block-size: 72px;
+  margin-block-end: var(--space-1);
+  border-radius: 50%;
+  background: var(--surface-peach);
+  color: var(--color-brand-600);
+}
+
+.bs-empty-state__title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--text-h3);
+  line-height: var(--leading-heading);
+  color: var(--color-brand-700);
+}
+
+.bs-empty-state__text {
+  margin: 0;
+  max-inline-size: 42ch;
+  color: var(--color-ink-soft);
+  line-height: var(--leading-body);
+}
+
+.bs-empty-state__action {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-block-start: var(--space-2);
+}
