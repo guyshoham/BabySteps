@@ -1,3 +1,6 @@
 @import './tokens.css';
 @import './base.css';
 /* Component styles are added below, one @import per component. */
+@import './components/Container/Container.css';
+@import './components/Section/Section.css';
+@import './components/SectionHeading/SectionHeading.css';
