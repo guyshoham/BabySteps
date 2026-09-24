@@ -174,8 +174,9 @@ and `amount` must be at least the price in `lib/prices.js` (more is fine). Other
 `400 amount below price` (or `currency must be ILS`) and enrolls nobody. If `amount` is not
 sent, it enrolls as before and logs a warning. With `REQUIRE_AMOUNT=1` a missing amount is a `400`.
 
-Note: `scripts/fake-payment.sh` sends `mc_gross=1.00`, so after step 3 below its runs end in
-`400 amount below price`. That is the check working.
+Note: `scripts/fake-payment.sh` sends `mc_gross` equal to the price in `lib/prices.js` and
+`mc_currency=ILS`, so it passes the check. Pass `--amount 1` to test on purpose that
+`/api/enroll` answers `400 amount below price`.
 
 **Update the scenario**
 
@@ -260,11 +261,17 @@ the IPN again. Make's webhook already answers `Accepted` right away, so that par
 
 Tests the whole chain without paying: Make → `/api/enroll` → Firebase user + welcome email.
 
-    scripts/fake-payment.sh guyshoham28+fake1@gmail.com
+    scripts/fake-payment.sh --url <hook URL> guyshoham28+fake1@gmail.com
 
-It posts a fake PayPal IPN (`payment_status=Completed`, `item_number=course_2`) to
-`MAKE_HOOK_URL` (from the environment, else from `.env`). Make answers `Accepted` at once; the result is in the scenario History.
+It posts a fake PayPal IPN (`payment_status=Completed`, `item_number=course_2`,
+`mc_currency=ILS`, `mc_gross` = the price in `lib/prices.js`) to `--url` or `MAKE_HOOK_URL`.
+It does not read `.env` by itself. It prints what it will send and asks first (`--yes` skips
+that). `--amount N` sends a different amount, for a below-price test. See `--help`.
+Make answers `Accepted` at once; the result is in the scenario History.
 Then check Firebase Auth for the email and `users/<uid>/enrollments/rolling`.
+
+Once the PayPal IPN check (G3, section 5a) is in the scenario, fake IPNs stop at that step by
+design. From then on, use the script only against a copy of the scenario without that step.
 
 **Security:** Make accepts IPNs without checking them with PayPal. Keep `MAKE_HOOK_URL`
 private (only in `.env`, never in the repo). If it leaks, regenerate the webhook in Make and
