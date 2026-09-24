@@ -198,11 +198,6 @@ what is still open.
   color (`:219`, `:243`). It looks unfinished next to a paid offer. **Fix:** use a crop of
   `assets/about.jpg` in the hero and `assets/videos/rolling-teaser-poster.jpg` on the rolling card.
   Use `CourseCard` in the rebuild.
-- [ ] **[U4] P2 — Make the tummy time card clickable.** `index.html:58-63`, `:241`. The card has
-  `pointer-events:none` and a grayscale filter, so it looks broken and the tummy time page with the
-  "update me" button cannot be reached from home. **Fix:** link the card to
-  `challenge/tummy-time/`, keep the "בקרוב" badge, drop the grayscale, and change the button to
-  "עדכנו אותי כשזה יוצא".
 - [ ] **[U5] P2 — One name for the course.** `challenge/rolling/index.html:569`. The course is "קורס
   מתהפכים" on the sticky bar, the WhatsApp text (`:509`) and the thank-you page
   (`challenge/rolling/thank-you.html:63`), but "קורס התהפכות" on home (`index.html:223`) and in the
