@@ -1,8 +1,9 @@
 /// <reference types="vite/client" />
-// Story images are imported, not served from public/, so they also resolve in
+// Story images are imported, not served from a static dir, so they also resolve in
 // design-sync previews (the converter inlines imported images as data URLs).
-import aboutPhoto from './public/about.jpg';
-import logoPeach from './public/logo-peach.png';
-import teaserPoster from './public/rolling-teaser-poster.jpg';
+// They come straight from the site's assets/ folder, so there is one copy of each.
+import aboutPhoto from '../../../assets/about.jpg';
+import logoPeach from '../../../assets/logos/logo-peach.png';
+import teaserPoster from '../../../assets/videos/rolling-teaser-poster.jpg';
 
 export const storyAssets = { aboutPhoto, logoPeach, teaserPoster };
