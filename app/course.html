@@ -29,8 +29,9 @@
 
     const courseQ = query(collection(db, "courses"), where("slug", "==", slug));
     const courseDocs = await getDocs(courseQ);
-    if (courseDocs.empty) { document.getElementById("noaccess").classList.remove("hidden"); throw new Error("no course"); }
-    const courseDoc = courseDocs.docs[0];
+    // An unpublished course (published === false) is treated as not found.
+    const courseDoc = courseDocs.docs.find((d) => d.data().published !== false);
+    if (!courseDoc) { document.getElementById("noaccess").classList.remove("hidden"); throw new Error("no course"); }
     const courseId = courseDoc.id;
     const c = courseDoc.data();
 
