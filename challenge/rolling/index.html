@@ -186,6 +186,14 @@
             background: var(--brand-brown);
             transition: width 0.15s linear;
         }
+        /* ─── Single price card (#register) ───── */
+        .price-single { max-width: 460px; margin: 0 auto; }
+        .price-single-name { font-size: 1.25rem; font-weight: 800; margin: 0 0 12px; color: #fff; }
+        .price-single-card-note { font-size: 0.85rem; color: var(--text-mid); text-align: center; line-height: 1.6; margin: 14px 0 0; }
+        .price-single-todo { display: inline-block; background: #fff3cd; color: #6b4c00; font-size: 0.75rem; font-weight: 700; padding: 1px 6px; border-radius: 4px; }
+        .price-single-alt { text-align: center; font-size: 0.85rem; margin: 20px 0 0; }
+        .price-single-alt a { color: var(--text-mid); text-decoration: underline; text-underline-offset: 3px; }
+        .price-single-alt a:hover, .price-single-alt a:focus-visible { color: var(--brand-brown); }
     </style>
 </head>
 <body>
@@ -458,27 +466,21 @@
 
         <div style="text-align:center; margin-bottom:56px;">
             <p style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brand-brown); font-weight:700; margin-bottom:12px;">הצטרפות לקורס</p>
-            <h2 class="section-heading" style="font-weight:800; color:var(--text-dark); margin-bottom:8px;">בחרי את הדרך הנוחה לך</h2>
+            <h2 class="section-heading" style="font-weight:800; color:var(--text-dark); margin-bottom:8px;">כל מה שצריך כדי להתחיל כבר היום</h2>
             <div class="section-divider"></div>
         </div>
 
-        <div class="price-grid" style="align-items:stretch;">
-
-            <!-- PayPal -->
-            <div class="reveal reveal-delay-1" style="display:flex; flex-direction:column;">
-            <div style="text-align:center; margin-bottom:10px;">
-                <span style="display:inline-block; background:linear-gradient(135deg,#f5a623,#e8920e); color:#fff; font-size:11px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; padding:5px 22px; border-radius:20px; box-shadow:0 2px 10px rgba(245,166,35,0.4);">⭐ הכי מומלץ</span>
-            </div>
-            <div class="price-card price-card-featured" style="flex:1;">
+        <div class="price-single reveal reveal-delay-1">
+            <div class="price-card price-card-featured">
                 <div class="price-card-header" style="background:var(--brand-brown); color:#fff;">
                     <span class="price-badge" style="background:rgba(255,255,255,0.2); margin-bottom:16px; display:inline-block;">גישה מיידית</span>
+                    <h3 class="price-single-name">קורס מתהפכים</h3>
                     <div style="font-size:2.8rem; font-weight:800; line-height:1; margin-bottom:4px;"><span data-price-ignore style="text-decoration:line-through; opacity:0.5; font-size:1.6rem;">₪205</span> <span data-price="rolling">₪175</span></div>
                     <div style="font-size:0.85rem; opacity:0.75;">תשלום חד-פעמי</div>
                 </div>
                 <div class="price-card-body" style="background:#fff;">
-                    <h3 style="font-size:1.1rem; font-weight:700; margin:0 0 12px;">תשלום דרך PayPal</h3>
                     <p style="font-size:0.9rem; color:#7a5a48; line-height:1.8; margin-bottom:12px;">
-                        הדרך המהירה ביותר: משלמות דרך PayPal ומקבלות מייל עם פרטי גישה — מיד אחרי התשלום.
+                        משלמות ומקבלות מייל עם פרטי גישה, מיד אחרי התשלום.
                     </p>
                     <p style="font-size:0.82rem; color:#7a5a48; line-height:1.6; margin-bottom:20px;">✓ גישה מיידית &nbsp;·&nbsp; ✓ ללא עיכובים &nbsp;·&nbsp; ✓ מאובטח</p>
                     <ul style="list-style:none; padding:0; margin:0 0 32px; display:flex; flex-direction:column; gap:10px;">
@@ -490,34 +492,13 @@
                         </li>
                     </ul>
                     <a href="https://www.paypal.com/ncp/payment/SDBZ5YS6JNKLQ" target="_blank" rel="noopener" class="btn-primary btn-pulse" style="width:100%; text-align:center; display:block; font-size:1rem;">שלמי וקבלי גישה מיידית ←</a>
-                </div>
-            </div>
-            </div>
-
-            <!-- Bit / Pepper -->
-            <div class="price-card price-card-plain reveal reveal-delay-2">
-                <div class="price-card-header" style="background:var(--brand-mint);">
-                    <span class="price-badge-soft" style="margin-bottom:16px; display:inline-block;">העברה ידנית</span>
-                    <div style="font-size:2.8rem; font-weight:800; line-height:1; margin-bottom:4px; color:var(--text-dark);"><span data-price-ignore style="text-decoration:line-through; opacity:0.5; font-size:1.6rem;">₪205</span> <span data-price="rolling">₪175</span></div>
-                    <div style="font-size:0.85rem; color:var(--text-mid);">תשלום חד-פעמי</div>
-                </div>
-                <div class="price-card-body">
-                    <h3 style="font-size:1.1rem; font-weight:700; margin:0 0 12px;">ביט / Paybox</h3>
-                    <p style="font-size:0.9rem; color:#7a5a48; line-height:1.8; margin-bottom:12px;">
-                        מעבירות את הסכום לנייד שלמטה ושולחות לי הודעת אישור בווטסאפ.
-                    </p>
-                    <div style="background:var(--brand-peach); border-radius:8px; padding:16px 20px; margin-bottom:28px;">
-                        <p style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--brand-brown); font-weight:700; margin:0 0 4px;">מספר להעברה:</p>
-                        <p style="font-size:1.3rem; font-weight:800; color:var(--text-dark); margin:0; letter-spacing:0.05em;">054-236-6243</p>
-                    </div>
-
-                    <a href="https://wa.me/972542366243?text=היי ירדן, העברתי תשלום לקורס מתהפכים, אשמח לקבלת גישה!"
-                       class="btn-outline" style="width:100%; text-align:center; display:block; font-size:1rem;">
-                        שלחי אישור בווטסאפ ←
-                    </a>
+                    <p class="price-single-card-note">אפשר לשלם בכרטיס אשראי, גם בלי חשבון PayPal <span class="price-single-todo">[לאשר: guest checkout]</span></p>
                 </div>
             </div>
 
+            <p class="price-single-alt">
+                <a href="https://wa.me/972542366243?text=היי ירדן, העברתי תשלום לקורס מתהפכים, אשמח לקבלת גישה!">מעדיפה ביט או פייבוקס? כתבי לי בווטסאפ</a>
+            </p>
         </div>
 
         <p style="text-align:center; font-size:0.85rem; color:var(--text-mid); margin-top:28px;">
