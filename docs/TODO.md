@@ -170,26 +170,11 @@ what is still open.
   cookieless tool (Cloudflare Web Analytics, GoatCounter or Vercel Web Analytics) so no cookie
   banner is needed. Count clicks on the PayPal button and the WhatsApp links, and use UTM tags on
   new links you share (the Instagram bio and Linktree links stay as they are, by owner decision). Compare PayPal clicks with Make runs each week.
-- [ ] **[S2] P2 — Fix dead share previews and search basics.** `index.html:13`, `:16`,
-  `challenge/rolling/index.html:13`, `:16`, `:25`. `og:image` and `og:url` point at
-  `guyshoham.github.io`, which is 404 since 2026-08-13, so links shared on WhatsApp and Instagram
-  show no image. The image is a 512px logo square while the card type is `summary_large_image`, and
-  the tummy time page has no OG tags. No page has a `<meta name="description">`, `/robots.txt` and
-  `/sitemap.xml` return 404, and `app/` pages are not `noindex`. **Fix:** absolute URLs on
-  `https://baby-steps-murex.vercel.app`, a 1200x630 image with Yarden's photo and the course name, OG tags
-  and a Hebrew description on every page, and a `robots.txt` that blocks `/app/` and `/api/`.
 - [ ] **[S3] P2 — Shrink the teaser video.** `challenge/rolling/index.html:272`. `rolling-teaser.mp4`
   is 13.9 MB at 1080x1920, and its `moov` box sits at the end of the file (no faststart), so some
   phones must fetch almost the whole file before playing. The poster is a 195 KB JPEG. **Fix:**
   re-encode at 720x1280 with `-movflags +faststart` (aim for 3 to 5 MB), and save the poster as a
   WebP around 60 KB.
-- [ ] **[S4] P2 — Remove the Tailwind CDN from the marketing pages.** `index.html:21`,
-  `challenge/rolling/index.html:26`, `challenge/tummy-time/index.html:9`,
-  `challenge/rolling/thank-you.html:10`. These pages use no Tailwind classes (only `styles.css`),
-  yet each loads the Tailwind dev runtime, a large script that blocks rendering and warns in the
-  console. **Fix:** delete the script tag, add the few reset rules the pages relied on to
-  `styles.css`, and compare screenshots. The `app/` pages use Tailwind heavily; replace it there in
-  the React rebuild.
 
 ## UI/UX
 
