@@ -14,3 +14,6 @@ export { Spinner, type SpinnerProps } from './components/Spinner/Spinner';
 export { Divider, type DividerProps } from './components/Divider/Divider';
 export { Avatar, initials, type AvatarProps } from './components/Avatar/Avatar';
 export { StarRating, type StarRatingProps } from './components/StarRating/StarRating';
+export { TextField, type TextFieldProps } from './components/TextField/TextField';
+export { Alert, type AlertProps, type AlertVariant } from './components/Alert/Alert';
+export { ProgressBar, type ProgressBarProps } from './components/ProgressBar/ProgressBar';

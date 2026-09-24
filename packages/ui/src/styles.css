@@ -9,3 +9,6 @@
 @import './components/Divider/Divider.css';
 @import './components/Avatar/Avatar.css';
 @import './components/StarRating/StarRating.css';
+@import './components/TextField/TextField.css';
+@import './components/Alert/Alert.css';
+@import './components/ProgressBar/ProgressBar.css';

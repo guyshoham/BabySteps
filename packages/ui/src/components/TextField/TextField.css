@@ -1,0 +1,59 @@
+.bs-text-field {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.bs-text-field__label {
+  font-weight: 500;
+  color: var(--color-brand-700);
+}
+
+.bs-text-field__input {
+  width: 100%;
+  min-height: 48px;
+  padding: var(--space-3) var(--space-4);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  color: var(--color-ink);
+  transition:
+    border-color var(--duration-fast) var(--ease-soft),
+    box-shadow var(--duration-fast) var(--ease-soft);
+}
+
+/* LTR values (email, phone) still line up with the RTL label. */
+.bs-text-field__input[dir='ltr'] {
+  text-align: right;
+}
+
+.bs-text-field__input::placeholder {
+  color: var(--color-ink-muted);
+}
+
+.bs-text-field__input:focus {
+  outline: none;
+  border-color: var(--color-brand-600);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-brand-600) 15%, transparent);
+}
+
+.bs-text-field__hint {
+  font-size: var(--text-caption);
+  color: var(--color-ink-muted);
+}
+
+.bs-text-field--error .bs-text-field__input {
+  border-color: var(--color-error);
+}
+
+.bs-text-field--error .bs-text-field__input:focus {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-error) 15%, transparent);
+}
+
+.bs-text-field__error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-caption);
+  font-weight: 500;
+  color: var(--color-error);
+}
