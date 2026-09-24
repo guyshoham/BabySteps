@@ -1,0 +1,108 @@
+.bs-hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--bs-tone);
+  color: var(--bs-tone-ink, inherit);
+  padding-block: var(--space-8);
+}
+
+@media (min-width: 768px) {
+  .bs-hero {
+    padding-block: var(--space-9);
+  }
+}
+
+.bs-hero__shapes span {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.75;
+}
+
+.bs-hero__shapes span:nth-child(1) {
+  width: 340px;
+  height: 340px;
+  background: var(--surface-mint);
+  inset-block-start: -140px;
+  inset-inline-end: -110px;
+}
+
+.bs-hero__shapes span:nth-child(2) {
+  width: 240px;
+  height: 240px;
+  background: var(--surface-blush);
+  inset-block-end: -90px;
+  inset-inline-start: -70px;
+}
+
+.bs-hero__shapes span:nth-child(3) {
+  width: 88px;
+  height: 88px;
+  border-radius: var(--radius-xl);
+  background: var(--surface-card);
+  opacity: 0.55;
+  inset-block-start: 16%;
+  inset-inline-start: 7%;
+  transform: rotate(18deg);
+}
+
+.bs-hero__inner {
+  position: relative;
+  display: grid;
+  gap: var(--space-7);
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .bs-hero--split .bs-hero__inner {
+    grid-template-columns: 1.1fr 1fr;
+  }
+}
+
+.bs-hero--center .bs-hero__content {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  max-width: 780px;
+  margin-inline: auto;
+}
+
+.bs-hero__title {
+  font-size: var(--text-display);
+  margin-block: var(--space-4);
+}
+
+.bs-hero__subtitle {
+  font-size: var(--text-lead);
+  color: var(--bs-ink-soft, var(--color-ink-soft));
+  max-width: 56ch;
+}
+
+.bs-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-block-start: var(--space-6);
+}
+
+.bs-hero--center .bs-hero__actions,
+.bs-hero--center .bs-hero__proof {
+  justify-content: center;
+}
+
+.bs-hero__proof {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-block-start: var(--space-5);
+  font-size: var(--text-caption);
+  font-weight: 500;
+  color: var(--bs-ink-soft, var(--color-ink-soft));
+}
+
+.bs-hero__media img {
+  width: 100%;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  object-fit: cover;
+}

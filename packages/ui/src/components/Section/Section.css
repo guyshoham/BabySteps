@@ -1,0 +1,14 @@
+.bs-section {
+  position: relative;
+  background: var(--bs-tone);
+  color: var(--bs-tone-ink, inherit);
+}
+
+.bs-section--sm { padding-block: var(--space-6); }
+.bs-section--md { padding-block: var(--space-7); }
+.bs-section--lg { padding-block: var(--space-8); }
+
+@media (min-width: 768px) {
+  .bs-section--md { padding-block: var(--space-8); }
+  .bs-section--lg { padding-block: var(--space-9); }
+}

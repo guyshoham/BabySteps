@@ -1,0 +1,31 @@
+.bs-highlight-box {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  background: var(--bs-tone);
+  border-radius: var(--radius-xl);
+  border-inline-start: 5px solid var(--color-accent);
+}
+
+.bs-highlight-box__icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--surface-card);
+  color: var(--color-accent);
+}
+
+.bs-highlight-box__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-h3);
+  color: var(--color-brand-700);
+  margin-block-end: var(--space-2);
+}
+
+.bs-highlight-box__body {
+  color: var(--color-ink-soft);
+}

@@ -71,6 +71,16 @@ PayPal ──▶ Make ──▶ POST /api/enroll ──▶ emails student their 
 - `scripts/seed.js` — one-off Firestore seeder for the 2 courses + lessons (edit `DATA`)
 - `tests/*.test.js` — Vitest unit tests for the three core modules
 
+## Design system (`packages/ui/`, `@babysteps/ui`)
+
+- npm workspace package with the "Warm Nest" React components (30), tokens and fonts.
+  Spec: `docs/superpowers/specs/2026-09-24-ui-design-system-design.md`.
+- TypeScript + plain `bs-` prefixed CSS that reads only `src/tokens.css` variables.
+  Logical CSS properties only (RTL). No Tailwind.
+- `npm run ui:storybook` for the style guide, `npm run ui:build` for `dist/`.
+- The live site does not use it yet. A later phase rebuilds the site in React on top of it.
+- Synced to Claude Design with the design-sync skill (config in `.design-sync/`).
+
 ## Conventions (follow these)
 
 - ESM throughout (`package.json` has `"type": "module"`). Serverless handlers `export default`.
@@ -83,7 +93,8 @@ PayPal ──▶ Make ──▶ POST /api/enroll ──▶ emails student their 
 
 ## Testing
 
-- `npm test` → Vitest (19 tests). Run before committing changes to `lib/` or `api/`.
+- `npm test` → root Vitest tests (`tests/`), then the `@babysteps/ui` tests. Run before
+  committing changes to `lib/`, `api/` or `packages/ui/`.
 - Smoke-check handlers/libs import: `node -e "import('./api/enroll.js').then(()=>console.log('ok'))"`
 
 ## Running locally

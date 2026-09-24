@@ -1,0 +1,12 @@
+html,
+body {
+  margin: 0;
+}
+
+.bs-story {
+  min-height: 100vh;
+}
+
+.bs-story--pad {
+  padding: 32px 24px;
+}

@@ -2,8 +2,13 @@
   "name": "babysteps-courses",
   "private": true,
   "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "test": "vitest run"
+    "test": "vitest run && npm test --workspace @babysteps/ui",
+    "ui:storybook": "npm run storybook --workspace @babysteps/ui",
+    "ui:build": "npm run build --workspace @babysteps/ui"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.600.0",
@@ -11,6 +16,6 @@
     "firebase-admin": "^12.1.0"
   },
   "devDependencies": {
-    "vitest": "^2.0.0"
+    "vitest": "^5.0.1"
   }
 }

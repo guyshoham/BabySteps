@@ -1,0 +1,51 @@
+.bs-faq {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.bs-faq__item {
+  background: var(--surface-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--duration-base) var(--ease-soft);
+}
+
+.bs-faq__item--open {
+  box-shadow: var(--shadow-md);
+}
+
+.bs-faq__heading {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+}
+
+.bs-faq__button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-4) var(--space-5);
+  border: 0;
+  border-radius: inherit;
+  background: none;
+  color: var(--color-brand-700);
+  font-weight: 700;
+  text-align: start;
+  cursor: pointer;
+}
+
+.bs-faq__chevron {
+  color: var(--color-accent);
+  transition: transform var(--duration-base) var(--ease-soft);
+}
+
+.bs-faq__item--open .bs-faq__chevron {
+  transform: rotate(180deg);
+}
+
+.bs-faq__answer {
+  padding: 0 var(--space-5) var(--space-5);
+  color: var(--color-ink-soft);
+}

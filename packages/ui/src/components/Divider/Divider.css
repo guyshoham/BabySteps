@@ -1,0 +1,16 @@
+.bs-divider--line {
+  border: 0;
+  height: 1px;
+  background: var(--color-border);
+  margin-block: var(--space-6);
+}
+
+.bs-divider--wave {
+  display: block;
+  line-height: 0;
+}
+
+.bs-divider--wave svg {
+  width: 100%;
+  height: 48px;
+}
