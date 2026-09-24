@@ -19,6 +19,8 @@ const paths = {
   ),
   // Points left: "forward" in RTL.
   arrow: <path d="M19 12H5M11 6l-6 6 6 6" />,
+  // Points right: "back" in RTL. Mirror of arrow.
+  'arrow-back': <path d="M5 12h14M13 6l6 6-6 6" />,
   chevron: <path d="M6 9l6 6 6-6" />,
   whatsapp: (
     <>
