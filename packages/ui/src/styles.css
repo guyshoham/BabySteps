@@ -23,3 +23,8 @@
 @import './components/AppHeader/AppHeader.css';
 @import './components/CourseProgressCard/CourseProgressCard.css';
 @import './components/LessonListItem/LessonListItem.css';
+@import './components/Hero/Hero.css';
+@import './components/FeatureSteps/FeatureSteps.css';
+@import './components/ProblemCard/ProblemCard.css';
+@import './components/CredentialPill/CredentialPill.css';
+@import './components/HighlightBox/HighlightBox.css';

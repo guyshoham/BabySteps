@@ -1,0 +1,25 @@
+.bs-problem-card {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+}
+
+.bs-problem-card__icon {
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-mint);
+  color: var(--color-brand-600);
+  font-size: 30px;
+  line-height: 1;
+}
+
+.bs-problem-card__title {
+  font-size: var(--text-h3);
+}
+
+.bs-problem-card__text {
+  color: var(--color-ink-soft);
+}

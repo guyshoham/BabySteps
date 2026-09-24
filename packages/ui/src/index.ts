@@ -28,3 +28,8 @@ export { StickyCTA, type StickyCTAProps } from './components/StickyCTA/StickyCTA
 export { AppHeader, type AppHeaderProps } from './components/AppHeader/AppHeader';
 export { CourseProgressCard, type CourseProgressCardProps } from './components/CourseProgressCard/CourseProgressCard';
 export { LessonListItem, type LessonListItemProps, type LessonState } from './components/LessonListItem/LessonListItem';
+export { Hero, type HeroProps } from './components/Hero/Hero';
+export { FeatureSteps, type FeatureStepsProps, type FeatureStep } from './components/FeatureSteps/FeatureSteps';
+export { ProblemCard, type ProblemCardProps } from './components/ProblemCard/ProblemCard';
+export { CredentialPill, type CredentialPillProps } from './components/CredentialPill/CredentialPill';
+export { HighlightBox, type HighlightBoxProps, type BoxTone } from './components/HighlightBox/HighlightBox';
