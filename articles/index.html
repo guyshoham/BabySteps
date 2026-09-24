@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <link rel="icon" type="image/png" href="/assets/logos/logo-peach.png">
+    <link rel="apple-touch-icon" href="/assets/logos/logo-peach.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מאמרים להורים | מתחילים בקטן</title>
+    <meta name="description" content="מאמרים קצרים להורים על התפתחות מוטורית של תינוקות: התהפכות, שכיבה על הבטן ועוד. מאת ירדן שוהם, מלווה התפתחותית.">
+    <link rel="canonical" href="https://baby-steps-murex.vercel.app/articles">
+    <meta property="og:title" content="מאמרים להורים | מתחילים בקטן">
+    <meta property="og:description" content="מאמרים קצרים להורים על התהפכות, שכיבה על הבטן ועוד.">
+    <meta property="og:image" content="https://baby-steps-murex.vercel.app/assets/og-home.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://baby-steps-murex.vercel.app/articles">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="he_IL">
+    <meta property="og:site_name" content="מתחילים בקטן">
+    <meta name="twitter:card" content="summary_large_image">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        .article { max-width: 680px; margin: 0 auto; padding: 40px 16px 56px; }
+        .article-kicker { font-size: 12px; letter-spacing: 0.12em; color: var(--brand-brown); font-weight: 700; margin-bottom: 12px; }
+        .article-kicker a:hover { text-decoration: underline; }
+        .article h1 { font-size: 1.9rem; line-height: 1.25; font-weight: 800; color: var(--text-dark); margin-bottom: 16px; }
+        .article .lead { font-size: 1.12rem; line-height: 1.85; color: var(--text-mid); margin-bottom: 8px; }
+        .article h2 { font-size: 1.35rem; line-height: 1.35; font-weight: 700; color: var(--brand-brown); margin: 36px 0 12px; }
+        .article p, .article li { font-size: 1.05rem; line-height: 1.85; color: var(--text-mid); }
+        .article p + p { margin-top: 12px; }
+        .article ul { list-style: disc; padding-inline-start: 22px; margin-top: 8px; }
+        .article li + li { margin-top: 6px; }
+        .article strong { color: var(--text-dark); }
+        .tbc { background: #fff3c4; color: #7a5a00; font-size: 0.8em; font-weight: 700; padding: 1px 6px; border-radius: 4px; white-space: nowrap; }
+        .doctor-box { background: var(--brand-pink); border-inline-start: 4px solid var(--brand-peach-dark); border-radius: 12px; padding: 4px 20px 20px; margin-top: 36px; }
+        .doctor-box h2 { margin-top: 20px; }
+        .cta-box { background: var(--brand-mint); border: 1.5px solid var(--brand-mint-dark); border-radius: 12px; padding: 24px 20px; margin-top: 36px; text-align: center; }
+        .cta-box p { margin-bottom: 16px; }
+        .cta-box .cta-title { font-size: 1.2rem; font-weight: 800; color: var(--text-dark); margin-bottom: 8px; }
+        .disclaimer { font-size: 0.9rem !important; color: #8a6a58 !important; margin-top: 28px; }
+        .sources { margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(112,66,41,0.12); }
+        .sources h2 { font-size: 1rem; margin: 0 0 8px; color: var(--text-dark); }
+        .sources li { font-size: 0.9rem; }
+        .sources a { color: var(--brand-brown); text-decoration: underline; word-break: break-word; }
+        @media (min-width: 768px) {
+            .article { padding: 64px 24px 80px; }
+            .article h1 { font-size: 2.4rem; }
+        }
+        .article-list { margin-top: 28px; }
+        .article-card { display: block; background: #fff; border: 1.5px solid rgba(112,66,41,0.1); border-radius: 12px; padding: 20px; transition: border-color 0.2s, transform 0.2s; }
+        .article-card + .article-card { margin-top: 14px; }
+        .article-card:hover { border-color: var(--brand-peach-dark); transform: translateY(-1px); }
+        .article-card h2 { margin: 0 0 6px; font-size: 1.15rem; }
+        .article-card p { font-size: 0.98rem; }
+    </style>
+</head>
+<body>
+
+<!-- ░░ NAV ░░ -->
+<nav class="site-nav">
+    <div class="nav-inner" style="max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;">
+        <a href="/" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
+            <img src="/assets/logos/logo-peach.png" alt="מתחילים בקטן - ירדן שוהם" style="width:52px; height:52px; border-radius:50%; object-fit:cover;">
+            <div style="white-space:nowrap;">
+                <div style="font-weight:800; font-size:15px; color:var(--text-dark); line-height:1;">ירדן שוהם</div>
+                <div style="font-size:11px; color:var(--brand-brown); letter-spacing:0.08em; font-weight:600;">מתחילים בקטן</div>
+            </div>
+        </a>
+        <div style="display:flex; align-items:center; gap:6px;">
+            <a href="/app/login" class="nav-login">כניסה לקורס</a>
+            <a href="/" class="btn-outline" style="padding:8px 14px; font-size:13px; white-space:nowrap;">→ חזרה לדף הבית</a>
+        </div>
+    </div>
+</nav>
+
+<main>
+<div class="article">
+    <h1>מאמרים להורים</h1>
+    <p class="lead">מאמרים קצרים וברורים על ההתפתחות המוטורית של התינוק, עם רעיונות שאפשר לנסות בבית.</p>
+    <div class="article-list">
+        <a class="article-card" href="/articles/when-do-babies-roll-over">
+            <h2>מתי תינוק מתחיל להתהפך?</h2>
+            <p>הטווח המקובל, מה בא לפני ההתהפכות, איך לעזור בבית ומתי כדאי לבדוק.</p>
+        </a>
+        <a class="article-card" href="/articles/baby-rolls-one-side-only">
+            <h2>תינוק מתהפך רק לצד אחד: מה עושים?</h2>
+            <p>למה תינוקות מעדיפים צד אחד, איך לעודד את הצד השני ומתי לפנות לבדיקה.</p>
+        </a>
+        <a class="article-card" href="/articles/baby-hates-tummy-time">
+            <h2>תינוק לא אוהב לשכב על הבטן</h2>
+            <p>למה זה קורה, רעיונות פשוטים שהופכים את הזמן על הבטן לנעים יותר, ומתי לבדוק.</p>
+        </a>
+    </div>
+    <aside class="cta-box">
+        <p class="cta-title">רוצה ליווי צעד אחר צעד?</p>
+        <p>בקורס ההתהפכות אני מראה לך איך לעזור לתינוק ללמוד להתהפך בבית, בקצב שלו.</p>
+        <a href="/challenge/rolling" class="btn-primary">לקורס ההתהפכות ←</a>
+    </aside>
+</div>
+</main>
+
+<!-- ░░ FOOTER ░░ -->
+<footer class="footer-inner" style="background:var(--brand-brown); color:rgba(255,255,255,0.9); text-align:center;">
+    <div style="max-width:600px; margin:0 auto;">
+        <div style="font-size:1.1rem; font-weight:800; letter-spacing:0.05em; margin-bottom:6px;">ירדן שוהם — מתחילים בקטן</div>
+        <p style="font-size:0.85rem; opacity:0.6; margin-bottom:20px;">מלווה התפתחותית · קורסים דיגיטליים לתינוקות</p>
+        <p style="font-size:0.9rem; margin-bottom:24px;">
+            <a href="/" style="text-decoration:underline;">דף הבית</a> ·
+            <a href="/articles" style="text-decoration:underline;">מאמרים</a> ·
+            <a href="/challenge/rolling" style="text-decoration:underline;">קורס ההתהפכות</a> ·
+            <a href="https://wa.me/972542366243" target="_blank" rel="noopener" style="text-decoration:underline;">WhatsApp</a>
+        </p>
+        <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:20px; font-size:12px; opacity:0.4;">
+            © 2026 ירדן שוהם · כל הזכויות שמורות
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
