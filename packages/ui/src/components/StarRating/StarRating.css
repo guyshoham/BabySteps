@@ -1,0 +1,12 @@
+.bs-stars {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.bs-stars__on {
+  color: var(--color-warning);
+}
+
+.bs-stars__off {
+  color: var(--color-border);
+}

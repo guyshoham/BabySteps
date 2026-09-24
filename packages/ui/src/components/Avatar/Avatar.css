@@ -1,0 +1,21 @@
+.bs-avatar {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--surface-peach);
+  color: var(--color-brand-600);
+  font-family: var(--font-heading);
+  box-shadow: 0 0 0 3px var(--surface-card);
+}
+
+.bs-avatar--sm { width: 40px; height: 40px; font-size: 15px; }
+.bs-avatar--md { width: 56px; height: 56px; font-size: 20px; }
+.bs-avatar--lg { width: 88px; height: 88px; font-size: 30px; }
+
+.bs-avatar__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
