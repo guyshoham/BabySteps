@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <link rel="icon" type="image/png" href="../assets/logos/logo-peach.png">
+    <link rel="apple-touch-icon" href="../assets/logos/logo-peach.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Draft: remove noindex after Yarden approves the text and every [לאשר] mark is gone. -->
+    <meta name="robots" content="noindex">
+    <title>הצהרת נגישות | מתחילים בקטן</title>
+    <meta name="description" content="הצהרת הנגישות של האתר מתחילים בקטן: מה הונגש, מה עוד לא, ואיך לפנות אלינו בבעיית נגישות.">
+    <link rel="canonical" href="https://baby-steps-murex.vercel.app/accessibility">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .a11y-main {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 40px 16px 64px;
+            color: var(--text-dark);
+            line-height: 1.8;
+        }
+        .a11y-main h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+        .a11y-main h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--brand-brown);
+            margin: 36px 0 10px;
+        }
+        .a11y-main p { margin-bottom: 12px; color: var(--text-mid); }
+        .a11y-main ul {
+            list-style: disc;
+            padding-inline-start: 24px;
+            margin-bottom: 12px;
+            color: var(--text-mid);
+        }
+        .a11y-main li { margin-bottom: 6px; }
+        .a11y-main a {
+            color: var(--brand-brown);
+            text-decoration: underline;
+            font-weight: 600;
+        }
+        .a11y-main a:focus-visible {
+            outline: 3px solid var(--brand-brown);
+            outline-offset: 2px;
+        }
+        /* Visible marks for facts Yarden still has to confirm. */
+        .confirm {
+            background: #fff3b0;
+            color: #3d2a00;
+            border-radius: 4px;
+            padding: 0 4px;
+            font-weight: 600;
+        }
+        .draft-note {
+            background: #fff3b0;
+            color: #3d2a00;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+        }
+        .contact-box {
+            background: var(--brand-peach);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 8px;
+        }
+        .contact-box p { margin-bottom: 6px; color: var(--text-dark); }
+        .a11y-footer {
+            background: var(--brand-brown);
+            color: #fff;
+            text-align: center;
+            padding: 24px 16px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="site-nav">
+    <div class="nav-inner" style="max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;">
+        <a href="../" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
+            <img src="../assets/logos/logo-peach.png" alt="מתחילים בקטן - ירדן שוהם" style="width:52px; height:52px; border-radius:50%; object-fit:cover;">
+            <div style="white-space:nowrap;">
+                <div style="font-weight:800; font-size:15px; color:var(--text-dark); line-height:1;">ירדן שוהם</div>
+                <div style="font-size:11px; color:var(--brand-brown); letter-spacing:0.08em; font-weight:600;">מתחילים בקטן</div>
+            </div>
+        </a>
+        <div style="display:flex; align-items:center; gap:6px;">
+            <a href="../" class="btn-outline" style="padding:8px 14px; font-size:13px; white-space:nowrap;">→ חזרה לדף הבית</a>
+        </div>
+    </div>
+</nav>
+
+<main class="a11y-main">
+
+    <p class="draft-note" role="note">טיוטה. הטקסט המסומן בצהוב עוד לא אושר.</p>
+
+    <h1>הצהרת נגישות</h1>
+    <p>עודכן לאחרונה: 25 בספטמבר 2026</p>
+
+    <h2>המחויבות שלנו</h2>
+    <p>
+        חשוב לנו שכל הורה יוכל להשתמש באתר ובקורסים בקלות, גם עם מוגבלות.
+        אנחנו עובדים כדי שהאתר יהיה נוח לכולם, ונמשיך לשפר אותו.
+    </p>
+
+    <h2>רמת הנגישות</h2>
+    <p>
+        <span class="confirm">[לאשר: התאמה חלקית לתקן 5568 ברמה AA]</span>
+    </p>
+    <p>
+        התקן הישראלי 5568 מבוסס על ההנחיות הבינלאומיות WCAG 2.0.
+        האתר עוד לא עומד בכל הדרישות של התקן. הפירוט נמצא למטה.
+    </p>
+    <p>
+        <span class="confirm">[לאשר: האם חל פטור לעסק קטן (עוסק פטור), ואם כן, לכתוב אותו כאן]</span>
+    </p>
+
+    <h2>מה עשינו באתר</h2>
+    <ul>
+        <li>האתר כתוב בעברית ומוצג מימין לשמאל. שפת הדף מוגדרת, כך שקורא מסך מקריא אותו נכון.</li>
+        <li>לתמונות יש טקסט חלופי.</li>
+        <li>בטופס הכניסה לקורס יש תווית לכל שדה, והודעות שגיאה מוקראות.</li>
+        <li>תיקנו חלק מצבעי הטקסט החלשים כדי שיהיה ניגוד של 4.5:1 לפחות.</li>
+        <li>האתר מותאם לטלפון, והטקסט גדל כשמגדילים את התצוגה.</li>
+        <li>אפשר להגיע לכל הקישורים והכפתורים גם במקלדת.</li>
+    </ul>
+
+    <h2>מה עוד לא נגיש</h2>
+    <ul>
+        <li>חלק מהאנימציות לא עוצרות כשמבקשים במכשיר "הפחתת תנועה". אנחנו עובדים על זה.</li>
+        <li>חלק מהתוכן מופיע רק כשהדף נגלל, ודורש JavaScript.</li>
+        <li>בחלק מהמקומות הניגוד בין הטקסט לרקע עדיין חלש מדי: הטקסט בתחתית הדפים, כפתור הווטסאפ הירוק ותגית "בקרוב".</li>
+        <li>לסרטוני הקורס אין עדיין כתוביות. <span class="confirm">[לאשר: האם ומתי יתווספו כתוביות]</span></li>
+        <li>עוד לא נבדקו כל הרכיבים של האתר החדש שבבנייה.</li>
+    </ul>
+    <p>
+        אם משהו באתר לא נגיש לך, נשמח לעזור ולתת את המידע בדרך אחרת, למשל בווטסאפ או בטלפון.
+    </p>
+
+    <h2>רכזת הנגישות</h2>
+    <div class="contact-box">
+        <p>שם: <span class="confirm">[לאשר: שם רכז/ת הנגישות]</span></p>
+        <p>אימייל: <span class="confirm">[לאשר: כתובת אימייל]</span></p>
+        <p>טלפון / ווטסאפ: <span class="confirm">[לאשר: 054-2366243]</span></p>
+    </div>
+
+    <h2>איך מדווחים על בעיה</h2>
+    <p>
+        נתקלת בבעיית נגישות? נשמח לשמוע. אפשר לשלוח לנו הודעה
+        <a href="https://wa.me/972542366243?text=%D7%94%D7%99%D7%99%2C%20%D7%A0%D7%AA%D7%A7%D7%9C%D7%AA%D7%99%20%D7%91%D7%91%D7%A2%D7%99%D7%99%D7%AA%20%D7%A0%D7%92%D7%99%D7%A9%D7%95%D7%AA%20%D7%91%D7%90%D7%AA%D7%A8" target="_blank" rel="noopener">בווטסאפ</a>
+        או באימייל <span class="confirm">[לאשר: כתובת אימייל]</span>.
+    </p>
+    <p>כדי שנוכל לעזור מהר, כדאי לכתוב:</p>
+    <ul>
+        <li>באיזה דף הייתה הבעיה.</li>
+        <li>מה ניסית לעשות, ומה קרה.</li>
+        <li>באיזה מכשיר, דפדפן או תוכנת עזר השתמשת (אם ידוע לך).</li>
+    </ul>
+    <p>
+        נחזור אליך תוך <span class="confirm">[לאשר: מספר ימי עבודה]</span> ימי עבודה.
+    </p>
+
+</main>
+
+<footer class="a11y-footer">
+    © 2026 ירדן שוהם · מתחילים בקטן
+</footer>
+
+</body>
+</html>
