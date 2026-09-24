@@ -1,0 +1,40 @@
+.bs-section-heading {
+  display: grid;
+  gap: var(--space-3);
+  margin-block-end: var(--space-6);
+}
+
+.bs-section-heading--center {
+  text-align: center;
+  justify-items: center;
+  max-width: 680px;
+  margin-inline: auto;
+}
+
+.bs-section-heading__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--bs-ink-soft, var(--color-brand-500));
+}
+
+.bs-section-heading__eyebrow::before {
+  content: '';
+  width: 24px;
+  height: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
+}
+
+.bs-section-heading__title {
+  font-size: var(--text-h2);
+}
+
+.bs-section-heading__lead {
+  font-size: var(--text-lead);
+  color: var(--bs-ink-soft, var(--color-ink-soft));
+  max-width: 60ch;
+}
