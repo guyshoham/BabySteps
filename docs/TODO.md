@@ -56,8 +56,8 @@ what is still open.
   buyer by hand (`docs/go-live-checklist.md:160`). Many Israeli mothers do not have PayPal and may
   not know they can pay by card. **Fix:** show one price card with the PayPal button and the line
   "אפשר לשלם בכרטיס אשראי, גם בלי חשבון PayPal" (check that guest checkout is on for the payment
-  link). Move Bit/Paybox to a small text link under it. Use one `PriceCard` in the rebuild, and keep the price in one shared
-  constant that every page reads.
+  link). Move Bit/Paybox to a small text link under it. Use one `PriceCard` in the rebuild, and have it read the price from
+  `lib/prices.js`.
 - [ ] **[C7] P2 — Testimonials that show results.** `challenge/rolling/index.html:427-443`. The three
   quotes praise Yarden in general ("את מדהימה", "חברה"), not the rolling course, and give no baby
   age or outcome. **Fix:** replace them with 3 short quotes from beta buyers (B1) that name the

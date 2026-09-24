@@ -56,6 +56,10 @@ PayPal ──▶ Make ──▶ POST /api/enroll ──▶ emails student their 
 ## Key files
 
 - `lib/course-map.js` — PayPal productId → courseId map (`COURSE_MAP` env)
+- `lib/prices.js` — course prices in ₪, the one source for every price on the site. HTML
+  shows them as `<span data-price="rolling">₪175</span>`; change the number, run
+  `npm run sync-prices`, then `npm test` (fails on a mismatch or an untagged `₪` amount).
+  The PayPal link's amount is set in PayPal separately.
 - `lib/enroll-core.js` — `runEnroll(deps, body)`, pure + idempotent (deps injected for tests)
 - `lib/video-core.js` — `runVideoUrl(deps, {idToken, lessonId})`, pure gatekeeper logic
 - `lib/firebase-admin.js` — Admin SDK singleton + real deps (`ensureUser`, `ensureEnrollment`,
