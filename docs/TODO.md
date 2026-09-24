@@ -67,6 +67,16 @@ what is still open.
   problem and the result, with the baby's age and, with consent, a WhatsApp screenshot or photo.
   Use `TestimonialCard` with the `detail` prop in the rebuild. While rebuilding, also move the
   problem block (`:322-361`) above the bio (`:284-320`), so the reader feels understood first.
+- [ ] **[C8] P2 — Give the home page a first action.** `index.html:190-219`. The home hero has a
+  photo, a bio and three chips, but no button. On a 390px phone the first link to the course (the
+  "לקורס ולרכישה" button) is about 1,100px down. Visitors from the Instagram bio often land here
+  first. **Fix:** add one primary button under the subtitle, "לקורס ההתהפכות ←", linking to
+  `challenge/rolling/`. Keep the chips below it. Screenshot:
+  `docs/ux-audit/2026-09-25/home-hero-no-cta-390.jpg`.
+- [ ] **[C9] P3 — Let buyers copy the Bit/Paybox number.** `challenge/rolling/index.html:511`. The
+  number is plain text. On a phone the buyer must remember it, switch to Bit, pay, and come back to
+  send the WhatsApp. **Fix:** make the number a button that copies it (`navigator.clipboard.writeText`)
+  and shows "הועתק ✓" for 2 seconds. Keep this even if C6 moves Bit/Paybox to a small link.
 
 ## Buy and onboarding flow
 
@@ -99,6 +109,27 @@ what is still open.
   empty and `durationSec` is 0 (`:12` says no page reads it). A parent cannot find a tip again or
   plan a session. **Fix:** get real titles and one-line descriptions from Yarden, fill durations,
   reseed, and show the description and length on `app/lesson.html` and `app/course.html`.
+- [ ] **[L8] P2 — Group the lesson list.** `app/course.html:139-156`. Under the new progress box,
+  the course page is still one flat list of 18 equal rows, two full screens on a phone. Videos,
+  image tips and bonuses look the same, so a mother cannot see the shape of the course or find the
+  tips again. **Fix:** add a `section`
+  field per lesson in `scripts/course-data.js` ("סרטוני הדרכה", "טיפי זהב", "בונוסים"), reseed, and
+  render a small heading per group with an icon per row (▶ for a video, a picture icon for a tip).
+  Use `LessonListItem` in the rebuild. Screenshot: `docs/ux-audit/2026-09-25/course-flat-list-390.jpg`.
+- [ ] **[L9] P2 — The next lesson is below the fold.** `app/lesson.html:44-47`, `:18-21`. The
+  videos are portrait (1080x1920), so the player fills the screen. Under it come the done button and
+  the WhatsApp card, and the prev/next buttons started at about 995px on a 390x844 phone (older
+  deploy). The new app header (#61) pushes them lower still. The page also
+  never says where she is in the course. **Fix:** move `#nav` right under the done button, above
+  `#feedback`, and add a line under the title such as "שיעור 3 מתוך 18" (the index is already known
+  from `findNeighbors`). Screenshot: `docs/ux-audit/2026-09-25/lesson-video-first-screen-390.jpg`.
+- [ ] **[L10] P2 — The last lesson is a dead end.** `app/lesson.html:108-112`. On "נספח" the next
+  slot says "→ חזרה לקורס" with the same arrow as "→ הקודם", so both buttons seem to go back. If
+  lessons are still open, nothing on the lesson page says what is left; the finish card shows only
+  at 100%. The course page has a continue button now (#54), but the lesson page does not use it.
+  **Fix:** when lessons are still open, show "נשארו לך עוד X שיעורים" with a button to the first
+  lesson not done (reuse `courseProgress` and `continueLabel` from `app/course-progress.js`). Label
+  the slot "לכל השיעורים" with no arrow. Screenshot: `docs/ux-audit/2026-09-25/lesson-last-bottom-390.jpg`.
 
 ## Trust and legal
 
@@ -163,6 +194,50 @@ what is still open.
 - [ ] **[U20] P2 — Link the legal pages.** `/terms`, `/privacy` and `/accessibility` exist only as
   drafts (#39, #42, #46). **Fix:** once Yarden approves them, remove `noindex`, add footer links on
   every page (the footer uses `.footer-link` now), and link terms under the PayPal button.
+- [ ] **[U21] P2 — Nav text overlaps on the tummy time page.** `challenge/tummy-time/index.html:76-78`.
+  The nav holds the brand, "כניסה לקורס" and a bordered "→ חזרה לדף הבית" button. At 360px and 320px
+  "כניסה לקורס" is drawn on top of "ירדן שוהם / מתחילים בקטן", and at 390px the boxes touch. The
+  logo already links home. **Fix:** remove the "חזרה לדף הבית" button (or add `hide-mobile`), like
+  the other pages. Check again at 320px. Screenshot:
+  `docs/ux-audit/2026-09-25/tummy-nav-overlap-360.jpg`.
+- [ ] **[U22] P2 — Body text under 16px on phones.** Many body paragraphs are 14.4px (`0.9rem`): the
+  problem cards and course contents (`challenge/rolling/index.html:342-409`), the price cards
+  (`:480`, `:506`) and `.course-card-desc` (`index.html:103-104`). The trust lines are 13px
+  (`challenge/rolling/index.html:246-258`), "מספר להעברה" is 11px (`:510`) and "יש שאלה לפני
+  הרכישה?" is 13.6px (`:524`). In light brown `#7a5a48` this is hard to read for a tired mother with
+  a baby on one arm. **Fix:** set body copy to at least 1rem on mobile and labels to at least 13px.
+  Replace the inline font sizes with classes in `styles.css`.
+- [ ] **[U23] P2 — Login gives no feedback while it works.** `app/login.html:32-34`, `:61-72`,
+  `:29-30`. After a tap on "כניסה" the button does not change until Firebase answers, so on a slow
+  network she taps again or leaves. She also cannot see the password she typed, which matters on a
+  phone keyboard. **Fix:** disable the button and show "נכנסת..." while signing in, then restore it
+  on error. Add a show/hide eye button to the password field.
+- [ ] **[U24] P2 — The thank-you page sends the buyer to login too early.**
+  `challenge/rolling/thank-you.html:103`, `:90`, `:126`, `:31`. The first big button is "כניסה
+  לקורס", but at that moment she has no password yet, so the login fails. The spam tip appears twice
+  (the box and step 1), and the page is 3.5 screens long. The logo links to `/app/login`, not home.
+  **Fix:** make "פתחי את המייל ובחרי סיסמה" the main message, move the login button after the steps
+  with the label "בחרתי סיסמה, לכניסה ←", keep the spam tip once, and link the logo to `/`. Screenshot:
+  `docs/ux-audit/2026-09-25/thank-you-top-390.jpg`.
+- [ ] **[U25] P3 — The hero title breaks badly on small phones.** `challenge/rolling/index.html:228-231`.
+  At 360px the dash after "להתהפך" wraps onto its own line and the title takes 5 lines. This pushes
+  the stars and trust lines below the fold. **Fix:** remove the `—` (the `<br>` already splits the
+  two parts), then test at 320, 360 and 390px. Screenshot:
+  `docs/ux-audit/2026-09-25/rolling-hero-360.jpg`.
+- [ ] **[U26] P3 — Info chips look like buttons.** `index.html:149-165`, `:214-216`,
+  `challenge/rolling/index.html:317-319`. The credential chips have a border, round corners and bold
+  brown text, close to `.btn-outline`. On a phone they look tappable, but nothing happens. **Fix:**
+  show them as plain text with a small ✓, or a soft fill with no border, so only real buttons have
+  outlines.
+- [ ] **[U27] P3 — The home course photo cuts Yarden's head.** `index.html:75-82`. The card photo
+  uses `object-position: center 60%`, so at 390px the top of her head is cut and her eyes sit near
+  the top edge. The tummy time card cuts the baby's head at the side. **Fix:** give the rolling card
+  `object-position: center 25%` (a per-card class), or crop `assets/card-rolling.jpg` again with room
+  above the head. Check the tummy time crop too.
+- [ ] **[U28] P3 — The teaser video is taller than a laptop screen.** `challenge/rolling/index.html:275-276`.
+  The portrait teaser is 480px wide, so on desktop it is about 850px tall and never fits on a
+  1280x800 screen. The play controls sit below the fold. **Fix:** on screens wider than 768px give
+  the video `max-height: 80vh; width: auto; margin: 0 auto`, like `app/lesson.html` does.
 
 ## Architecture
 
