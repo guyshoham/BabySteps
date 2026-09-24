@@ -215,9 +215,9 @@
               "o": "text:equal"
             },
             {
-              "a": "{{1.raw}}",
+              "a": "{{1.itemNumber}}",
               "b": "course_2",
-              "o": "text:contain"
+              "o": "text:equal"
             }
           ]
         ]
@@ -234,7 +234,7 @@
         "qs": [],
         "bodyType": "raw",
         "contentType": "application/json",
-        "data": "{\"email\":\"{{1.payer.email}}\",\"paypalProductId\":\"course_2\",\"paymentRef\":\"{{1.txnId}}\"}",
+        "data": "{\"email\":\"{{1.payer.email}}\",\"paypalProductId\":\"{{1.itemNumber}}\",\"paymentRef\":\"{{1.txnId}}\",\"amount\":\"{{1.gross}}\",\"currency\":\"{{1.currency}}\"}",
         "parseResponse": true,
         "serializeUrl": false,
         "shareCookies": false,
