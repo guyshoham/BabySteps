@@ -12,7 +12,7 @@ export interface HeroProps extends Omit<HTMLAttributes<HTMLElement>, 'title'> {
   subtitle?: ReactNode;
   /** Usually one or two Buttons. */
   actions?: ReactNode;
-  /** Social proof line under the actions, e.g. StarRating + "200+ אמהות". */
+  /** Short line under the actions, e.g. "ליווי אישי בווטסאפ". Only true claims. */
   proof?: ReactNode;
   /** Image or VideoFrame. Switches to a two-column layout on desktop. */
   media?: ReactNode;

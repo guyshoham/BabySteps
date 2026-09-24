@@ -46,7 +46,6 @@ export const CocoaWithCards: Story = {
           title="תשלום דרך PayPal"
           description="משלמות דרך PayPal ומקבלות מייל עם פרטי גישה, מיד אחרי התשלום."
           price="₪175"
-          oldPrice="₪205"
           priceNote="תשלום חד-פעמי"
           features={['גישה מלאה לכל הסרטונים', 'ליווי אישי בווטסאפ', 'גישה מיידית, ללא עיכובים']}
           cta={<Button icon="arrow">שלמי וקבלי גישה מיידית</Button>}

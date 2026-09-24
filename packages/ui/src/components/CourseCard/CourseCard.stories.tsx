@@ -11,8 +11,8 @@ const meta = {
     description: '10 סרטוני הדרכה פרקטיים, 6 טיפי זהב וליווי אישי בווטסאפ. כל הכלים לעזור לתינוק שלך להתהפך בביטחון.',
     emoji: '🔄',
     status: 'זמין עכשיו',
-    meta: ['10 סרטונים', 'ליווי בווטסאפ', '200+ אמהות'],
-    price: '₪105',
+    meta: ['10 סרטונים', 'ליווי בווטסאפ'],
+    price: '₪175',
     cta: <Button size="sm" icon="arrow" href="/challenge/rolling/">לקורס ולרכישה</Button>,
   },
 } satisfies Meta<typeof CourseCard>;

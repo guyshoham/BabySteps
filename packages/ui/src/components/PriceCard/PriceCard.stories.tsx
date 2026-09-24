@@ -9,7 +9,6 @@ const meta = {
     title: 'תשלום דרך PayPal',
     description: 'משלמות דרך PayPal ומקבלות מייל עם פרטי גישה, מיד אחרי התשלום.',
     price: '₪175',
-    oldPrice: '₪205',
     priceNote: 'תשלום חד-פעמי',
     features: ['גישה מלאה לכל הסרטונים', 'ליווי אישי בווטסאפ', 'גישה מיידית, ללא עיכובים'],
     cta: <Button icon="arrow">שלמי וקבלי גישה מיידית</Button>,
@@ -32,7 +31,6 @@ export const SideBySide: Story = {
         title="העברה ידנית"
         description="ביט או Paybox, ואז הודעת אישור בווטסאפ."
         price="₪175"
-        oldPrice="₪205"
         priceNote="תשלום חד-פעמי"
         features={['גישה מלאה לכל הסרטונים', 'ליווי אישי בווטסאפ']}
         cta={<Button variant="whatsapp">שלחי אישור בווטסאפ</Button>}
