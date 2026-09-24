@@ -70,10 +70,10 @@ what is still open.
 
 ## Buy and onboarding flow
 
-- [ ] **[F2] P1 — A receipt for every sale.** Receipts are made by hand in Paperless today.
-  **Fix:** read `docs/research/2026-09-25-receipts-for-osek-patur.md` (#49). If Paperless has an API
-  Make can call, add one Make step after `/api/enroll` that issues and emails the קבלה, keyed by the
-  PayPal `txnId`. Until then, issue each receipt by hand the same day. Bit/Paybox always by hand.
+- [ ] **[F2] P3 — Automate receipts once sales grow.** Decision 2026-09-25: Yarden keeps Paperless
+  and issues each receipt by hand the same day (PayPal and Bit/Paybox). **Fix:** when sales reach
+  about 5 a month, buy Paperless's "אוטומציות וקישוריות" package and add the Make step from
+  `docs/research/2026-09-25-receipts-for-osek-patur.md`, keyed by the PayPal `txnId`.
 - [ ] **[F3] P2 — Get told when an enrollment fails.** When the welcome email fails,
   `/api/enroll` returns 502 and Make marks the run failed, but nobody is told. **Fix:** turn on
   Make's error email for the scenario (Scenario settings, "Notify on error") to Guy and Yarden.
