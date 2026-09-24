@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Hero } from './Hero';
 import { Button } from '../Button/Button';
-import { StarRating } from '../StarRating/StarRating';
 import { storyAssets } from '../../../.storybook/assets';
 
 const meta = {
@@ -18,12 +17,7 @@ const meta = {
         <Button size="lg" variant="outline">מה יש בקורס?</Button>
       </>
     ),
-    proof: (
-      <>
-        <StarRating value={5} size={16} />
-        <span>200+ אמהות מרוצות</span>
-      </>
-    ),
+    proof: <span>ליווי אישי בווטסאפ</span>,
   },
 } satisfies Meta<typeof Hero>;
 

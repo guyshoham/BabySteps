@@ -14,7 +14,6 @@ import {
   Section,
   SectionHeading,
   SiteNav,
-  StarRating,
   StickyCTA,
   TestimonialCard,
   VideoFrame,
@@ -50,7 +49,7 @@ function LandingPage() {
             <Button size="lg" variant="outline" href="#content">מה יש בקורס?</Button>
           </>
         }
-        proof={<><StarRating value={5} size={16} /><span>200+ אמהות מרוצות</span></>}
+        proof={<span>ליווי אישי בווטסאפ</span>}
         media={<VideoFrame poster={storyAssets.teaserPoster} caption="הצצה לקורס" />}
       />
       <Divider variant="wave" from="peach" tone="white" />
@@ -103,7 +102,6 @@ function LandingPage() {
             title="תשלום דרך PayPal"
             description="מקבלות מייל עם פרטי גישה, מיד אחרי התשלום."
             price="₪175"
-            oldPrice="₪205"
             priceNote="תשלום חד-פעמי"
             features={['גישה מלאה לכל הסרטונים', 'ליווי אישי בווטסאפ', 'גישה מיידית']}
             cta={<Button icon="arrow">שלמי וקבלי גישה מיידית</Button>}
@@ -112,7 +110,6 @@ function LandingPage() {
             title="העברה ידנית"
             description="ביט או Paybox, ואז הודעת אישור בווטסאפ."
             price="₪175"
-            oldPrice="₪205"
             priceNote="תשלום חד-פעמי"
             features={['גישה מלאה לכל הסרטונים', 'ליווי אישי בווטסאפ']}
             cta={<Button variant="whatsapp">שלחי אישור בווטסאפ</Button>}
@@ -132,7 +129,7 @@ function LandingPage() {
       <Section tone="cream">
         <SectionHeading title="עוד קורסים" />
         <div style={grid(280)}>
-          <CourseCard title="קורס התהפכות" emoji="🔄" status="זמין עכשיו" price="₪105" meta={['10 סרטונים', 'ליווי בווטסאפ']} cta={<Button size="sm" icon="arrow">לקורס</Button>} />
+          <CourseCard title="קורס התהפכות" emoji="🔄" status="זמין עכשיו" price="₪175" meta={['10 סרטונים', 'ליווי בווטסאפ']} cta={<Button size="sm" icon="arrow">לקורס</Button>} />
           <CourseCard title="קורס שכיבה על הבטן" emoji="🤱" tone="mint" status="בקרוב" comingSoon description="לעודד את התינוק ליהנות מהשכיבה על הבטן." />
         </div>
       </Section>

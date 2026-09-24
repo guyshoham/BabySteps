@@ -19,7 +19,8 @@ const narrow: Decorator = (Story) => <div style={{ maxWidth: 380 }}><Story /></d
 
 export const Default: Story = { decorators: [narrow] };
 export const WithPhoto: Story = { args: { avatar: storyAssets.aboutPhoto, name: 'כרמל' }, decorators: [narrow] };
-export const NoRating: Story = { args: { rating: null }, decorators: [narrow] };
+/** For real reviews only. Pass the score the buyer gave. */
+export const WithRating: Story = { args: { rating: 5 }, decorators: [narrow] };
 export const LongText: Story = {
   args: {
     name: 'טל',
