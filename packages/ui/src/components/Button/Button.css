@@ -1,0 +1,75 @@
+.bs-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border: 2px solid transparent;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform var(--duration-fast) var(--ease-soft),
+    box-shadow var(--duration-fast) var(--ease-soft),
+    background-color var(--duration-fast) var(--ease-soft);
+}
+
+.bs-button--sm { padding: var(--space-2) var(--space-4); font-size: var(--text-caption); }
+.bs-button--md { padding: var(--space-3) var(--space-5); font-size: var(--text-body); }
+.bs-button--lg { padding: var(--space-4) var(--space-6); font-size: var(--text-lead); }
+
+.bs-button--primary {
+  background: var(--color-brand-600);
+  color: var(--color-on-brand);
+  box-shadow: var(--shadow-brand);
+}
+.bs-button--primary:hover {
+  background: var(--color-brand-700);
+  transform: translateY(-2px);
+}
+
+.bs-button--outline {
+  background: transparent;
+  color: var(--color-brand-600);
+  border-color: currentColor;
+}
+.bs-button--outline:hover {
+  background: var(--surface-peach);
+}
+
+.bs-button--ghost {
+  background: transparent;
+  color: var(--color-brand-600);
+}
+.bs-button--ghost:hover {
+  background: color-mix(in srgb, var(--color-brand-600) 8%, transparent);
+}
+
+/* Dark ink on WhatsApp green: white text fails contrast. */
+.bs-button--whatsapp {
+  background: var(--color-whatsapp);
+  color: var(--color-ink);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--color-whatsapp) 35%, transparent);
+}
+.bs-button--whatsapp:hover {
+  transform: translateY(-2px);
+}
+
+.bs-button--full {
+  width: 100%;
+}
+
+.bs-button:disabled,
+.bs-button[aria-disabled='true'] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.bs-button--loading {
+  cursor: progress;
+}
