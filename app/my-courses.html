@@ -44,13 +44,15 @@
     });
 
     const loading = document.getElementById("loading");
+    let redirecting = false;
     try {
-      await render();
+      redirecting = await render();
     } catch (err) {
       console.error(err);
       document.getElementById("error").classList.remove("hidden");
     } finally {
-      loading.classList.add("hidden");
+      // Keep the spinner while we move to the only course.
+      if (!redirecting) loading.classList.add("hidden");
     }
 
     async function render() {
@@ -64,6 +66,14 @@
       const courses = visibleCourses(
         courseSnaps.filter((s) => s.exists()).map((s) => s.data())
       );
+
+      // One course only: skip the list and open it. replace() keeps "back" from
+      // bouncing here again. ?all=1 (the course page's back link) keeps the list.
+      const showAll = new URLSearchParams(location.search).has("all");
+      if (courses.length === 1 && courses[0].slug && !showAll) {
+        location.replace(`/app/course/${encodeURIComponent(courses[0].slug)}`);
+        return true;
+      }
 
       if (!courses.length) { document.getElementById("empty").classList.remove("hidden"); }
 
@@ -91,6 +101,7 @@
         a.appendChild(body);
         list.appendChild(a);
       }
+      return false;
     }
   </script>
 </body>
