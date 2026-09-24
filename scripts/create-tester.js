@@ -11,9 +11,11 @@
 import { readFileSync, appendFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import {
-  upsertUserWithPassword, listCourseIds, ensureEnrollment, findUserByEmail,
+  upsertUserWithPassword, listCourses, ensureEnrollment, findUserByEmail,
 } from "../lib/firebase-admin.js";
-import { runCreateTester, readablePassword, DEFAULT_TESTER_EMAIL } from "../lib/tester-core.js";
+import {
+  runCreateTester, readablePassword, publishedCourseIds, DEFAULT_TESTER_EMAIL,
+} from "../lib/tester-core.js";
 
 const DRY_RUN = process.argv.includes("--dry-run");
 const ENV_PATH = fileURLToPath(new URL("../.env", import.meta.url));
@@ -29,7 +31,7 @@ if (!password) {
 
 if (DRY_RUN) {
   const existing = await findUserByEmail(email);
-  const courses = await listCourseIds();
+  const courses = publishedCourseIds(await listCourses());
   console.log("email:", email);
   console.log("user:", existing ? `exists (${existing.uid}) → password would be reset` : "missing → would be created");
   console.log("courses to enroll:", courses.join(", ") || "(none)");
@@ -46,7 +48,7 @@ if (generated) {
 }
 
 const result = await runCreateTester(
-  { upsertUser: upsertUserWithPassword, listCourseIds, ensureEnrollment },
+  { upsertUser: upsertUserWithPassword, listCourses, ensureEnrollment },
   { email, password }
 );
 
