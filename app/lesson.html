@@ -16,9 +16,11 @@
     <h1 id="title" class="text-2xl font-bold mt-2"></h1>
   </header>
   <main class="max-w-3xl mx-auto">
-    <video id="video" class="w-full rounded-2xl shadow bg-black" controls playsinline
+    <video id="video" class="block mx-auto w-auto max-w-full object-contain rounded-2xl shadow bg-black"
+           style="max-height:80vh;max-height:80svh" controls playsinline
            controlsList="nodownload" oncontextmenu="return false"></video>
-    <img id="image" class="w-full rounded-2xl shadow hidden" alt="" oncontextmenu="return false" />
+    <img id="image" class="block mx-auto w-auto max-w-full object-contain rounded-2xl shadow hidden"
+         style="max-height:80vh;max-height:80svh" alt="" oncontextmenu="return false" />
     <p id="msg" class="text-center text-red-600 mt-3"></p>
     <nav id="nav" class="hidden flex items-center justify-between gap-3 mt-4">
       <a id="prev" class="invisible px-4 py-3 rounded-xl bg-white shadow text-[#704229] font-medium">→ הקודם</a>
@@ -29,6 +31,7 @@
   <script type="module">
     import { requireAuth, db } from "/app/firebase-client.js";
     import { findNeighbors } from "/app/lesson-nav.js";
+    import { shouldComplete } from "/app/lesson-progress.js";
     import { collection, query, where, orderBy, getDocs, doc, getDoc, setDoc }
       from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -93,6 +96,41 @@
       { merge: true }
     );
 
+    // "Mark as done" toggle under the player. Starts from the saved progress doc.
+    let isDone = progSnap.exists() && progSnap.data().completed === true;
+    const doneBtn = document.createElement("button");
+    doneBtn.id = "done";
+    doneBtn.type = "button";
+    doneBtn.className = "block mx-auto mt-3 px-4 py-2 rounded-xl shadow font-medium";
+    const renderDone = () => {
+      doneBtn.textContent = isDone ? "בוצע ✓" : "סמני כבוצע";
+      doneBtn.setAttribute("aria-pressed", String(isDone));
+      doneBtn.classList.toggle("bg-[#704229]", isDone);
+      doneBtn.classList.toggle("text-white", isDone);
+      doneBtn.classList.toggle("bg-white", !isDone);
+      doneBtn.classList.toggle("text-[#704229]", !isDone);
+    };
+    // Only updates the button; callers save the doc themselves.
+    const markDone = () => { isDone = true; renderDone(); };
+    // Set once the 90% rule has fired or the student chose by hand, so the
+    // auto rule never overrides a manual "not done".
+    let autoDone = isDone;
+    doneBtn.addEventListener("click", async () => {
+      const want = !isDone;
+      doneBtn.disabled = true;
+      try {
+        await save({ completed: want });
+        isDone = want;
+        autoDone = true;
+        renderDone();
+      } catch (e) {
+        console.error("saving done state failed", e);
+      } finally {
+        doneBtn.disabled = false;
+      }
+    });
+    renderDone();
+
     const token = await user.getIdToken();
     const resp = await fetch(`/api/video-url?lessonId=${encodeURIComponent(lessonId)}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -100,13 +138,15 @@
     if (resp.status === 403) { msg.textContent = "אין לך גישה לשיעור הזה"; throw new Error("403"); }
     if (!resp.ok) { msg.textContent = isImage ? "שגיאה בטעינת הטיפ" : "שגיאה בטעינת הסרטון"; throw new Error("video-url failed"); }
     const { url } = await resp.json();
+    // Show the toggle only once the lesson has loaded (not next to an error).
+    msg.before(doneBtn);
 
     if (isImage) {
       // Tips are images: show them instead of the player, and count as done once seen.
       video.classList.add("hidden");
       image.classList.remove("hidden");
       image.setAttribute("alt", lesson.title ?? "");
-      image.addEventListener("load", () => save({ completed: true }));
+      image.addEventListener("load", () => { markDone(); save({ completed: true }); });
       image.setAttribute("src", url);
     } else {
       image.remove();
@@ -115,10 +155,18 @@
 
       let lastSaved = 0;
       const savePosition = (extra) => save({ lastPositionSec: Math.floor(video.currentTime), ...extra });
+      // Done at 90% watched. Written once per visit, not on every tick.
       video.addEventListener("timeupdate", () => {
+        if (!autoDone && shouldComplete(video.currentTime, video.duration)) {
+          autoDone = true;
+          markDone();
+          lastSaved = video.currentTime;
+          savePosition({ completed: true });
+          return;
+        }
         if (video.currentTime - lastSaved > 10) { lastSaved = video.currentTime; savePosition({}); }
       });
-      video.addEventListener("ended", () => { savePosition({ completed: true }); highlightNext(); });
+      video.addEventListener("ended", () => { markDone(); savePosition({ completed: true }); highlightNext(); });
     }
   </script>
 </body>
