@@ -20,3 +20,8 @@ export { Card, type CardProps } from './components/Card/Card';
 export { TextField, type TextFieldProps } from './components/TextField/TextField';
 export { Alert, type AlertProps, type AlertVariant } from './components/Alert/Alert';
 export { ProgressBar, type ProgressBarProps } from './components/ProgressBar/ProgressBar';
+export { Hero, type HeroProps } from './components/Hero/Hero';
+export { FeatureSteps, type FeatureStepsProps, type FeatureStep } from './components/FeatureSteps/FeatureSteps';
+export { ProblemCard, type ProblemCardProps } from './components/ProblemCard/ProblemCard';
+export { CredentialPill, type CredentialPillProps } from './components/CredentialPill/CredentialPill';
+export { HighlightBox, type HighlightBoxProps, type BoxTone } from './components/HighlightBox/HighlightBox';
