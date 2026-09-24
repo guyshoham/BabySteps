@@ -41,6 +41,48 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
+/* ─── Keyboard focus ──────────────────── */
+/* One visible ring for keyboard users only (:focus-visible, so no ring on
+   mouse click). Brown on the light page. The 3px gap shows the page colour
+   between the ring and a brown button, so the ring stays visible there too. */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+video:focus-visible,
+[tabindex]:focus-visible {
+    outline: 3px solid var(--brand-brown);
+    outline-offset: 3px;
+}
+/* Light ring on dark (brown) areas: white on #704229 is about 9:1. */
+.site-footer a:focus-visible,
+.site-footer button:focus-visible,
+.sticky-cta a:focus-visible,
+.sticky-cta button:focus-visible,
+.proof-bar a:focus-visible {
+    outline-color: #fff;
+}
+
+/* Skip link: hidden until it gets keyboard focus. */
+.skip-link {
+    position: fixed;
+    top: 8px;
+    inset-inline-start: 16px;
+    z-index: 200;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    background: var(--brand-brown);
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    text-decoration: none;
+    transform: translateY(-200%);
+}
+.skip-link:focus,
+.skip-link:focus-visible { transform: none; }
+
 /* ─── Utility Classes ─────────────────── */
 .text-brown   { color: var(--brand-brown); }
 .bg-peach     { background-color: var(--brand-peach); }
@@ -66,6 +108,17 @@ body {
     white-space: nowrap;
     text-decoration: none;
     padding: 8px 4px;
+    /* 44px tall tap target (WCAG 2.5.5) without changing the text size */
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+}
+/* Small buttons in the nav (tummy-time "back home", rolling "buy") */
+.site-nav .btn-primary,
+.site-nav .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
 }
 .nav-login:hover { text-decoration: underline; }
 
@@ -109,6 +162,7 @@ body {
     font-weight: 600;
     text-decoration: none;
     padding: 8px 14px;
+    min-height: 44px;
     border-radius: 6px;
     border: 1.5px solid rgba(112,66,41,0.2);
     background: transparent;
@@ -155,6 +209,7 @@ body {
     border: 1px solid rgba(255,255,255,0.2);
     color: #fff;
     padding: 10px 20px;
+    min-height: 44px;
     border-radius: 6px;
     font-size: 13px;
     font-weight: 600;
@@ -205,6 +260,19 @@ body {
 .btn-outline:hover {
     background: var(--brand-peach);
     transform: translateY(-1px);
+}
+
+/* ─── Tap targets (44px, WCAG 2.5.5) ──── */
+/* Button in the rolling page's sticky bar (its padding is inline) */
+.sticky-cta a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+}
+/* FAQ questions: the whole row is the target */
+summary {
+    min-height: 44px;
+    cursor: pointer;
 }
 
 /* ─── Divider ─────────────────────────── */
