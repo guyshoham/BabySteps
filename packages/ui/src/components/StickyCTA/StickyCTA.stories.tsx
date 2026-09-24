@@ -5,6 +5,8 @@ import { Button } from '../Button/Button';
 const meta = {
   title: 'Landing/StickyCTA',
   component: StickyCTA,
+  // Phone-first: the fixed bar only shows below 768px.
+  globals: { viewport: { value: 'phone', isRotated: false } },
   args: {
     title: 'קורס מתהפכים',
     subtitle: '₪175 · גישה מיידית',
@@ -19,7 +21,6 @@ type Story = StoryObj<typeof meta>;
 export const Static: Story = { render: (args) => <div style={{ maxWidth: 420 }}><StickyCTA {...args} /></div> };
 export const FixedOnMobile: Story = {
   args: { position: 'fixed' },
-  globals: { viewport: { value: 'mobile2', isRotated: false } },
   render: (args) => (
     <div style={{ minHeight: '120vh', paddingBlockEnd: 96 }}>
       <p>גללי למטה. הפס קבוע בתחתית המסך בטלפון בלבד.</p>

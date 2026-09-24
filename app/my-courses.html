@@ -35,10 +35,8 @@
   </div>
 
   <script type="module">
-    import { requireAuth, db, signOut } from "/app/firebase-client.js";
+    import { requireAuth, db, signOut, collection, getDocs, doc, getDoc } from "/app/firebase-client.js";
     import { visibleCourses } from "/app/course-list.js";
-    import { collection, getDocs, doc, getDoc }
-      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const user = await requireAuth();
     document.getElementById("signout").addEventListener("click", async () => {

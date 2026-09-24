@@ -33,9 +33,9 @@
   </div>
 
   <script type="module">
-    import { requireAuth, db } from "/app/firebase-client.js";
-    import { collection, query, where, orderBy, getDocs, doc, getDoc }
-      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import {
+      requireAuth, db, collection, query, where, orderBy, getDocs, doc, getDoc,
+    } from "/app/firebase-client.js";
 
     const slug = decodeURIComponent(location.pathname.split("/").pop());
     const user = await requireAuth();

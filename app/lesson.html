@@ -29,11 +29,11 @@
   </main>
 
   <script type="module">
-    import { requireAuth, db } from "/app/firebase-client.js";
+    import {
+      requireAuth, db, collection, query, where, orderBy, getDocs, doc, getDoc, setDoc,
+    } from "/app/firebase-client.js";
     import { findNeighbors } from "/app/lesson-nav.js";
     import { shouldComplete } from "/app/lesson-progress.js";
-    import { collection, query, where, orderBy, getDocs, doc, getDoc, setDoc }
-      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const lessonId = decodeURIComponent(location.pathname.split("/").pop());
     const user = await requireAuth();
