@@ -20,3 +20,6 @@
 @import './components/VideoFrame/VideoFrame.css';
 @import './components/FAQ/FAQ.css';
 @import './components/StickyCTA/StickyCTA.css';
+@import './components/AppHeader/AppHeader.css';
+@import './components/CourseProgressCard/CourseProgressCard.css';
+@import './components/LessonListItem/LessonListItem.css';

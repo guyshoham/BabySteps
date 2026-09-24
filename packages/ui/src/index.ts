@@ -25,3 +25,6 @@ export { Footer, type FooterProps, type SocialLink } from './components/Footer/F
 export { VideoFrame, type VideoFrameProps } from './components/VideoFrame/VideoFrame';
 export { FAQ, type FAQProps, type FAQItem } from './components/FAQ/FAQ';
 export { StickyCTA, type StickyCTAProps } from './components/StickyCTA/StickyCTA';
+export { AppHeader, type AppHeaderProps } from './components/AppHeader/AppHeader';
+export { CourseProgressCard, type CourseProgressCardProps } from './components/CourseProgressCard/CourseProgressCard';
+export { LessonListItem, type LessonListItemProps, type LessonState } from './components/LessonListItem/LessonListItem';
