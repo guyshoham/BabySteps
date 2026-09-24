@@ -129,7 +129,7 @@ Every component is RTL-first and uses CSS logical properties.
 | `CredentialPill` | `icon`, `text` |
 | `HighlightBox` | `tone`, `title`, children |
 | `VideoFrame` | `poster`, `onPlay`, `label`, `aspect` |
-| `FAQ` | `items`: list of `{ question, answer }`; one open at a time |
+| `Faq` | `items`: list of `{ question, answer }`; one open at a time |
 | `StickyCTA` | `text`, `action`; shows as a bottom bar on mobile |
 
 ### Course app (6)
@@ -207,7 +207,7 @@ Self-hosted through `@fontsource/rubik` and `@fontsource/varela-round`, imported
 
 - Vitest + Testing Library + jsdom, inside `packages/ui`.
 - Tests cover real behavior only:
-  - `FAQ`: opening one item closes the other; keyboard and `aria-expanded`.
+  - `Faq`: opening one item closes the other; keyboard and `aria-expanded`.
   - `Button`: `loading` disables clicks and sets `aria-busy`; `href` renders a link.
   - `LessonListItem`: `locked` is not a link and is marked as locked.
   - `TextField`: `error` and `hint` are linked through `aria-describedby`;

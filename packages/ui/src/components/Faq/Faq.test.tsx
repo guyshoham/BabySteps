@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { FAQ } from './FAQ';
+import { Faq } from './Faq';
 
 const items = [
   { question: 'לאיזה גיל הקורס מתאים?', answer: 'מגיל 3 חודשים ועד שהתינוק מתהפך לשני הצדדים.' },
@@ -12,9 +12,9 @@ function q(name: string) {
   return screen.getByRole('button', { name });
 }
 
-describe('FAQ', () => {
+describe('Faq', () => {
   it('starts closed and opens an item on click', async () => {
-    render(<FAQ items={items} />);
+    render(<Faq items={items} />);
     expect(q('לאיזה גיל הקורס מתאים?')).toHaveAttribute('aria-expanded', 'false');
     expect(screen.queryByText(items[0].answer)).not.toBeVisible();
     await userEvent.click(q('לאיזה גיל הקורס מתאים?'));
@@ -23,7 +23,7 @@ describe('FAQ', () => {
   });
 
   it('keeps only one item open', async () => {
-    render(<FAQ items={items} />);
+    render(<Faq items={items} />);
     await userEvent.click(q('לאיזה גיל הקורס מתאים?'));
     await userEvent.click(q('כמה זמן יש לי גישה?'));
     expect(q('לאיזה גיל הקורס מתאים?')).toHaveAttribute('aria-expanded', 'false');
@@ -31,13 +31,13 @@ describe('FAQ', () => {
   });
 
   it('closes an open item when clicked again', async () => {
-    render(<FAQ items={items} defaultOpen={0} />);
+    render(<Faq items={items} defaultOpen={0} />);
     await userEvent.click(q('לאיזה גיל הקורס מתאים?'));
     expect(q('לאיזה גיל הקורס מתאים?')).toHaveAttribute('aria-expanded', 'false');
   });
 
   it('links each button to its panel', () => {
-    render(<FAQ items={items} defaultOpen={1} />);
+    render(<Faq items={items} defaultOpen={1} />);
     const button = q('כמה זמן יש לי גישה?');
     const panel = document.getElementById(button.getAttribute('aria-controls')!);
     expect(panel).toHaveAttribute('role', 'region');
@@ -45,7 +45,7 @@ describe('FAQ', () => {
   });
 
   it('opens with the keyboard', async () => {
-    render(<FAQ items={items} />);
+    render(<Faq items={items} />);
     q('לאיזה גיל הקורס מתאים?').focus();
     await userEvent.keyboard('{Enter}');
     expect(q('לאיזה גיל הקורס מתאים?')).toHaveAttribute('aria-expanded', 'true');
@@ -54,7 +54,7 @@ describe('FAQ', () => {
   });
 
   it('ignores an out-of-range defaultOpen', () => {
-    render(<FAQ items={items} defaultOpen={5} />);
+    render(<Faq items={items} defaultOpen={5} />);
     expect(screen.getAllByRole('button').every((b) => b.getAttribute('aria-expanded') === 'false')).toBe(true);
   });
 });

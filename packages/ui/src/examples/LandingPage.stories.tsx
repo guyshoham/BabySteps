@@ -4,7 +4,7 @@ import {
   CourseCard,
   CredentialPill,
   Divider,
-  FAQ,
+  Faq,
   FeatureSteps,
   Footer,
   Hero,
@@ -120,7 +120,7 @@ function LandingPage() {
       </Section>
       <Section tone="white" width="narrow">
         <SectionHeading title="שאלות נפוצות" />
-        <FAQ
+        <Faq
           items={[
             { question: 'לאיזה גיל הקורס מתאים?', answer: 'מגיל 3 חודשים ועד שהתינוק מתהפך בביטחון לשני הצדדים.' },
             { question: 'כמה זמן יש לי גישה?', answer: 'שנה מלאה, ואפשר לצפות כמה פעמים שרוצים.' },

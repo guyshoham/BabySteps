@@ -23,7 +23,7 @@ export { ProgressBar, type ProgressBarProps } from './components/ProgressBar/Pro
 export { SiteNav, type SiteNavProps } from './components/SiteNav/SiteNav';
 export { Footer, type FooterProps, type SocialLink } from './components/Footer/Footer';
 export { VideoFrame, type VideoFrameProps } from './components/VideoFrame/VideoFrame';
-export { FAQ, type FAQProps, type FAQItem } from './components/FAQ/FAQ';
+export { Faq, type FaqProps, type FaqItem } from './components/Faq/Faq';
 export { StickyCTA, type StickyCTAProps } from './components/StickyCTA/StickyCTA';
 export { AppHeader, type AppHeaderProps } from './components/AppHeader/AppHeader';
 export { CourseProgressCard, type CourseProgressCardProps } from './components/CourseProgressCard/CourseProgressCard';

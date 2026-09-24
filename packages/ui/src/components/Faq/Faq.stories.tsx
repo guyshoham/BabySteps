@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { FAQ } from './FAQ';
+import { Faq } from './Faq';
 
 const meta = {
-  title: 'Landing/FAQ',
-  component: FAQ,
+  title: 'Landing/Faq',
+  component: Faq,
   args: {
     items: [
       { question: 'לאיזה גיל הקורס מתאים?', answer: 'מגיל 3 חודשים ועד שהתינוק מתהפך בביטחון לשני הצדדים.' },
@@ -12,10 +12,10 @@ const meta = {
       { question: 'מה אם התינוק שלי כבר מתהפך לצד אחד?', answer: 'מצוין! הקורס עוזר גם לאזן ולהתהפך לצד השני.' },
     ],
   },
-} satisfies Meta<typeof FAQ>;
+} satisfies Meta<typeof Faq>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Closed: Story = { render: (args) => <div style={{ maxWidth: 720 }}><FAQ {...args} /></div> };
-export const FirstOpen: Story = { args: { defaultOpen: 0 }, render: (args) => <div style={{ maxWidth: 720 }}><FAQ {...args} /></div> };
+export const Closed: Story = { render: (args) => <div style={{ maxWidth: 720 }}><Faq {...args} /></div> };
+export const FirstOpen: Story = { args: { defaultOpen: 0 }, render: (args) => <div style={{ maxWidth: 720 }}><Faq {...args} /></div> };

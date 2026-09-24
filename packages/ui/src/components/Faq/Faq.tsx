@@ -2,18 +2,18 @@ import { useId, useState, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../utils/cx';
 import { Icon } from '../Icon/Icon';
 
-export interface FAQItem {
+export interface FaqItem {
   question: ReactNode;
   answer: ReactNode;
 }
 
-export interface FAQProps extends HTMLAttributes<HTMLDivElement> {
-  items: FAQItem[];
+export interface FaqProps extends HTMLAttributes<HTMLDivElement> {
+  items: FaqItem[];
   /** Index of the item open at first. */
   defaultOpen?: number | null;
 }
 
-export function FAQ({ items, defaultOpen = null, className, ...rest }: FAQProps) {
+export function Faq({ items, defaultOpen = null, className, ...rest }: FaqProps) {
   const baseId = useId();
   const [open, setOpen] = useState<number | null>(defaultOpen);
 
