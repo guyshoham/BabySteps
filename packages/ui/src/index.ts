@@ -17,3 +17,6 @@ export { StarRating, type StarRatingProps } from './components/StarRating/StarRa
 export { Button, type ButtonProps, type ButtonVariant, type ButtonSize } from './components/Button/Button';
 export { Badge, type BadgeProps } from './components/Badge/Badge';
 export { Card, type CardProps } from './components/Card/Card';
+export { TextField, type TextFieldProps } from './components/TextField/TextField';
+export { Alert, type AlertProps, type AlertVariant } from './components/Alert/Alert';
+export { ProgressBar, type ProgressBarProps } from './components/ProgressBar/ProgressBar';

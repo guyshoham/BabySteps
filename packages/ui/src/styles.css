@@ -12,3 +12,6 @@
 @import './components/Button/Button.css';
 @import './components/Badge/Badge.css';
 @import './components/Card/Card.css';
+@import './components/TextField/TextField.css';
+@import './components/Alert/Alert.css';
+@import './components/ProgressBar/ProgressBar.css';
