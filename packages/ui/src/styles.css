@@ -12,3 +12,8 @@
 @import './components/Button/Button.css';
 @import './components/Badge/Badge.css';
 @import './components/Card/Card.css';
+@import './components/Hero/Hero.css';
+@import './components/FeatureSteps/FeatureSteps.css';
+@import './components/ProblemCard/ProblemCard.css';
+@import './components/CredentialPill/CredentialPill.css';
+@import './components/HighlightBox/HighlightBox.css';

@@ -17,3 +17,8 @@ export { StarRating, type StarRatingProps } from './components/StarRating/StarRa
 export { Button, type ButtonProps, type ButtonVariant, type ButtonSize } from './components/Button/Button';
 export { Badge, type BadgeProps } from './components/Badge/Badge';
 export { Card, type CardProps } from './components/Card/Card';
+export { Hero, type HeroProps } from './components/Hero/Hero';
+export { FeatureSteps, type FeatureStepsProps, type FeatureStep } from './components/FeatureSteps/FeatureSteps';
+export { ProblemCard, type ProblemCardProps } from './components/ProblemCard/ProblemCard';
+export { CredentialPill, type CredentialPillProps } from './components/CredentialPill/CredentialPill';
+export { HighlightBox, type HighlightBoxProps, type BoxTone } from './components/HighlightBox/HighlightBox';
