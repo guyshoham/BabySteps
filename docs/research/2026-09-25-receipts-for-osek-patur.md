@@ -4,6 +4,12 @@ Backlog item: F2 (P1). Researched on 2026-09-25. All prices and features were ch
 that date. Prices are before VAT unless marked. Yarden is עוסק פטור, so she cannot reclaim the
 18% VAT on these subscriptions. The "real cost" columns add it.
 
+## Decision (2026-09-25)
+
+Yarden keeps Paperless and issues every receipt by hand for now, for PayPal and Bit/Paybox sales
+alike. The ₪50 a month API package is not worth it at today's volume. Revisit when sales reach
+about 5 a month: then buy the package and follow "The Make flow" and "Setup steps" below.
+
 ## Summary
 
 - Yarden must issue a **קבלה** (receipt) for every payment, the same day. Not a חשבונית מס.
