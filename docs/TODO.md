@@ -99,11 +99,6 @@ what is still open.
 
 ## Learning experience
 
-- [ ] **[L1] P1 — Next lesson button and the right back link.** `app/lesson.html:14`. "חזרה לקורס"
-  links to `/app/my-courses`, not the course. There is no next or previous button, and nothing
-  happens when a video ends (`:77`). With 18 lessons that is many extra taps on a phone. **Fix:**
-  point the back link at `/app/course/<slug>`, add "לשיעור הבא ←" and "→ הקודם" buttons, and show
-  the next-lesson button big when the video ends.
 - [ ] **[L2] P2 — Take the student straight to her next lesson.** `app/course.html:49-64`,
   `app/login.html:33`. Every buyer first lands on "הקורסים שלי" with a single card. The course page
   shows done checks but no current lesson and no overall progress. **Fix:** if the user has exactly

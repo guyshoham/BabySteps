@@ -19,11 +19,16 @@
            controlsList="nodownload" oncontextmenu="return false"></video>
     <img id="image" class="w-full rounded-2xl shadow hidden" alt="" oncontextmenu="return false" />
     <p id="msg" class="text-center text-red-600 mt-3"></p>
+    <nav id="nav" class="hidden flex items-center justify-between gap-3 mt-4">
+      <a id="prev" class="invisible px-4 py-3 rounded-xl bg-white shadow text-[#704229] font-medium">→ הקודם</a>
+      <a id="next" class="invisible px-4 py-3 rounded-xl bg-white shadow text-[#704229] font-medium">לשיעור הבא ←</a>
+    </nav>
   </main>
 
   <script type="module">
     import { requireAuth, db } from "/app/firebase-client.js";
-    import { doc, getDoc, setDoc }
+    import { findNeighbors } from "/app/lesson-nav.js";
+    import { collection, query, where, orderBy, getDocs, doc, getDoc, setDoc }
       from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const lessonId = decodeURIComponent(location.pathname.split("/").pop());
@@ -39,6 +44,44 @@
     document.getElementById("title").textContent = lesson.title;
     // Lessons are videos unless marked otherwise; older docs have no `kind`.
     const isImage = lesson.kind === "image";
+
+    // Back link and prev/next buttons. Runs alongside the video load, so a slow
+    // query never delays playback.
+    const next = document.getElementById("next");
+    const navReady = (async () => {
+      const [courseSnap, lessonsSnap] = await Promise.all([
+        getDoc(doc(db, "courses", lesson.courseId)),
+        getDocs(query(collection(db, "lessons"), where("courseId", "==", lesson.courseId), orderBy("order"))),
+      ]);
+      const courseUrl = courseSnap.exists()
+        ? `/app/course/${encodeURIComponent(courseSnap.data().slug)}`
+        : "/app/my-courses";
+      document.getElementById("back").setAttribute("href", courseUrl);
+      const n = findNeighbors(lessonsSnap.docs.map(d => d.id), lessonId);
+      const show = (el, id) => {
+        if (!id) return;
+        el.setAttribute("href", `/app/lesson/${encodeURIComponent(id)}`);
+        el.classList.remove("invisible");
+      };
+      show(document.getElementById("prev"), n.prev);
+      if (n.next) {
+        show(next, n.next);
+      } else {
+        // Last lesson: the "next" slot leads back to the course.
+        next.textContent = "חזרה לקורס ←";
+        next.setAttribute("href", courseUrl);
+        next.classList.remove("invisible");
+      }
+      document.getElementById("nav").classList.remove("hidden");
+    })().catch((e) => console.error("lesson nav failed", e));
+
+    // When a video ends, make the next step big and easy to tap.
+    const highlightNext = async () => {
+      await navReady;
+      next.classList.remove("bg-white", "text-[#704229]", "px-4", "py-3");
+      next.classList.add("bg-[#704229]", "text-white", "px-6", "py-4", "text-lg");
+      next.scrollIntoView({ behavior: "smooth", block: "center" });
+    };
 
     const progSnap = await getDoc(doc(db, "users", user.uid, "progress", lessonId));
     const startAt = progSnap.exists() ? (progSnap.data().lastPositionSec || 0) : 0;
@@ -74,7 +117,7 @@
       video.addEventListener("timeupdate", () => {
         if (video.currentTime - lastSaved > 10) { lastSaved = video.currentTime; savePosition({}); }
       });
-      video.addEventListener("ended", () => savePosition({ completed: true }));
+      video.addEventListener("ended", () => { savePosition({ completed: true }); highlightNext(); });
     }
   </script>
 </body>
