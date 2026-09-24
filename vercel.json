@@ -3,10 +3,10 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "routes": [
-    { "src": "^/(docs|lib|scripts|tests|packages|staging)(/.*)?$", "status": 404, "dest": "/__not-found" },
-    { "src": "^/\\..*$", "status": 404, "dest": "/__not-found" },
-    { "src": "^/.*\\.md$", "status": 404, "dest": "/__not-found" },
-    { "src": "^/(firestore\\.rules|package\\.json|package-lock\\.json|vitest\\.config\\.js|vercel\\.json)$", "status": 404, "dest": "/__not-found" }
+    { "src": "^/(docs|lib|scripts|tests|packages|staging)(/.*)?$", "status": 404, "dest": "/404.html" },
+    { "src": "^/\\..*$", "status": 404, "dest": "/404.html" },
+    { "src": "^/.*\\.md$", "status": 404, "dest": "/404.html" },
+    { "src": "^/(firestore\\.rules|package\\.json|package-lock\\.json|vitest\\.config\\.js|vercel\\.json)$", "status": 404, "dest": "/404.html" }
   ],
   "rewrites": [
     { "source": "/app/course/:slug", "destination": "/app/course" },
