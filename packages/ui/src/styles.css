@@ -11,6 +11,7 @@
 @import './components/StarRating/StarRating.css';
 @import './components/Button/Button.css';
 @import './components/Badge/Badge.css';
+@import './components/BackLink/BackLink.css';
 @import './components/Card/Card.css';
 @import './components/TextField/TextField.css';
 @import './components/Alert/Alert.css';
