@@ -20,3 +20,6 @@ export { Card, type CardProps } from './components/Card/Card';
 export { TextField, type TextFieldProps } from './components/TextField/TextField';
 export { Alert, type AlertProps, type AlertVariant } from './components/Alert/Alert';
 export { ProgressBar, type ProgressBarProps } from './components/ProgressBar/ProgressBar';
+export { AppHeader, type AppHeaderProps } from './components/AppHeader/AppHeader';
+export { CourseProgressCard, type CourseProgressCardProps } from './components/CourseProgressCard/CourseProgressCard';
+export { LessonListItem, type LessonListItemProps, type LessonState } from './components/LessonListItem/LessonListItem';
