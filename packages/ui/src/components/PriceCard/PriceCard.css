@@ -1,0 +1,94 @@
+.bs-price-card {
+  display: flex;
+  flex-direction: column;
+  margin-block-start: var(--space-4);
+}
+
+.bs-price-card--featured {
+  border: 2px solid var(--color-brand-600);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Physical left/transform: centers the badge the same way in any direction. */
+.bs-price-card__badge {
+  position: absolute;
+  inset-block-start: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: var(--shadow-sm);
+}
+
+.bs-price-card__header {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-6) var(--space-6) var(--space-5);
+  border-start-start-radius: inherit;
+  border-start-end-radius: inherit;
+  text-align: center;
+}
+
+.bs-price-card--featured .bs-price-card__header {
+  background: var(--surface-peach);
+}
+
+.bs-price-card__title {
+  font-size: var(--text-h3);
+}
+
+.bs-price-card__desc {
+  font-size: var(--text-caption);
+  color: var(--color-ink-soft);
+}
+
+.bs-price-card__price {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-block-start: var(--space-2);
+}
+
+.bs-price-card__amount {
+  font-family: var(--font-heading);
+  font-size: 2.75rem;
+  line-height: 1;
+  color: var(--color-brand-700);
+}
+
+.bs-price-card__old {
+  font-size: var(--text-lead);
+  color: var(--color-ink-muted);
+}
+
+.bs-price-card__note {
+  font-size: var(--text-caption);
+  color: var(--color-ink-muted);
+}
+
+.bs-price-card__features {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-5) var(--space-6) 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.bs-price-card__features li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.bs-price-card__check {
+  margin-block-start: 5px;
+  color: var(--color-success);
+}
+
+.bs-price-card__cta {
+  margin-block-start: auto;
+  padding: var(--space-5) var(--space-6) var(--space-6);
+}
+
+.bs-price-card__cta > .bs-button {
+  width: 100%;
+}
