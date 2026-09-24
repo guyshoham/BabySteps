@@ -12,7 +12,7 @@
 </head>
 <body class="min-h-screen bg-[#fdf6f0] p-4">
   <header class="max-w-3xl mx-auto py-4">
-    <a id="back" href="/app/my-courses" class="text-sm underline text-[#704229]">← חזרה לקורס</a>
+    <a id="back" href="/app/my-courses" class="text-sm underline text-[#704229]">→ חזרה לקורס</a>
     <h1 id="title" class="text-2xl font-bold mt-2"></h1>
   </header>
   <main class="max-w-3xl mx-auto">
@@ -69,7 +69,7 @@
         show(next, n.next);
       } else {
         // Last lesson: the "next" slot leads back to the course.
-        next.textContent = "חזרה לקורס ←";
+        next.textContent = "→ חזרה לקורס";
         next.setAttribute("href", courseUrl);
         next.classList.remove("invisible");
       }
