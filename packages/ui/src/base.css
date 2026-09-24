@@ -1,0 +1,101 @@
+/* Fonts: Hebrew and Latin subsets only */
+@import '@fontsource/rubik/hebrew-400.css';
+@import '@fontsource/rubik/hebrew-500.css';
+@import '@fontsource/rubik/hebrew-700.css';
+@import '@fontsource/rubik/latin-400.css';
+@import '@fontsource/rubik/latin-500.css';
+@import '@fontsource/rubik/latin-700.css';
+@import '@fontsource/varela-round/hebrew-400.css';
+@import '@fontsource/varela-round/latin-400.css';
+
+.bs-root {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--color-ink);
+  background: var(--surface-cream);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.bs-root *,
+.bs-root *::before,
+.bs-root *::after {
+  box-sizing: border-box;
+}
+
+.bs-root :where(h1, h2, h3, h4, p, ul, ol, figure, blockquote) {
+  margin: 0;
+}
+
+.bs-root :where(h1, h2, h3, h4) {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  line-height: var(--leading-heading);
+  color: var(--bs-heading, var(--color-brand-700));
+  text-wrap: balance;
+}
+
+/* <em> inside a heading is a soft terracotta highlight */
+.bs-root :where(h1, h2, h3) em {
+  font-style: normal;
+  padding-inline: 0.1em;
+  background: linear-gradient(
+    transparent 62%,
+    color-mix(in srgb, var(--color-accent) 38%, transparent) 62%
+  );
+}
+
+.bs-root :where(img, video, svg) {
+  display: block;
+  max-width: 100%;
+}
+
+.bs-root :where(a) {
+  color: inherit;
+}
+
+.bs-root :where(button, input) {
+  font: inherit;
+}
+
+.bs-root :focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Tone classes: sections, heroes, boxes read --bs-tone */
+.bs-tone--cream { --bs-tone: var(--surface-cream); }
+.bs-tone--white { --bs-tone: var(--surface-card); }
+.bs-tone--peach { --bs-tone: var(--surface-peach); }
+.bs-tone--mint  { --bs-tone: var(--surface-mint); }
+.bs-tone--sky   { --bs-tone: var(--surface-sky); }
+.bs-tone--blush { --bs-tone: var(--surface-blush); }
+.bs-tone--cocoa {
+  --bs-tone: var(--surface-cocoa);
+  --bs-tone-ink: var(--color-on-brand);
+  --bs-heading: var(--color-on-brand);
+  --bs-ink-soft: color-mix(in srgb, var(--color-on-brand) 82%, transparent);
+}
+
+.bs-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bs-root *,
+  .bs-root *::before,
+  .bs-root *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
