@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
+    <script>document.documentElement.classList.add('js')</script>
     <link rel="icon" type="image/png" href="../../assets/logos/logo-peach.png">
     <link rel="apple-touch-icon" href="../../assets/logos/logo-peach.png">
     <meta charset="UTF-8">
@@ -211,19 +212,7 @@
     </div>
 </footer>
 
-<script>
-    /* ── Reveal on scroll (IntersectionObserver) ─────────────────── */
-    const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                revealObserver.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.12 });
-
-    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-</script>
+<script src="/site.js" defer></script>
 
 </body>
 </html>

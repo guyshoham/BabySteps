@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
+    <script>document.documentElement.classList.add('js')</script>
     <link rel="icon" type="image/png" href="../../assets/logos/logo-peach.png">
     <link rel="apple-touch-icon" href="../../assets/logos/logo-peach.png">
     <meta charset="UTF-8">
@@ -573,6 +574,7 @@
     <a href="#register" style="background:#fff; color:var(--brand-brown); padding:10px 22px; border-radius:6px; font-weight:700; font-size:14px; text-decoration:none;">לרכישה ←</a>
 </div>
 
+<script src="/site.js" defer></script>
 <script>
     /* ── Video play overlay ──────────────────────────────────────── */
     const teaserVideo = document.getElementById('teaserVideo');
@@ -589,6 +591,10 @@
     }
 
     function smoothScrollTo(targetY, duration) {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            window.scrollTo(0, targetY);
+            return;
+        }
         const startY = window.scrollY;
         const diff   = targetY - startY;
         let start    = null;
@@ -617,20 +623,6 @@
         });
     });
 
-    /* ── Ripple effect on buttons ────────────────────────────────── */
-    document.querySelectorAll('.btn-primary, .btn-outline').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            const rect   = this.getBoundingClientRect();
-            const circle = document.createElement('span');
-            circle.classList.add('ripple-circle');
-            // position relative to click point
-            circle.style.top  = (e.clientY - rect.top)  + 'px';
-            circle.style.right = (rect.right - e.clientX) + 'px';
-            this.appendChild(circle);
-            setTimeout(() => circle.remove(), 600);
-        });
-    });
-
     /* ── Scroll progress bar ─────────────────────────────────────── */
     const navProgress = document.getElementById('navProgress');
     function updateProgress() {
@@ -638,18 +630,6 @@
         const total    = document.body.scrollHeight - window.innerHeight;
         navProgress.style.width = (scrolled / total * 100) + '%';
     }
-
-    /* ── Reveal on scroll (IntersectionObserver) ─────────────────── */
-    const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                revealObserver.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.12 });
-
-    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
     /* ── Sticky CTA (mobile) ─────────────────────────────────────── */
     // Hide the bar while the price section or the footer is on screen:
