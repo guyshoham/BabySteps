@@ -312,3 +312,23 @@ with a generated password, repeat call → `created:false` (idempotent), Auth us
 + `enrollments/rolling` all written, a real web ID token reached `/api/video-url` and returned
 `404 lesson not found` (correct — Firestore isn't seeded yet). Test user and docs deleted;
 Auth and Firestore are empty again. Remaining boxes need seeded data and uploaded videos.
+
+## Hebrew password page (TODO G4)
+
+The welcome email and "שכחתי סיסמה" both send Firebase's password reset link. By default that
+link opens Firebase's own page, in English. `app/auth-action.html` is our Hebrew page for it.
+It reads `mode` and `oobCode` from the link, shows the email, and lets her choose a password
+(at least 8 characters). Other modes (`verifyEmail`, `recoverEmail`) show a short note and a
+link to `/app/login`.
+
+The page does nothing until Firebase sends links to it:
+
+- [ ] Firebase console, Authentication, Templates, Password reset, the pencil icon, then
+      "Customize action URL". Set it to `https://baby-steps-murex.vercel.app/app/auth-action`
+      and save. This URL is used for all email templates.
+- [ ] Send one reset to the tester email ("שכחתי סיסמה" on `/app/login`). Open the link. Check
+      it lands on `/app/auth-action` in Hebrew, shows the tester email, and saves a new
+      password. Log in with it. Then reset the tester again with `scripts/create-tester.js`.
+- [ ] Open the same link a second time. It should say the link is not valid, in Hebrew.
+
+To undo, clear the custom action URL in the same place. Links go back to Firebase's page.
