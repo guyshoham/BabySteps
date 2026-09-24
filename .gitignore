@@ -1,9 +1,10 @@
 /.claude/settings.local.json
 /.idea/
 node_modules/
-.env
-.env.local
 .vercel
+.DS_Store
+.playwright-mcp/
+*-preview.png
 
 .claude/worktrees/
 .env*
