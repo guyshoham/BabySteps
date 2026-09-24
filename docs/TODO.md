@@ -12,7 +12,8 @@ what is still open.
 
 - [ ] **[G2] P1 — Run one real payment end to end.** **Fix:** in PayPal
   (`paypal.com/ncp/links/SDBZ5YS6JNKLQ/edit`) set the price to ₪1, keep Product ID `course_2`, pay
-  once, watch the Make run, set a password from the email, log in. Then set the price back to ₪175
+  once, watch the Make run, set a password from the email, log in. Set
+  `/challenge/rolling/thank-you` as the payment link's return URL first and check it lands there. Then set the price back to ₪175
   right away (a real buyer in that window would pay ₪1) and delete the test user.
 - [ ] **[G3] P3 — Stop fake payments.** Low priority until sales grow. The Make PayPal webhook accepts unverified IPNs, so
   anyone with the hook URL gets free access. **Fix:** verify each IPN with PayPal
@@ -26,10 +27,6 @@ what is still open.
 
 ## Conversion
 
-- [ ] **[C1] P1 — One price everywhere.** `index.html:232`. The home card says ₪105, but the sales
-  page and the sticky bar say ₪175 (`challenge/rolling/index.html:470`, `:496`, `:570`). A buyer who
-  clicks from home sees a higher price and feels tricked. **Fix:** change the home card to ₪175 now.
-  In the React rebuild, keep the price in one shared constant that every page reads.
 - [ ] **[C2] P1 — Remove claims and discounts that are not true.** `challenge/rolling/index.html:192`.
   The top bar says "כבר למעלה מ-200 אמהות עזרו לתינוק שלהן להתהפך עם הקורס הזה", and five stars
   with "200+ אמהות מרוצות" repeat at `:240-241`, `index.html:198` and `index.html:229-230`. The
@@ -59,7 +56,8 @@ what is still open.
   buyer by hand (`docs/go-live-checklist.md:160`). Many Israeli mothers do not have PayPal and may
   not know they can pay by card. **Fix:** show one price card with the PayPal button and the line
   "אפשר לשלם בכרטיס אשראי, גם בלי חשבון PayPal" (check that guest checkout is on for the payment
-  link). Move Bit/Paybox to a small text link under it. Use one `PriceCard` in the rebuild.
+  link). Move Bit/Paybox to a small text link under it. Use one `PriceCard` in the rebuild, and have it read the price from
+  `lib/prices.js`.
 - [ ] **[C7] P2 — Testimonials that show results.** `challenge/rolling/index.html:427-443`. The three
   quotes praise Yarden in general ("את מדהימה", "חברה"), not the rolling course, and give no baby
   age or outcome. **Fix:** replace them with 3 short quotes from beta buyers (B1) that name the
@@ -69,13 +67,6 @@ what is still open.
 
 ## Buy and onboarding flow
 
-- [ ] **[F1] P1 — Fix the thank-you page.** `challenge/rolling/thank-you.html:93`. It says the email
-  comes from systeme.io with the subject "Important: Your access to training", which is no longer
-  true. Step 3 (`:133`) says "Forgot password" in English, the headings start with "!" (`:59`,
-  `:63`), and the logo (`:30`) sends the buyer back to the sales page. **Fix:** rewrite the copy to
-  match the real Firebase email (sender "ירדן - מתחילים בקטן", link to choose a password), add a
-  "כניסה לקורס" button to `/app/login`, say "שכחתי סיסמה", fix the punctuation, and point the logo
-  at `/app/login`. Then set this page as the PayPal payment link's return URL and check it in G2.
 - [ ] **[F2] P1 — A receipt for every sale.** Yarden is עוסק פטור and must issue a receipt (קבלה)
   for each payment. Nothing in the flow creates one. **Fix:** pick an Israeli invoicing service
   that Make can call (for example Morning/Green Invoice, iCount or EZcount; compare the cheapest
