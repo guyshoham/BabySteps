@@ -8,51 +8,60 @@
   <link rel="icon" type="image/png" href="/assets/logos/logo-peach.png" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <style>body{font-family:'Rubik',sans-serif}</style>
+  <link rel="stylesheet" href="/app/app.css" />
+  <link rel="manifest" href="/app/manifest.webmanifest" />
+  <meta name="theme-color" content="#704229" />
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="מתחילים בקטן" />
 </head>
-<body class="min-h-screen bg-[#fdf6f0] p-4">
-  <header class="max-w-3xl mx-auto py-4">
-    <a id="back" href="/app/my-courses" class="text-sm underline text-[#704229]">→ חזרה לקורס</a>
+<body class="min-h-screen p-4">
+  <div class="max-w-3xl mx-auto py-4">
+    <a id="back" href="/app/my-courses" class="text-sm app-link">→ חזרה לקורס</a>
     <h1 id="title" class="text-2xl font-bold mt-2"></h1>
-  </header>
+  </div>
   <main class="max-w-3xl mx-auto">
-    <video id="video" class="block mx-auto w-auto max-w-full object-contain rounded-2xl shadow bg-black"
+    <video id="video" class="block mx-auto w-auto max-w-full object-contain app-rounded-lg app-shadow bg-black"
            style="max-height:80vh;max-height:80svh" controls playsinline
            controlsList="nodownload" oncontextmenu="return false"></video>
-    <img id="image" class="block mx-auto w-auto max-w-full object-contain rounded-2xl shadow hidden"
+    <img id="image" class="block mx-auto w-auto max-w-full object-contain app-rounded-lg app-shadow hidden"
          style="max-height:80vh;max-height:80svh" alt="" oncontextmenu="return false" />
     <p id="msg" class="text-center text-red-600 mt-3"></p>
     <!-- Shown once every lesson of the course is done. -->
-    <section id="finish" class="hidden mt-4 p-5 rounded-2xl bg-[#704229] text-white shadow text-center">
+    <section id="finish" class="hidden mt-4 p-5 app-rounded-lg bg-[#704229] text-white app-shadow text-center">
       <h2 class="text-xl font-bold">סיימת את הקורס! 🎉</h2>
       <p class="mt-2 leading-relaxed">כל הכבוד לך! אשמח מאוד לשמוע איך היה לך. כמה מילים קצרות ממך יעזרו לאמהות אחרות להחליט.</p>
       <a id="testimonial" target="_blank" rel="noopener"
-         class="inline-block mt-4 px-5 py-3 rounded-xl bg-white text-[#704229] font-bold">שלחי לי כמה מילים בווטסאפ</a>
+         class="inline-block mt-4 px-5 py-3 app-rounded bg-white text-[#704229] font-bold">שלחי לי כמה מילים בווטסאפ</a>
       <p class="mt-4 text-sm opacity-90">ואל תשכחי: את תמיד יכולה לצלם תרגול ולשלוח לי לפידבק אישי.</p>
     </section>
     <!-- Personal WhatsApp feedback, as promised on the sales page. -->
-    <section id="feedback" class="hidden mt-4 p-5 rounded-2xl bg-white shadow text-center">
+    <section id="feedback" class="hidden mt-4 p-5 app-card text-center">
       <h2 class="text-lg font-bold text-[#704229]">צלמי את התרגול ושלחי לי לפידבק אישי</h2>
-      <p class="mt-2 text-sm text-[#7a5a48] leading-relaxed">אני אצפה בסרטון ואחזיר לך דיוק אישי.</p>
+      <p class="mt-2 text-sm app-muted leading-relaxed">אני אצפה בסרטון ואחזיר לך דיוק אישי.</p>
       <a id="whatsapp" target="_blank" rel="noopener"
-         class="inline-block mt-4 px-5 py-3 rounded-xl bg-[#704229] text-white font-bold">שלחי לי בווטסאפ</a>
+         class="mt-4 px-5 py-3 app-btn">שלחי לי בווטסאפ</a>
     </section>
     <nav id="nav" class="hidden flex items-center justify-between gap-3 mt-4">
-      <a id="prev" class="invisible px-4 py-3 rounded-xl bg-white shadow text-[#704229] font-medium">→ הקודם</a>
-      <a id="next" class="invisible px-4 py-3 rounded-xl bg-white shadow text-[#704229] font-medium">לשיעור הבא ←</a>
+      <a id="prev" class="invisible px-4 py-3 app-rounded bg-white app-shadow text-[#704229] font-medium">→ הקודם</a>
+      <a id="next" class="invisible px-4 py-3 app-rounded bg-white app-shadow text-[#704229] font-medium">לשיעור הבא ←</a>
     </nav>
   </main>
 
   <script type="module">
     import {
-      requireAuth, db, collection, query, where, orderBy, getDocs, doc, getDoc, setDoc,
+      requireAuth, db, signOut, collection, query, where, orderBy, getDocs, doc, getDoc, setDoc,
     } from "/app/firebase-client.js";
+    import { mountAppHeader } from "/app/app-shell.js";
     import { findNeighbors } from "/app/lesson-nav.js";
     import { shouldComplete } from "/app/lesson-progress.js";
     import { whatsAppFeedbackUrl, whatsAppTestimonialUrl, allDone } from "/app/lesson-extras.js";
 
     const lessonId = decodeURIComponent(location.pathname.split("/").pop());
+    const shell = mountAppHeader();
     const user = await requireAuth();
+    shell.showUser(user.email, async () => {
+      await signOut(); location.replace("/app/login");
+    });
     const msg = document.getElementById("msg");
     const video = document.getElementById("video");
 
@@ -138,7 +147,7 @@
     const doneBtn = document.createElement("button");
     doneBtn.id = "done";
     doneBtn.type = "button";
-    doneBtn.className = "block mx-auto mt-3 px-4 py-2 rounded-xl shadow font-medium";
+    doneBtn.className = "block mx-auto mt-3 px-5 py-2 app-rounded app-shadow font-medium";
     const renderDone = () => {
       doneBtn.textContent = isDone ? "בוצע ✓" : "סמני כבוצע";
       doneBtn.setAttribute("aria-pressed", String(isDone));

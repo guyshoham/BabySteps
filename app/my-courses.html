@@ -8,38 +8,43 @@
   <link rel="icon" type="image/png" href="/assets/logos/logo-peach.png" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <style>body{font-family:'Rubik',sans-serif}</style>
+  <link rel="stylesheet" href="/app/app.css" />
+  <link rel="manifest" href="/app/manifest.webmanifest" />
+  <meta name="theme-color" content="#704229" />
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="מתחילים בקטן" />
 </head>
-<body class="min-h-screen bg-[#fdf6f0] p-4">
-  <header class="max-w-3xl mx-auto flex items-center justify-between py-4">
-    <h1 class="text-xl font-bold">הקורסים שלי</h1>
-    <button id="signout" class="text-sm underline text-[#704229]">יציאה</button>
-  </header>
+<body class="min-h-screen p-4">
+  <div class="max-w-3xl mx-auto py-4">
+    <h1 class="text-2xl font-bold">הקורסים שלי</h1>
+  </div>
   <div id="loading" role="status" aria-live="polite"
        class="max-w-3xl mx-auto flex items-center justify-center gap-3 py-12 text-[#704229]">
     <span class="w-6 h-6 border-4 border-[#704229]/20 border-t-[#704229] rounded-full animate-spin" aria-hidden="true"></span>
     <span>טוען...</span>
   </div>
   <main id="list" class="max-w-3xl mx-auto grid gap-4 sm:grid-cols-2"></main>
-  <div id="empty" class="max-w-3xl mx-auto text-center text-gray-600 bg-white rounded-2xl shadow p-6 hidden">
+  <div id="empty" class="max-w-3xl mx-auto text-center app-mid app-card p-6 hidden">
     <p class="font-medium">עדיין אין לך קורסים כאן.</p>
     <p class="text-sm mt-2">רכשת קורס והוא לא מופיע? כתבי לנו ונסדר את זה.</p>
     <a href="https://wa.me/972542366243" target="_blank" rel="noopener"
-       class="inline-block mt-4 bg-[#704229] text-white rounded-lg px-4 py-2 font-semibold">כתבי לנו בוואטסאפ</a>
+       class="mt-4 app-btn px-5 py-3">כתבי לנו בוואטסאפ</a>
   </div>
   <div id="error" class="max-w-3xl mx-auto text-center text-red-600 hidden">
     <p>לא הצלחנו לטעון את הקורסים. נסי לרענן את הדף.</p>
-    <p class="text-sm mt-2 text-gray-600">זה חוזר?
-      <a href="https://wa.me/972542366243" target="_blank" rel="noopener" class="text-[#704229] underline">כתבי לנו בוואטסאפ</a>
+    <p class="text-sm mt-2 app-mid">זה חוזר?
+      <a href="https://wa.me/972542366243" target="_blank" rel="noopener" class="app-link">כתבי לנו בוואטסאפ</a>
     </p>
   </div>
 
   <script type="module">
     import { requireAuth, db, signOut, collection, getDocs, doc, getDoc } from "/app/firebase-client.js";
     import { visibleCourses } from "/app/course-list.js";
+    import { mountAppHeader } from "/app/app-shell.js";
 
+    const shell = mountAppHeader();
     const user = await requireAuth();
-    document.getElementById("signout").addEventListener("click", async () => {
+    shell.showUser(user.email, async () => {
       await signOut(); location.replace("/app/login");
     });
 
@@ -80,7 +85,7 @@
       for (const c of courses) {
         const a = document.createElement("a");
         a.href = `/app/course/${encodeURIComponent(c.slug)}`;
-        a.className = "block bg-white rounded-2xl shadow overflow-hidden hover:shadow-lg transition";
+        a.className = "block app-card overflow-hidden";
         // Build with DOM APIs (textContent/setAttribute) — never innerHTML with Firestore data.
         if (c.coverImage) {
           const img = document.createElement("img");
@@ -95,7 +100,7 @@
         h2.className = "font-bold text-lg";
         h2.textContent = c.title ?? "";
         const p = document.createElement("p");
-        p.className = "text-sm text-gray-600 mt-1";
+        p.className = "text-sm app-mid mt-1";
         p.textContent = c.description ?? "";
         body.append(h2, p);
         a.appendChild(body);
