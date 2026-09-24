@@ -109,24 +109,27 @@ what is still open.
   empty and `durationSec` is 0 (`:12` says no page reads it). A parent cannot find a tip again or
   plan a session. **Fix:** get real titles and one-line descriptions from Yarden, fill durations,
   reseed, and show the description and length on `app/lesson.html` and `app/course.html`.
-- [ ] **[L5] P2 — Group the lesson list.** `app/course.html:131-147`. The course page is one flat
-  list of 18 equal rows, two full screens on a phone. Videos, image tips and bonuses look the same,
-  so a mother cannot see the shape of the course or find the tips again. **Fix:** add a `section`
+- [ ] **[L8] P2 — Group the lesson list.** `app/course.html:139-156`. Under the new progress box,
+  the course page is still one flat list of 18 equal rows, two full screens on a phone. Videos,
+  image tips and bonuses look the same, so a mother cannot see the shape of the course or find the
+  tips again. **Fix:** add a `section`
   field per lesson in `scripts/course-data.js` ("סרטוני הדרכה", "טיפי זהב", "בונוסים"), reseed, and
   render a small heading per group with an icon per row (▶ for a video, a picture icon for a tip).
   Use `LessonListItem` in the rebuild. Screenshot: `docs/ux-audit/2026-09-25/course-flat-list-390.jpg`.
-- [ ] **[L6] P2 — The next lesson is below the fold.** `app/lesson.html:40-43`, `:14-17`. The
+- [ ] **[L9] P2 — The next lesson is below the fold.** `app/lesson.html:44-47`, `:18-21`. The
   videos are portrait (1080x1920), so the player fills the screen. Under it come the done button and
-  the WhatsApp card, and the prev/next buttons start at about 995px on a 390x844 phone. The page also
+  the WhatsApp card, and the prev/next buttons started at about 995px on a 390x844 phone (older
+  deploy). The new app header (#61) pushes them lower still. The page also
   never says where she is in the course. **Fix:** move `#nav` right under the done button, above
   `#feedback`, and add a line under the title such as "שיעור 3 מתוך 18" (the index is already known
   from `findNeighbors`). Screenshot: `docs/ux-audit/2026-09-25/lesson-video-first-screen-390.jpg`.
-- [ ] **[L7] P2 — The last lesson is a dead end.** `app/lesson.html:99-103`. On "נספח" the next
+- [ ] **[L10] P2 — The last lesson is a dead end.** `app/lesson.html:108-112`. On "נספח" the next
   slot says "→ חזרה לקורס" with the same arrow as "→ הקודם", so both buttons seem to go back. If
-  lessons are still open, nothing says what is left; the finish card shows only at 100%. **Fix:**
-  when lessons are still open, show "נשארו לך עוד X שיעורים" with a button to the first lesson not
-  done (reuse `courseProgress` from `app/course-progress.js`). Label the slot "לכל השיעורים" with
-  no arrow. Screenshot: `docs/ux-audit/2026-09-25/lesson-last-bottom-390.jpg`.
+  lessons are still open, nothing on the lesson page says what is left; the finish card shows only
+  at 100%. The course page has a continue button now (#54), but the lesson page does not use it.
+  **Fix:** when lessons are still open, show "נשארו לך עוד X שיעורים" with a button to the first
+  lesson not done (reuse `courseProgress` and `continueLabel` from `app/course-progress.js`). Label
+  the slot "לכל השיעורים" with no arrow. Screenshot: `docs/ux-audit/2026-09-25/lesson-last-bottom-390.jpg`.
 
 ## Trust and legal
 
@@ -204,13 +207,11 @@ what is still open.
   הרכישה?" is 13.6px (`:524`). In light brown `#7a5a48` this is hard to read for a tired mother with
   a baby on one arm. **Fix:** set body copy to at least 1rem on mobile and labels to at least 13px.
   Replace the inline font sizes with classes in `styles.css`.
-- [ ] **[U23] P2 — Login gives no feedback while it works.** `app/login.html:27-29`, `:53-63`,
-  `app/auth-errors.js:6`. After a tap on "כניסה" the button does not change until Firebase answers,
-  so on a slow network she taps again or leaves. She cannot see the password she typed. A new buyer
-  who tries before she set a password only sees "אימייל או סיסמה שגויים". **Fix:** disable the button
-  and show "נכנסת..." while signing in. Add a show/hide eye button to the password field. For wrong
-  credentials add "פעם ראשונה? לחצי 'שכחתי סיסמה' ונשלח לך קישור". Screenshot:
-  `docs/ux-audit/2026-09-25/login-error-390.jpg`.
+- [ ] **[U23] P2 — Login gives no feedback while it works.** `app/login.html:32-34`, `:61-72`,
+  `:29-30`. After a tap on "כניסה" the button does not change until Firebase answers, so on a slow
+  network she taps again or leaves. She also cannot see the password she typed, which matters on a
+  phone keyboard. **Fix:** disable the button and show "נכנסת..." while signing in, then restore it
+  on error. Add a show/hide eye button to the password field.
 - [ ] **[U24] P2 — The thank-you page sends the buyer to login too early.**
   `challenge/rolling/thank-you.html:103`, `:90`, `:126`, `:31`. The first big button is "כניסה
   לקורס", but at that moment she has no password yet, so the login fails. The spam tip appears twice
