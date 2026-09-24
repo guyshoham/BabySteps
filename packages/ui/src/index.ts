@@ -20,3 +20,5 @@ export { Card, type CardProps } from './components/Card/Card';
 export { TextField, type TextFieldProps } from './components/TextField/TextField';
 export { Alert, type AlertProps, type AlertVariant } from './components/Alert/Alert';
 export { ProgressBar, type ProgressBarProps } from './components/ProgressBar/ProgressBar';
+export { SiteNav, type SiteNavProps } from './components/SiteNav/SiteNav';
+export { Footer, type FooterProps, type SocialLink } from './components/Footer/Footer';

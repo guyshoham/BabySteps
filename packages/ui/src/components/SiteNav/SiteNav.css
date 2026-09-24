@@ -1,0 +1,112 @@
+.bs-sitenav {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 40;
+  background: color-mix(in srgb, var(--surface-cream) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-block-end: 1px solid var(--color-border);
+}
+
+.bs-sitenav__bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: 68px;
+}
+
+.bs-sitenav__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+}
+
+.bs-sitenav__logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.bs-sitenav__title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  color: var(--color-brand-700);
+}
+
+.bs-sitenav__toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-brand-700);
+  cursor: pointer;
+}
+
+.bs-sitenav__menu {
+  display: none;
+}
+
+.bs-sitenav--open .bs-sitenav__menu {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-4);
+  position: absolute;
+  inset-inline: var(--space-4);
+  inset-block-start: calc(100% + var(--space-2));
+  padding: var(--space-5);
+  background: var(--surface-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+.bs-sitenav__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.bs-sitenav__link {
+  display: block;
+  padding: var(--space-2) var(--space-1);
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--color-ink);
+  border-radius: var(--radius-sm);
+}
+
+.bs-sitenav__link:hover {
+  color: var(--color-brand-600);
+}
+
+@media (min-width: 768px) {
+  .bs-sitenav__toggle {
+    display: none;
+  }
+
+  .bs-sitenav__menu,
+  .bs-sitenav--open .bs-sitenav__menu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-5);
+    position: static;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  .bs-sitenav__links {
+    flex-direction: row;
+    gap: var(--space-5);
+  }
+}
