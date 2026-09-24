@@ -27,10 +27,11 @@
 
   <script type="module">
     import { signIn, resetPassword, auth } from "/app/firebase-client.js";
+    import { safeNext } from "/app/safe-next.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
     const params = new URLSearchParams(location.search);
-    const next = params.get("next") || "/app/my-courses";
+    const next = safeNext(params.get("next"));
     const msg = document.getElementById("msg");
 
     onAuthStateChanged(auth, (user) => { if (user) location.replace(next); });
