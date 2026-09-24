@@ -15,15 +15,18 @@ what is still open.
   once, watch the Make run, set a password from the email, log in. Set
   `/challenge/rolling/thank-you` as the payment link's return URL first and check it lands there. Then set the price back to ₪175
   right away (a real buyer in that window would pay ₪1) and delete the test user.
-- [ ] **[G3] P3 — Stop fake payments.** Low priority until sales grow. The Make PayPal webhook accepts unverified IPNs, so
-  anyone with the hook URL gets free access. **Fix:** verify each IPN with PayPal
-  (`cmd=_notify-validate`) before enrolling, in Make or in `/api/enroll`.
-- [ ] **[G4] P2 — Better welcome email.** Firebase refuses custom subject/body
-  (`EMAIL_TEMPLATE_UPDATE_NOT_ALLOWED`), so buyers get the stock Hebrew "reset password" email,
-  and the link opens an English Firebase page. The console is locked too ("Email template updates
-  are currently unavailable"; only Firebase Support can lift it). Project name must be English, so
-  `%APP_NAME%` stays `babysteps-courses` for now. **Fix:** send our own email and host a Hebrew
-  `/app/set-password` page.
+- [ ] **[G3] P3 — Stop fake payments.** The Make PayPal webhook accepts unverified IPNs. The
+  code side is done: `/api/enroll` checks the amount (#36). **Fix:** follow the manual steps in
+  `docs/go-live-checklist.md` section 5a to add a PayPal `_notify-validate` check in Make. First
+  confirm in a Make run that the trigger's `raw` field is the original IPN text; if it is JSON,
+  use a custom webhook trigger or move the check into `/api/enroll`.
+- [ ] **[G4] P2 — Our own welcome email.** Firebase refuses a custom subject and body, so buyers get
+  the stock reset email. The Hebrew `/app/auth-action` page is live (#38) but only takes over once
+  the Firebase console action URL is set, and that field may be locked or reject a Vercel domain.
+  The welcome link also expires after 1 hour. **Fix:** try the console step from
+  `docs/go-live-checklist.md`. If it is refused, follow `docs/research/2026-09-25-transactional-email.md`:
+  buy a domain, send our own Hebrew email with Resend and `generatePasswordResetLink`, and add a
+  "שלחו לי קישור חדש" button on `/app/auth-action` for expired links.
 
 ## Conversion
 
@@ -67,22 +70,19 @@ what is still open.
 
 ## Buy and onboarding flow
 
-- [ ] **[F2] P1 — A receipt for every sale.** Yarden is עוסק פטור and must issue a receipt (קבלה)
-  for each payment. Nothing in the flow creates one. **Fix:** pick an Israeli invoicing service
-  that Make can call (for example Morning/Green Invoice, iCount or EZcount; compare the cheapest
-  plan against issuing by hand) and add a Make step after the HTTP call that issues and emails the
-  receipt with the buyer email and PayPal `txnId`. Until then, issue each receipt by hand the same
-  day. Bit/Paybox sales always need a manual receipt.
+- [ ] **[F2] P1 — A receipt for every sale.** Receipts are made by hand in Paperless today.
+  **Fix:** read `docs/research/2026-09-25-receipts-for-osek-patur.md` (#49). If Paperless has an API
+  Make can call, add one Make step after `/api/enroll` that issues and emails the קבלה, keyed by the
+  PayPal `txnId`. Until then, issue each receipt by hand the same day. Bit/Paybox always by hand.
 - [ ] **[F3] P2 — Get told when an enrollment fails.** When the welcome email fails,
   `/api/enroll` returns 502 and Make marks the run failed, but nobody is told. **Fix:** turn on
   Make's error email for the scenario (Scenario settings, "Notify on error") to Guy and Yarden.
   Add the FAQ line "הגישה נשלחת למייל של חשבון ה-PayPal ששילם" when C3 lands. The manual enroll
   script and the playbook ("Paid but no access" in `docs/go-live-checklist.md`) are done.
-- [ ] **[F4] P2 — Tell existing students about a new course.** `lib/enroll-core.js:31`. The welcome
-  email goes only to users who never signed in. When tummy time launches, a returning student who
-  pays gets no email at all and may think the payment failed. **Fix:** when the enrollment is new
-  and the user has signed in before, send a short "הקורס נוסף לחשבון שלך" email with a login link.
-  Build it on the same sender as G4.
+- [ ] **[F4] P2 — Tell existing students about a new course.** The welcome email goes only to users
+  who never signed in, so a returning student who buys tummy time gets no email. **Fix:** build it on
+  the G4 sender (see the research doc); send once when `ensureEnrollment` creates a new enrollment for
+  a user who has signed in before.
 
 ## Learning experience
 
@@ -92,32 +92,13 @@ what is still open.
   one enrollment, skip the list and open the course. On the course page add a "המשיכי מאיפה שעצרת"
   button that opens the first lesson not done, a progress line ("6 מתוך 18"), and highlight the
   current lesson. Use `ProgressBar` and `LessonListItem` with `state="current"` in the rebuild.
-- [ ] **[L3] P2 — Bring the WhatsApp feedback into the app.** `app/lesson.html:17-22`. The sales page
-  sells personal feedback (`challenge/rolling/index.html:404`), but the app never mentions it, so
-  buyers forget to use the best part. **Fix:** on the course page and under each video, add a card
-  "צלמי את התרגול ושלחי לי לפידבק אישי" with a `wa.me` link prefilled with the lesson title. Show the
-  terms from C5.
+- [ ] **[L3] P2 — WhatsApp feedback on the course page.** The lesson page has the card (#40).
+  **Fix:** add the same card to `app/course.html`, and show the WhatsApp terms once C5 is decided.
 - [ ] **[L4] P2 — Real titles, descriptions and lengths.** `scripts/course-data.js:52-57`. The tips
   are named "טיפ זהב 1" to "טיפ זהב 6", the appendix is just "נספח" (`:68`), every `description` is
   empty and `durationSec` is 0 (`:12` says no page reads it). A parent cannot find a tip again or
   plan a session. **Fix:** get real titles and one-line descriptions from Yarden, fill durations,
   reseed, and show the description and length on `app/lesson.html` and `app/course.html`.
-- [ ] **[L5] P2 — Portrait video fit and fair completion.** `app/lesson.html:18`, `:77`. The videos
-  are portrait (the teaser is 1080x1920), and `w-full` makes them taller than a phone screen, so the
-  controls fall below the fold. A lesson counts as done only on `ended`, so skipping the last
-  seconds never marks it. **Fix:** cap the player at about 80vh with `object-fit: contain`, set a
-  poster, mark done at 90% watched, and add a "סמני כבוצע" toggle.
-- [ ] **[L6] P2 — Loading, error and help states.** `app/my-courses.html:17`, `app/course.html:31`,
-  `app/login.html:46-48`. Pages stay blank until Firestore answers, and a wrong course slug shows
-  "אין לך גישה". The login page has no hint for first-time buyers and no support link, and every
-  error says "אימייל או סיסמה שגויים", even a network error. The empty state
-  (`app/my-courses.html:18`) offers no help. **Fix:** a spinner while loading, friendly errors with
-  a WhatsApp link, the hint "פעם ראשונה? בחרי סיסמה דרך הקישור שקיבלת במייל", and clear Hebrew
-  messages per Firebase error code. Use `Spinner`, `Alert` and `TextField` in the rebuild.
-- [ ] **[L7] P3 — A finish line.** `app/lesson.html:77`. After the last lesson nothing happens. This
-  is the best moment to ask for a review and to offer the next step. **Fix:** when all lessons are
-  done, show "סיימת את הקורס!" with a request for a short testimonial (B1), a reminder about the
-  WhatsApp feedback, and a link to the tummy time list (B2) or bundle (B3).
 
 ## Trust and legal
 
@@ -152,19 +133,9 @@ what is still open.
   cookieless tool (Cloudflare Web Analytics, GoatCounter or Vercel Web Analytics) so no cookie
   banner is needed. Count clicks on the PayPal button and the WhatsApp links, and use UTM tags on
   new links you share (the Instagram bio and Linktree links stay as they are, by owner decision). Compare PayPal clicks with Make runs each week.
-- [ ] **[S3] P2 — Shrink the teaser video.** `challenge/rolling/index.html:272`. `rolling-teaser.mp4`
-  is 13.9 MB at 1080x1920, and its `moov` box sits at the end of the file (no faststart), so some
-  phones must fetch almost the whole file before playing. The poster is a 195 KB JPEG. **Fix:**
-  re-encode at 720x1280 with `-movflags +faststart` (aim for 3 to 5 MB), and save the poster as a
-  WebP around 60 KB.
 
 ## UI/UX
 
-- [ ] **[U3] P2 — Real photos instead of the logo and emoji.** `index.html:181`. The home "profile
-  photo" is the logo with `alt="ירדן שוהם"`, and the course cards show big emoji (🔄, 🤱) on flat
-  color (`:219`, `:243`). It looks unfinished next to a paid offer. **Fix:** use a crop of
-  `assets/about.jpg` in the hero and `assets/videos/rolling-teaser-poster.jpg` on the rolling card.
-  Use `CourseCard` in the rebuild.
 - [ ] **[U5] P2 — One name for the course.** `challenge/rolling/index.html:569`. The course is "קורס
   מתהפכים" on the sticky bar, the WhatsApp text (`:509`) and the thank-you page
   (`challenge/rolling/thank-you.html:63`), but "קורס התהפכות" on home (`index.html:223`) and in the
@@ -176,137 +147,34 @@ what is still open.
   screens in Claude Design with `@babysteps/ui` (`AppHeader`, `CourseProgressCard`,
   `LessonListItem`, `TextField`), get Yarden's feedback, then rebuild them in React. Fold L1 to L7
   into those designs.
-- [ ] **[U7] P2 — Two color systems that already disagree.** `styles.css:5-16`. The live site uses
-  `--text-dark #2d1a0e`, `--brand-peach #FCE7D6` and 6px buttons. `packages/ui/src/tokens.css:4-25`
-  uses `--color-ink #3b2213`, `--surface-peach #fce1cc`, 8 to 32px radii and a Varela Round heading
-  font the site never loads. The app pages hardcode `bg-[#fdf6f0]` and `text-[#704229]`
-  (`app/login.html:12`, `:20`). The rebuild will look like a redesign, not a port. **Fix:** decide
-  the final values with Yarden, then link `tokens.css` from the marketing pages and alias
-  `--brand-*` to the token names. **[CONFIRMED]**
-- [ ] **[U8] P2 — "Back" arrows point forward in RTL.** `app/course.html:14`. "← הקורסים שלי",
-  "← חזרה לקורס" (`app/lesson.html:14`) and "← חזרה לדף הבית" (`challenge/tummy-time/index.html:95`)
-  use the left arrow, which on this site means "forward" (every CTA uses "←"). The design system
-  has only a forward arrow (`packages/ui/src/components/Icon/Icon.tsx:20-21`). **Fix:** use "→"
-  for every back link. Add an `arrow-back` icon and a `BackLink` to `@babysteps/ui`. **[CONFIRMED]**
-- [ ] **[U9] P2 — Motion ignores "reduce motion", and content needs JS to show.**
-  `styles.css:178-198`. `.reveal` starts at `opacity: 0`, `.btn-pulse` loops forever, the sales
-  page runs its own scroll animation (`challenge/rolling/index.html:586-616`), and the thank-you
-  page drops confetti (`thank-you.html:223-240`). Nothing checks `prefers-reduced-motion`. If the
-  script fails, `.reveal` sections stay invisible. **Fix:** a `prefers-reduced-motion: reduce`
-  block that shows `.reveal` and stops the pulse and confetti; skip the smooth scroll in that case;
-  hide `.reveal` only under a `.js` class set on `html`. **[CONFIRMED]**
-- [ ] **[U10] P2 — The mobile sticky bar covers the price section and the footer.**
-  `challenge/rolling/index.html:655-661`. The bar shows whenever `scrollY > 150`, also over
-  `#register`, where it repeats the price over the PayPal card. The body has no bottom padding, so
-  it also hides the footer's last line. **Fix:** hide it with an `IntersectionObserver` while
-  `#register` or the footer is visible, and add `padding-bottom: 80px` to `body` below 768px.
-  **[CONFIRMED]**
-- [ ] **[U11] P2 — No way to reach the course from the site.** `index.html:152-169`. No marketing
-  page links to `/app/login`. A returning buyer who lost the email cannot find where to log in.
-  **Fix:** a small "כניסה לקורס" link in the nav and footer of every page (`SiteNav` in the
-  rebuild). **[CONFIRMED]**
-- [ ] **[U12] P2 — The login form has no labels and the wrong text direction.**
-  `app/login.html:16-19`. The inputs use only placeholders, which vanish on typing and are weak for
-  screen readers. Both fields inherit RTL, so an email shows flipped while typing. The error line
-  (`:25`) is not announced. **Fix:** visible `<label>`s, `dir="ltr"` on both inputs, and
-  `role="status" aria-live="polite"` on `#msg`. `TextField` already does this for the rebuild.
-  **[CONFIRMED]**
-- [ ] **[U13] P2 — Muted text fails contrast.** `packages/ui/src/tokens.css:6`. `--color-ink-muted
-  #8a6a55` is about 3.9:1 on `--surface-peach`, and `PriceCard` uses it at caption size on the peach
-  header (`PriceCard.css:31-33`, `:60-66`). On the live site, `#9a7a68` on white is about 3.9:1
-  (`challenge/rolling/index.html:519`, `thank-you.html:92`). WCAG AA needs 4.5:1. **Fix:** darken
-  the token to about `#74553f` and replace `#9a7a68` with `var(--text-mid)`. **[CONFIRMED]**
-- [ ] **[U14] P2 — The reference designs repeat the claims being removed.**
-  `packages/ui/src/examples/LandingPage.stories.tsx:53`. The example page synced to Claude Design
-  shows five stars with "200+ אמהות מרוצות", the ₪205 old price (`:106`, `:115`) and the ₪105 home
-  price (`:135`). `TestimonialCard` defaults to `rating = 5` (`TestimonialCard.tsx:18`). The rebuild
-  will copy these. **Fix:** update the example after C2, set the `rating` default to `null`, and
-  re-sync to Claude Design. **[CONFIRMED]**
-- [ ] **[U15] P2 — The design system is missing pieces the rebuild needs.**
-  `packages/ui/src/components/VideoFrame/VideoFrame.tsx:5-14`. `VideoFrame` is a teaser only: no
-  `onTimeUpdate`, `onEnded`, start time or ref, and props spread onto the `<figure>` (`:34`), where
-  media events do not bubble. It cannot drive lesson progress (L5). There is also no Checkbox (B2
-  consent), EmptyState or BackLink (U8). **Fix:** add a `LessonPlayer` with `startAt`,
-  `onProgress(sec)`, `onComplete` at 90% and a 9/16 fit capped at 80vh. Add `Checkbox`,
-  `EmptyState` and `BackLink` before the app screens (U6). **[CONFIRMED]**
-- [ ] **[U16] P2 — The package CSS carries 319 KB of inlined fonts.** `packages/ui/vite.config.ts:7-19`.
-  Library mode inlines the `@fontsource` files from `base.css:2-9` as base64, woff and woff2, so
-  `dist/styles.css` is 319 KB and blocks the first paint on phones. **Fix:**
-  `build.assetsInlineLimit: 0`, import only woff2, and preload the Rubik 400 Hebrew file.
-  **[CONFIRMED]**
-- [ ] **[U17] P3 — Storybook has no accessibility or phone checks.** `packages/ui/.storybook/main.ts:5`.
-  The only addon is `addon-docs`: no a11y panel and no phone viewport, though most buyers use phones
-  and `StickyCTA` shows only below 768px. 13 of 30 components have no test (for example `Hero`,
-  `Footer`, `StickyCTA`, `TestimonialCard`). **Fix:** add `@storybook/addon-a11y` and fail on
-  violations in the Storybook Vitest run, add a 390px viewport, and add smoke tests. **[CONFIRMED]**
+- [ ] **[U7] P2 — Pick one set of colors.** Decision sheet: `docs/design/2026-09-25-color-decision.md`
+  and `color-decision.html` (#41). **Fix:** Yarden answers the 5 questions there, then align
+  `styles.css` and `tokens.css`. Also fix now: the green "done" badge in `app/course.html` fails
+  contrast (2.28:1); use `#2f9e6b`.
+- [ ] **[U18] P2 — Contrast failures found by axe.** On the marketing pages: the footer tagline
+  (3.7:1) and the `opacity:0.4` copyright line (2.49:1) on every page, `.btn-whatsapp` on the
+  thank-you and tummy-time pages (1.98:1), and `.badge-coming-soon` on home (3.54:1). In
+  `@babysteps/ui`: `.bs-lesson__state`, the CourseCard "coming soon" badge and title, and the
+  TextField error text. **Fix:** darken to at least 4.5:1 (3:1 for large text) and rerun axe.
+- [ ] **[U19] P3 — Invalid list and heading order in the design system.** axe flags
+  `ol.bs-lesson-list` in the LessonListItem FullList story (children are not list items) and a
+  heading-order warning in the AppScreens example. **Fix:** wrap items in `<li>` and fix heading
+  levels. Then consider `@storybook/addon-vitest` so a11y violations fail CI.
+- [ ] **[U20] P2 — Link the legal pages.** `/terms`, `/privacy` and `/accessibility` exist only as
+  drafts (#39, #42, #46). **Fix:** once Yarden approves them, remove `noindex`, add footer links on
+  every page (the footer uses `.footer-link` now), and link terms under the PayPal button.
 
 ## Architecture
 
-- [ ] **[A2] P2 — The live site serves the repo's source and docs.** `vercel.json:1`. There is no
-  output directory, so the repo root is public: `/docs/TODO.md`, `/CLAUDE.md`,
-  `/docs/make/paypal-enroll.blueprint.json`, `/lib/firebase-admin.js` and `/firestore.rules` all
-  return 200 (`.env*` files return 404). The GitHub repo is public too, so this adds little, but it
-  makes G3 easy to find from the site. **Fix:** do not use `.vercelignore` for `lib/`, because the
-  `/api` functions import it. Move the public files into `public/` and set `outputDirectory`
-  (or do it as part of A10). Until then, add `vercel.json` rewrites that return 404 for `/docs/`,
-  `/lib/`, `/scripts/`, `/tests/`, `/packages/` and `*.md`. Add `X-Frame-Options: DENY` and
-  `Referrer-Policy: strict-origin-when-cross-origin` headers for `/app/(.*)`. Check each URL after
-  deploy. **[CONFIRMED]**
-- [ ] **[A3] P2 — The Firebase SDK version is written seven times.** `app/firebase-client.js:2`.
-  `10.12.0` appears in `firebase-client.js:2`, `:6`, `:7`, and each page imports Firestore from the
-  CDN itself (`app/course.html:24`, `app/lesson.html:27`, `app/login.html:30`,
-  `app/my-courses.html:23`). If one URL is bumped and not the others, two SDK copies load and
-  Firestore throws "Type does not match the expected instance". **Fix:** re-export every Auth and
-  Firestore function the pages use from `app/firebase-client.js`, and import only from there.
-  **[CONFIRMED]**
-- [ ] **[A4] P2 — The Make scenario is tied to one course and never checks the amount.**
-  `docs/make/paypal-enroll.blueprint.json:219`. The filter checks that the raw IPN *contains*
-  `course_2`, so `course_20` matches too. The body always sends `"paypalProductId":"course_2"`
-  (`:237`), so `COURSE_MAP` is never really used and a second course needs a cloned scenario.
-  `mc_gross` and `mc_currency` are never checked, so a payment at a wrong price still enrolls.
-  **Fix:** send `{{1.item_number}}` as `paypalProductId` and let `/api/enroll` map it. Also send
-  `mc_gross` and `mc_currency`, and reject in `runEnroll` when they do not match the expected price
-  per product. **[CONFIRMED]**
-- [ ] **[A5] P2 — Enrollment writes overwrite the first purchase.** `lib/firebase-admin.js:83-90`.
-  `ensureEnrollment` merges and resets `grantedAt` and `paymentRef` on every call. A Make retry, a
-  second payment or a manual enroll replaces the original PayPal `txnId`, which refunds (T1) and
-  receipts (F2) need. **Fix:** in a transaction, create the doc only if it is missing. On later
-  calls append to a `payments` array (`FieldValue.arrayUnion({ ref, source, at })`) and keep the
-  first `grantedAt`. **[CONFIRMED]**
-- [ ] **[A6] P2 — `published` and `order` are never read.** `app/my-courses.html:35`. The list shows
-  every enrolled course in doc-id order and fetches them one by one. The course page
-  (`app/course.html:29`) and the rules (`firestore.rules:7-9`) ignore `published`. The tester
-  script enrolls in the unpublished tummy-time course (`lib/tester-core.js:23-26`), which then
-  shows as an empty course. **Fix:** fetch courses with `Promise.all`, drop `published === false`,
-  sort by `order`. Enroll the tester only in published courses. **[CONFIRMED]**
-- [ ] **[A7] P2 — Video scripts break when a second course reuses file names.**
-  `scripts/upload-videos.js:178`. Local files are matched by the last part of the key only, so
-  `rolling/lesson-01.mp4` and `tummy-time/lesson-01.mp4` both want `lesson-01.mp4`.
-  `prepare-videos.js:85-97` keys lessons by number across all courses, and `BONUS_NUMBER` assumes
-  one course. `validate()` (`scripts/course-data.js:98`) does not catch it. **Fix:** a
-  `--course <id>` flag on both scripts, and make `validate()` fail on duplicate basenames inside a
-  course. **[CONFIRMED]**
-- [ ] **[A8] P2 — No tests for handlers, real deps or data validation.** `api/enroll.js:12`.
-  `tests/` covers only the pure cores. Nothing tests the fail-closed secret check, the `405`, the
-  `Bearer` parsing (`api/video-url.js:11`), the `ensureUser` error branches and `hasSignedIn`
-  (`lib/firebase-admin.js:35-55`), `sendWelcome` error parsing (`:73-80`), or `validate()`
-  (`scripts/course-data.js:80-107`). **Fix:** handler tests with fake `req`/`res` and
-  `vi.mock("../lib/firebase-admin.js")`; let `sendWelcome` take `fetch` as a parameter; add
-  `tests/course-data.test.js`. **[CONFIRMED]**
-- [ ] **[A9] P2 — No CI and no pinned Node version.** `package.json:8-9`. There is no `.github/`, so
-  tests run only when someone remembers. The UI `typecheck` (`packages/ui/package.json:25`) is not
-  in `npm test`. There is no `engines` field or `.nvmrc`, while Vitest needs Node 22.12 or newer.
-  **Fix:** add `"engines": { "node": ">=22.12" }` and `.nvmrc`. Add a GitHub Action that runs
-  `npm ci`, `npm test`, the UI typecheck and `npm run ui:build` on every PR. **[CONFIRMED]**
-- [ ] **[A10] P2 — Plan the build step for the React rebuild.** `packages/ui/package.json:7-15`. The
-  package points to `dist/`, which is gitignored and built by nobody on Vercel. The site has no
-  build command, and routing is two rewrites (`vercel.json:4-5`). `lib/firebase-admin.js:6` imports
-  `app/firebase-config.js` and `:9` hardcodes the prod URL, so moving `app/` or using preview URLs
-  breaks the server. **Fix:** an `apps/web` workspace (Vite + React Router, one SPA for `/app/*`,
-  prerendered `/` and `/challenge/*`). Vercel `buildCommand` builds the UI then the app,
-  `outputDirectory` is `apps/web/dist`, `api/` stays at the root. Move the web API key and site URL
-  into env vars (`FIREBASE_WEB_API_KEY`, `SITE_URL`). Keep old URLs with rewrites. This also fixes
-  A2. **[CONFIRMED]**
+- [ ] **[A4] P2 — Update the Make scenario to send the amount.** The code checks price, currency and
+  the exact product (#36). **Fix:** do G2 first (a ₪1 test is rejected once Make sends the amount).
+  Then import `docs/make/paypal-enroll.blueprint.json` or edit the scenario as in checklist section
+  5a, run one real payment, then set `REQUIRE_AMOUNT=1` in Vercel. `scripts/fake-payment.sh` sends
+  ₪1 and will stop working; update it to send the real price or delete it.
+- [ ] **[A10] P2 — Start the React rebuild.** The plan is in
+  `docs/superpowers/specs/2026-09-25-react-rebuild-build-plan.md` (#44). **Fix:** decide the open
+  questions in it (Vite vs Astro, Firebase config, custom domain first), then do step 1: the build
+  pipeline with one page, and prove on a preview that `/api` still answers 401.
 
 ## Bigger bets
 
@@ -335,50 +203,8 @@ what is still open.
 
 - [ ] **[H1] P3 — Delete `staging/`.** 748 MB of transcoded videos, gitignored. **Fix:** once R2
   playback is confirmed good, `rm -rf staging/`.
-- [ ] **[H2] P3 — Update `CLAUDE.md` status.** `CLAUDE.md` still says "built, not yet
-  provisioned". **Fix:** mark the platform live and trim the "Remaining work" section to the open items here.
-
-- [ ] **[H3] P3 — Remove dead code and assets.** `challenge/tummy-time/index.html:50-80`. Unused
-  `.notify-input` styles, a "Logo placeholder" comment (`challenge/rolling/index.html:199`), a
-  "Guarantee note" comment over a line with no guarantee (`:518`), and three unused logos
-  (`assets/logos/logo-blue.png`, `logo-mint.png`, `logo-pink.png`, about 520 KB). **Fix:** delete
-  them, or keep the logos only if the design system needs them.
-- [ ] **[H4] P3 — Remove the committed third-party UI skill.** `.agents/skills/ui-ux-pro-max/SKILL.md:1`.
-  About 1.5 MB of Python scripts and CSV data for a generic design tool is tracked in the repo.
-  Nothing uses it, and it adds noise to every search. **Fix:** `git rm -r .agents/`, and install it
-  in the user skills folder if still wanted. **[CONFIRMED]**
 - [ ] **[H5] P3 — Delete old design-sync leftovers.** `.gitignore:21-22`. `.ds-sync/` (46 MB) and
   `ds-bundle/` (9.3 MB) are from an old sync tool that `.design-sync/` replaced. They are untracked
   but still on disk and still in `.gitignore`. `.superpowers/` and `.playwright-mcp/` (screenshots
   and logs) are leftovers too. **Fix:** `rm -rf .ds-sync ds-bundle .playwright-mcp .superpowers`,
   then drop lines 21 and 22 from `.gitignore`. **[CONFIRMED]**
-- [ ] **[H6] P3 — Tidy `.gitignore`.** `.gitignore:4-5`, `:9`. `.env` and `.env.local` repeat
-  `.env*`. `.DS_Store`, `.playwright-mcp/` and `*-preview.png` are ignored only by a personal global
-  or `.git/info/exclude`, so another clone will commit them. **Fix:** delete lines 4 and 5, add
-  `.DS_Store`, `.playwright-mcp/`, `*-preview.png` and `.idea/`. **[CONFIRMED]**
-- [ ] **[H7] P3 — Share the page scripts instead of copying them.** `index.html:326-338`. The
-  reveal-on-scroll observer is copied into all four marketing pages
-  (`challenge/rolling/index.html:641-651`, `challenge/rolling/thank-you.html:255-265`,
-  `challenge/tummy-time/index.html:233-245`), and the ripple handler twice
-  (`challenge/rolling/index.html:619-631`, `thank-you.html:242-253`). **Fix:** one `/site.js` loaded
-  with `defer`; delete the inline copies. **[CONFIRMED]**
-- [ ] **[H8] P3 — Copied nav and footer markup with inline hover JS.** `index.html:286-324`. The same
-  footer, with long inline SVGs and `onmouseover`/`onmouseout` style swaps, is pasted into all four
-  pages, and the nav too (`challenge/rolling/index.html:196-209`). One link change means four
-  edits. **Fix:** `.footer-link` and `.brand` classes with `:hover` in `styles.css`, drop the
-  `onmouse*` attributes. Use `SiteNav` and `Footer` in the rebuild. **[CONFIRMED]**
-- [ ] **[H9] P3 — Storybook keeps its own copies of site images.** `packages/ui/.storybook/main.ts:10`.
-  The three files in `.storybook/public/` are byte-identical copies of `assets/about.jpg`,
-  `assets/logos/logo-peach.png` and `assets/videos/rolling-teaser-poster.jpg`. Stories import images
-  through `.storybook/assets.ts`, so `staticDirs` is not needed. **Fix:** import from
-  `../../../assets/...` in `assets.ts`, delete `.storybook/public/`, remove `staticDirs`.
-  **[CONFIRMED]**
-- [ ] **[H10] P3 — More stale facts in `CLAUDE.md` (do with H2).** `CLAUDE.md:43`. It says Make emails
-  a generated password; buyers now get the Firebase reset email. Line 49 lists `posterKey`, which
-  nothing writes, and leaves out `kind`. Line 66 says the web config holds placeholders. Line 71
-  says to edit `DATA` in `seed.js`; the data lives in `scripts/course-data.js`. Lines 13 and 15 say
-  "HTML/Tailwind" and "GitHub Pages". **Fix:** update these lines. **[CONFIRMED]**
-- [ ] **[H11] P3 — One R2 client and shared script helpers.** `scripts/upload-videos.js:59-66`. The
-  S3 client setup repeats `lib/r2.js:11-19`, and `walk()` and `mb()` are copied between
-  `scripts/upload-videos.js:68-79` and `scripts/prepare-videos.js:43`, `:71-80`. **Fix:** export
-  `r2Client()` from `lib/r2.js`, and move `walk` and `mb` into `scripts/fs-utils.js`. **[CONFIRMED]**

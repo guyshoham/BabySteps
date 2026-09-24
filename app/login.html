@@ -30,11 +30,19 @@
     </form>
     <button id="reset" class="w-full text-sm text-[#704229] mt-3 underline">שכחתי סיסמה</button>
     <p id="msg" role="status" aria-live="polite" class="text-sm text-red-600 mt-3 text-center"></p>
+    <div class="mt-5 pt-4 border-t text-sm text-gray-600 text-center space-y-2">
+      <p>פעם ראשונה? בחרי סיסמה דרך הקישור שקיבלת במייל, או לחצי על "שכחתי סיסמה".</p>
+      <p>צריכה עזרה?
+        <a href="https://wa.me/972542366243" target="_blank" rel="noopener"
+           class="text-[#704229] underline font-medium">כתבי לנו בוואטסאפ</a>
+      </p>
+    </div>
   </main>
 
   <script type="module">
     import { signIn, resetPassword, auth, onAuthStateChanged } from "/app/firebase-client.js";
     import { safeNext } from "/app/safe-next.js";
+    import { messageFor } from "/app/auth-errors.js";
 
     const params = new URLSearchParams(location.search);
     const next = safeNext(params.get("next"));
@@ -50,21 +58,21 @@
         await signIn(document.getElementById("email").value.trim(),
                      document.getElementById("password").value);
         location.replace(next);
-      } catch {
-        msg.textContent = "אימייל או סיסמה שגויים";
+      } catch (e) {
+        msg.textContent = messageFor(e?.code);
       }
     });
 
     document.getElementById("reset").addEventListener("click", async () => {
       msg.className = "text-sm text-red-600 mt-3 text-center";
       const email = document.getElementById("email").value.trim();
-      if (!email) { msg.textContent = "הזינו אימייל ואז לחצו שכחתי סיסמה"; return; }
+      if (!email) { msg.textContent = messageFor("auth/missing-email", "reset"); return; }
       try {
         await resetPassword(email);
         msg.className = "text-sm text-green-700 mt-3 text-center";
-        msg.textContent = "נשלח אליכם מייל לאיפוס סיסמה";
-      } catch {
-        msg.textContent = "לא הצלחנו לשלוח מייל איפוס";
+        msg.textContent = "שלחנו לך מייל לבחירת סיסמה. בדקי גם בספאם.";
+      } catch (e) {
+        msg.textContent = messageFor(e?.code, "reset");
       }
     });
   </script>

@@ -32,3 +32,6 @@
 @import './components/TestimonialCard/TestimonialCard.css';
 @import './components/PriceCard/PriceCard.css';
 @import './components/CourseCard/CourseCard.css';
+@import './components/Checkbox/Checkbox.css';
+@import './components/EmptyState/EmptyState.css';
+@import './components/LessonPlayer/LessonPlayer.css';

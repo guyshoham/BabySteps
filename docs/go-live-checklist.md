@@ -161,6 +161,72 @@ Scenario: **PayPal (new notification) → filter → HTTP**.
       so enroll them by hand with `scripts/enroll-manual.js` (see "Paid but no access"
       below). They get the same Firebase welcome email.
 
+### 5a. Price check and IPN verification (backlog A4, G3)
+
+This replaces the filter and body in the two items above. Two gaps are closed here:
+
+- **A4:** the old filter checked that the raw IPN *contains* `course_2`, so `course_20` also
+  matched. Nothing checked the amount, so a ₪1 payment still enrolled.
+- **G3:** Make accepts any IPN sent to the hook URL. Anyone who has the URL can fake a payment.
+
+`/api/enroll` now reads `amount` and `currency`. If `amount` is sent, `currency` must be `ILS`
+and `amount` must be at least the price in `lib/prices.js` (more is fine). Otherwise it answers
+`400 amount below price` (or `currency must be ILS`) and enrolls nobody. If `amount` is not
+sent, it enrolls as before and logs a warning. With `REQUIRE_AMOUNT=1` a missing amount is a `400`.
+
+Note: `scripts/fake-payment.sh` sends `mc_gross=1.00`, so after step 3 below its runs end in
+`400 amount below price`. That is the check working.
+
+**Update the scenario**
+
+1. In Make, either import `docs/make/paypal-enroll.blueprint.json` as a new scenario, or edit
+   the live one by hand. If you import, set the PayPal webhook again and replace
+   `PASTE_ENROLL_SECRET_HERE` with the real `ENROLL_SECRET`.
+2. Filter on the link into HTTP: `paymentStatus` **equals** `Completed` **AND** `itemNumber`
+   **equals** `course_2` (exact match, not "contains").
+3. HTTP body:
+   `{"email":"{{1.payer.email}}","paypalProductId":"{{1.itemNumber}}","paymentRef":"{{1.txnId}}","amount":"{{1.gross}}","currency":"{{1.currency}}"}`
+   (`itemNumber`, `gross` and `currency` are the PayPal module's names for the IPN fields
+   `item_number`, `mc_gross` and `mc_currency`.)
+
+**Verify each IPN with PayPal (G3)**
+
+PayPal's rules (source: <https://developer.paypal.com/api/nvp-soap/ipn/IPNImplementation/>):
+post the message back over HTTPS to `https://ipnpb.paypal.com/cgi-bin/webscr` (sandbox:
+`https://ipnpb.sandbox.paypal.com/cgi-bin/webscr`). Put `cmd=_notify-validate` in front of it,
+and do not change the fields, their order or the character encoding. PayPal answers with the
+single word `VERIFIED` or `INVALID`. PayPal also wants an empty `200` back at once, or it sends
+the IPN again. Make's webhook already answers `Accepted` right away, so that part is covered.
+
+4. Run the scenario once (a real sale or `scripts/fake-payment.sh`). In History, open the
+   PayPal module output and look at `raw`. Check that it is the original form text
+   (`txn_type=web_accept&payment_status=Completed&...`). If it is JSON instead, stop: the
+   postback cannot rebuild the exact original order from JSON. In that case use Make's
+   **Webhooks → Custom webhook** as the trigger (it keeps the raw body), or move the check
+   into `/api/enroll` later.
+5. Add an **HTTP → Make a request** module between the PayPal trigger and the enroll HTTP
+   module:
+   - URL `https://ipnpb.paypal.com/cgi-bin/webscr`, method **POST**
+   - Header `Content-Type: application/x-www-form-urlencoded`
+   - Header `User-Agent: BabySteps-IPN-Verify` (PayPal asks for a User-Agent)
+   - Body type **Raw**, content: `cmd=_notify-validate&{{1.raw}}` (no spaces, nothing else)
+   - Parse response: **No** (the answer is plain text)
+   - Follow all redirects: **No**
+6. Add a filter on the link from this module to the enroll HTTP module: `data` (the response
+   body) **equals** `VERIFIED`. Keep the filter from step 2 as well. Anything else (`INVALID`,
+   empty, an error page) stops the run, and nobody is enrolled.
+7. Test it: `scripts/fake-payment.sh` must now stop at the new filter, because PayPal answers
+   `INVALID` for a message it did not send. Then check that one real sale goes through with
+   `VERIFIED` in History.
+
+**Turn on the strict mode**
+
+8. After one good run where History shows `amount` and `currency` in the enroll request and a
+   `200` answer, set `REQUIRE_AMOUNT=1` in Vercel (Production and Preview) and redeploy. From
+   then on, a call without an amount is rejected.
+9. If a real buyer is ever rejected with `amount below price`, check the payment in PayPal
+   first. If she did pay in full, enroll her by hand ("Paid but no access", step 4).
+
 ## 6. Verify end to end
 
 - [x] `npm test` → all unit tests pass.
@@ -246,3 +312,23 @@ with a generated password, repeat call → `created:false` (idempotent), Auth us
 + `enrollments/rolling` all written, a real web ID token reached `/api/video-url` and returned
 `404 lesson not found` (correct — Firestore isn't seeded yet). Test user and docs deleted;
 Auth and Firestore are empty again. Remaining boxes need seeded data and uploaded videos.
+
+## Hebrew password page (TODO G4)
+
+The welcome email and "שכחתי סיסמה" both send Firebase's password reset link. By default that
+link opens Firebase's own page, in English. `app/auth-action.html` is our Hebrew page for it.
+It reads `mode` and `oobCode` from the link, shows the email, and lets her choose a password
+(at least 8 characters). Other modes (`verifyEmail`, `recoverEmail`) show a short note and a
+link to `/app/login`.
+
+The page does nothing until Firebase sends links to it:
+
+- [ ] Firebase console, Authentication, Templates, Password reset, the pencil icon, then
+      "Customize action URL". Set it to `https://baby-steps-murex.vercel.app/app/auth-action`
+      and save. This URL is used for all email templates.
+- [ ] Send one reset to the tester email ("שכחתי סיסמה" on `/app/login`). Open the link. Check
+      it lands on `/app/auth-action` in Hebrew, shows the tester email, and saves a new
+      password. Log in with it. Then reset the tester again with `scripts/create-tester.js`.
+- [ ] Open the same link a second time. It should say the link is not valid, in Hebrew.
+
+To undo, clear the custom action URL in the same place. Links go back to Firebase's page.

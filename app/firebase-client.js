@@ -9,6 +9,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import {
   getAuth, signInWithEmailAndPassword, signOut as fbSignOut,
   onAuthStateChanged, sendPasswordResetEmail, setPersistence, browserLocalPersistence,
+  verifyPasswordResetCode, confirmPasswordReset,
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
   getFirestore, collection, query, where, orderBy, getDocs, doc, getDoc, setDoc,
@@ -16,6 +17,7 @@ import {
 import { firebaseConfig } from "./firebase-config.js";
 
 // Re-exported for the pages, so they all share this one SDK copy.
+export { verifyPasswordResetCode, confirmPasswordReset }; // used by app/auth-action.html
 export { onAuthStateChanged, collection, query, where, orderBy, getDocs, doc, getDoc, setDoc };
 
 export const app = initializeApp(firebaseConfig);

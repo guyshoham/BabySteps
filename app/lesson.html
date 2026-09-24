@@ -22,6 +22,21 @@
     <img id="image" class="block mx-auto w-auto max-w-full object-contain rounded-2xl shadow hidden"
          style="max-height:80vh;max-height:80svh" alt="" oncontextmenu="return false" />
     <p id="msg" class="text-center text-red-600 mt-3"></p>
+    <!-- Shown once every lesson of the course is done. -->
+    <section id="finish" class="hidden mt-4 p-5 rounded-2xl bg-[#704229] text-white shadow text-center">
+      <h2 class="text-xl font-bold">סיימת את הקורס! 🎉</h2>
+      <p class="mt-2 leading-relaxed">כל הכבוד לך! אשמח מאוד לשמוע איך היה לך. כמה מילים קצרות ממך יעזרו לאמהות אחרות להחליט.</p>
+      <a id="testimonial" target="_blank" rel="noopener"
+         class="inline-block mt-4 px-5 py-3 rounded-xl bg-white text-[#704229] font-bold">שלחי לי כמה מילים בווטסאפ</a>
+      <p class="mt-4 text-sm opacity-90">ואל תשכחי: את תמיד יכולה לצלם תרגול ולשלוח לי לפידבק אישי.</p>
+    </section>
+    <!-- Personal WhatsApp feedback, as promised on the sales page. -->
+    <section id="feedback" class="hidden mt-4 p-5 rounded-2xl bg-white shadow text-center">
+      <h2 class="text-lg font-bold text-[#704229]">צלמי את התרגול ושלחי לי לפידבק אישי</h2>
+      <p class="mt-2 text-sm text-[#7a5a48] leading-relaxed">אני אצפה בסרטון ואחזיר לך דיוק אישי.</p>
+      <a id="whatsapp" target="_blank" rel="noopener"
+         class="inline-block mt-4 px-5 py-3 rounded-xl bg-[#704229] text-white font-bold">שלחי לי בווטסאפ</a>
+    </section>
     <nav id="nav" class="hidden flex items-center justify-between gap-3 mt-4">
       <a id="prev" class="invisible px-4 py-3 rounded-xl bg-white shadow text-[#704229] font-medium">→ הקודם</a>
       <a id="next" class="invisible px-4 py-3 rounded-xl bg-white shadow text-[#704229] font-medium">לשיעור הבא ←</a>
@@ -34,6 +49,7 @@
     } from "/app/firebase-client.js";
     import { findNeighbors } from "/app/lesson-nav.js";
     import { shouldComplete } from "/app/lesson-progress.js";
+    import { whatsAppFeedbackUrl, whatsAppTestimonialUrl, allDone } from "/app/lesson-extras.js";
 
     const lessonId = decodeURIComponent(location.pathname.split("/").pop());
     const user = await requireAuth();
@@ -46,12 +62,21 @@
     if (!lessonSnap.exists()) { msg.textContent = "השיעור לא נמצא"; throw new Error("no lesson"); }
     const lesson = lessonSnap.data();
     document.getElementById("title").textContent = lesson.title;
+    document.getElementById("whatsapp").setAttribute("href", whatsAppFeedbackUrl(lesson.title));
+    document.getElementById("testimonial").setAttribute("href", whatsAppTestimonialUrl());
     // Lessons are videos unless marked otherwise; older docs have no `kind`.
     const isImage = lesson.kind === "image";
 
     // Back link and prev/next buttons. Runs alongside the video load, so a slow
     // query never delays playback.
     const next = document.getElementById("next");
+    // Finish card state: this course's lesson ids and the ones already done.
+    let courseLessonIds = null;
+    const completedIds = new Set();
+    const checkFinished = () => {
+      if (!courseLessonIds) return;
+      document.getElementById("finish").classList.toggle("hidden", !allDone(courseLessonIds, completedIds));
+    };
     const navReady = (async () => {
       const [courseSnap, lessonsSnap] = await Promise.all([
         getDoc(doc(db, "courses", lesson.courseId)),
@@ -61,7 +86,8 @@
         ? `/app/course/${encodeURIComponent(courseSnap.data().slug)}`
         : "/app/my-courses";
       document.getElementById("back").setAttribute("href", courseUrl);
-      const n = findNeighbors(lessonsSnap.docs.map(d => d.id), lessonId);
+      courseLessonIds = lessonsSnap.docs.map(d => d.id);
+      const n = findNeighbors(courseLessonIds, lessonId);
       const show = (el, id) => {
         if (!id) return;
         el.setAttribute("href", `/app/lesson/${encodeURIComponent(id)}`);
@@ -90,11 +116,22 @@
     const progSnap = await getDoc(doc(db, "users", user.uid, "progress", lessonId));
     const startAt = progSnap.exists() ? (progSnap.data().lastPositionSec || 0) : 0;
 
-    const save = (extra) => setDoc(
-      doc(db, "users", user.uid, "progress", lessonId),
-      { updatedAt: new Date().toISOString(), ...extra },
-      { merge: true }
-    );
+    const save = (extra) => {
+      const saved = setDoc(
+        doc(db, "users", user.uid, "progress", lessonId),
+        { updatedAt: new Date().toISOString(), ...extra },
+        { merge: true }
+      );
+      // Side effect only: re-check the finish card once a done state is saved.
+      // Callers still get the same promise, errors included.
+      if ("completed" in extra) {
+        saved.then(() => {
+          if (extra.completed) completedIds.add(lessonId); else completedIds.delete(lessonId);
+          checkFinished();
+        }, () => {});
+      }
+      return saved;
+    };
 
     // "Mark as done" toggle under the player. Starts from the saved progress doc.
     let isDone = progSnap.exists() && progSnap.data().completed === true;
@@ -131,6 +168,17 @@
     });
     renderDone();
 
+    // Load which lessons are done (same query as the course page), then check
+    // the finish card. The current lesson follows the live toggle state, in
+    // case it was saved while this query was running.
+    Promise.all([navReady, getDocs(collection(db, "users", user.uid, "progress"))])
+      .then(([, snap]) => {
+        snap.docs.forEach((d) => { if (d.data().completed) completedIds.add(d.id); });
+        if (isDone) completedIds.add(lessonId); else completedIds.delete(lessonId);
+        checkFinished();
+      })
+      .catch((e) => console.error("loading progress failed", e));
+
     const token = await user.getIdToken();
     const resp = await fetch(`/api/video-url?lessonId=${encodeURIComponent(lessonId)}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -140,6 +188,7 @@
     const { url } = await resp.json();
     // Show the toggle only once the lesson has loaded (not next to an error).
     msg.before(doneBtn);
+    document.getElementById("feedback").classList.remove("hidden");
 
     if (isImage) {
       // Tips are images: show them instead of the player, and count as done once seen.

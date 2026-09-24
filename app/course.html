@@ -16,8 +16,21 @@
     <h1 id="title" class="text-2xl font-bold mt-2"></h1>
     <p id="desc" class="text-gray-600"></p>
   </header>
+  <div id="loading" role="status" aria-live="polite"
+       class="max-w-2xl mx-auto flex items-center justify-center gap-3 py-12 text-[#704229]">
+    <span class="w-6 h-6 border-4 border-[#704229]/20 border-t-[#704229] rounded-full animate-spin" aria-hidden="true"></span>
+    <span>טוען...</span>
+  </div>
   <main id="lessons" class="max-w-2xl mx-auto space-y-2"></main>
-  <p id="noaccess" class="max-w-2xl mx-auto text-center text-red-600 hidden">אין לך גישה לקורס הזה.</p>
+  <div id="problem" class="max-w-2xl mx-auto text-center bg-white rounded-2xl shadow p-6 hidden">
+    <p id="problem-title" class="font-bold text-lg text-[#704229]"></p>
+    <p id="problem-text" class="text-sm text-gray-600 mt-2"></p>
+    <div class="mt-4 flex flex-wrap justify-center gap-3">
+      <a href="/app/my-courses" class="bg-[#704229] text-white rounded-lg px-4 py-2 font-semibold">לקורסים שלי</a>
+      <a href="https://wa.me/972542366243" target="_blank" rel="noopener"
+         class="border border-[#704229] text-[#704229] rounded-lg px-4 py-2 font-semibold">כתבי לנו בוואטסאפ</a>
+    </div>
+  </div>
 
   <script type="module">
     import {
@@ -27,43 +40,70 @@
     const slug = decodeURIComponent(location.pathname.split("/").pop());
     const user = await requireAuth();
 
-    const courseQ = query(collection(db, "courses"), where("slug", "==", slug));
-    const courseDocs = await getDocs(courseQ);
-    // An unpublished course (published === false) is treated as not found.
-    const courseDoc = courseDocs.docs.find((d) => d.data().published !== false);
-    if (!courseDoc) { document.getElementById("noaccess").classList.remove("hidden"); throw new Error("no course"); }
-    const courseId = courseDoc.id;
-    const c = courseDoc.data();
+    const PROBLEMS = {
+      notFound: ["הקורס לא נמצא", "אולי הקישור לא מדויק. חזרי לרשימת הקורסים שלך ובחרי משם."],
+      noAccess: ["אין לך גישה לקורס הזה", "רכשת את הקורס והוא לא נפתח? כתבי לנו ונסדר את זה."],
+      error: ["לא הצלחנו לטעון את הקורס", "נסי לרענן את הדף. אם זה חוזר, כתבי לנו."],
+    };
+    function showProblem(kind) {
+      const [title, text] = PROBLEMS[kind];
+      document.getElementById("problem-title").textContent = title;
+      document.getElementById("problem-text").textContent = text;
+      document.getElementById("problem").classList.remove("hidden");
+    }
 
-    const enr = await getDoc(doc(db, "users", user.uid, "enrollments", courseId));
-    if (!enr.exists()) { document.getElementById("noaccess").classList.remove("hidden"); throw new Error("not enrolled"); }
+    const loading = document.getElementById("loading");
+    try {
+      const problem = await render();
+      if (problem) showProblem(problem);
+    } catch (err) {
+      console.error(err);
+      showProblem("error");
+    } finally {
+      loading.classList.add("hidden");
+    }
 
-    document.getElementById("title").textContent = c.title;
-    document.getElementById("desc").textContent = c.description ?? "";
+    // Renders the course. Returns "notFound" or "noAccess" when it cannot.
+    async function render() {
+      const courseQ = query(collection(db, "courses"), where("slug", "==", slug));
+      const courseDocs = await getDocs(courseQ);
+      // An unpublished course (published === false) is treated as not found.
+      const courseDoc = courseDocs.docs.find((d) => d.data().published !== false);
+      if (!courseDoc) return "notFound";
+      const courseId = courseDoc.id;
+      const c = courseDoc.data();
 
-    const lessonsSnap = await getDocs(
-      query(collection(db, "lessons"), where("courseId", "==", courseId), orderBy("order"))
-    );
-    const progressSnap = await getDocs(collection(db, "users", user.uid, "progress"));
-    const completed = new Set(progressSnap.docs.filter(d => d.data().completed).map(d => d.id));
+      const enr = await getDoc(doc(db, "users", user.uid, "enrollments", courseId));
+      if (!enr.exists()) return "noAccess";
 
-    const wrap = document.getElementById("lessons");
-    lessonsSnap.docs.forEach((d, i) => {
-      const l = d.data();
-      const done = completed.has(d.id);
-      const a = document.createElement("a");
-      a.href = `/app/lesson/${encodeURIComponent(d.id)}`;
-      a.className = "flex items-center gap-3 bg-white rounded-xl shadow px-4 py-3 hover:shadow-md transition";
-      // Build with DOM APIs — never innerHTML with Firestore data.
-      const badge = document.createElement("span");
-      badge.className = `w-6 h-6 flex items-center justify-center rounded-full ${done ? "bg-green-500 text-white" : "bg-gray-200 text-gray-600"} text-sm`;
-      badge.textContent = done ? "✓" : String(i + 1);
-      const label = document.createElement("span");
-      label.className = "font-medium";
-      label.textContent = l.title ?? "";
-      a.append(badge, label);
-      wrap.appendChild(a);
-    });
+      const lessonsSnap = await getDocs(
+        query(collection(db, "lessons"), where("courseId", "==", courseId), orderBy("order"))
+      );
+      const progressSnap = await getDocs(collection(db, "users", user.uid, "progress"));
+      const completed = new Set(progressSnap.docs.filter(d => d.data().completed).map(d => d.id));
+
+      document.getElementById("title").textContent = c.title ?? "";
+      document.getElementById("desc").textContent = c.description ?? "";
+
+      const wrap = document.getElementById("lessons");
+      lessonsSnap.docs.forEach((d, i) => {
+        const l = d.data();
+        const done = completed.has(d.id);
+        const a = document.createElement("a");
+        a.href = `/app/lesson/${encodeURIComponent(d.id)}`;
+        a.className = "flex items-center gap-3 bg-white rounded-xl shadow px-4 py-3 hover:shadow-md transition";
+        // Build with DOM APIs — never innerHTML with Firestore data.
+        const badge = document.createElement("span");
+        badge.className = `w-6 h-6 flex items-center justify-center rounded-full ${done ? "bg-green-500 text-white" : "bg-gray-200 text-gray-600"} text-sm`;
+        badge.textContent = done ? "✓" : String(i + 1);
+        const label = document.createElement("span");
+        label.className = "font-medium";
+        label.textContent = l.title ?? "";
+        a.append(badge, label);
+        wrap.appendChild(a);
+      });
+      return null;
+    }
   </script>
 </body>
 </html>

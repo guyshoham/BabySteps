@@ -15,8 +15,24 @@
     <h1 class="text-xl font-bold">הקורסים שלי</h1>
     <button id="signout" class="text-sm underline text-[#704229]">יציאה</button>
   </header>
+  <div id="loading" role="status" aria-live="polite"
+       class="max-w-3xl mx-auto flex items-center justify-center gap-3 py-12 text-[#704229]">
+    <span class="w-6 h-6 border-4 border-[#704229]/20 border-t-[#704229] rounded-full animate-spin" aria-hidden="true"></span>
+    <span>טוען...</span>
+  </div>
   <main id="list" class="max-w-3xl mx-auto grid gap-4 sm:grid-cols-2"></main>
-  <p id="empty" class="max-w-3xl mx-auto text-center text-gray-500 hidden">עדיין אין לך קורסים.</p>
+  <div id="empty" class="max-w-3xl mx-auto text-center text-gray-600 bg-white rounded-2xl shadow p-6 hidden">
+    <p class="font-medium">עדיין אין לך קורסים כאן.</p>
+    <p class="text-sm mt-2">רכשת קורס והוא לא מופיע? כתבי לנו ונסדר את זה.</p>
+    <a href="https://wa.me/972542366243" target="_blank" rel="noopener"
+       class="inline-block mt-4 bg-[#704229] text-white rounded-lg px-4 py-2 font-semibold">כתבי לנו בוואטסאפ</a>
+  </div>
+  <div id="error" class="max-w-3xl mx-auto text-center text-red-600 hidden">
+    <p>לא הצלחנו לטעון את הקורסים. נסי לרענן את הדף.</p>
+    <p class="text-sm mt-2 text-gray-600">זה חוזר?
+      <a href="https://wa.me/972542366243" target="_blank" rel="noopener" class="text-[#704229] underline">כתבי לנו בוואטסאפ</a>
+    </p>
+  </div>
 
   <script type="module">
     import { requireAuth, db, signOut, collection, getDocs, doc, getDoc } from "/app/firebase-client.js";
@@ -27,42 +43,54 @@
       await signOut(); location.replace("/app/login");
     });
 
-    const enrollSnap = await getDocs(collection(db, "users", user.uid, "enrollments"));
-    const list = document.getElementById("list");
+    const loading = document.getElementById("loading");
+    try {
+      await render();
+    } catch (err) {
+      console.error(err);
+      document.getElementById("error").classList.remove("hidden");
+    } finally {
+      loading.classList.add("hidden");
+    }
 
-    // Fetch all enrolled courses at once, then hide unpublished ones and sort by `order`.
-    const courseSnaps = await Promise.all(
-      enrollSnap.docs.map((enr) => getDoc(doc(db, "courses", enr.id)))
-    );
-    const courses = visibleCourses(
-      courseSnaps.filter((s) => s.exists()).map((s) => s.data())
-    );
+    async function render() {
+      const enrollSnap = await getDocs(collection(db, "users", user.uid, "enrollments"));
+      const list = document.getElementById("list");
 
-    if (!courses.length) { document.getElementById("empty").classList.remove("hidden"); }
+      // Fetch all enrolled courses at once, then hide unpublished ones and sort by `order`.
+      const courseSnaps = await Promise.all(
+        enrollSnap.docs.map((enr) => getDoc(doc(db, "courses", enr.id)))
+      );
+      const courses = visibleCourses(
+        courseSnaps.filter((s) => s.exists()).map((s) => s.data())
+      );
 
-    for (const c of courses) {
-      const a = document.createElement("a");
-      a.href = `/app/course/${encodeURIComponent(c.slug)}`;
-      a.className = "block bg-white rounded-2xl shadow overflow-hidden hover:shadow-lg transition";
-      // Build with DOM APIs (textContent/setAttribute) — never innerHTML with Firestore data.
-      if (c.coverImage) {
-        const img = document.createElement("img");
-        img.setAttribute("src", c.coverImage);
-        img.setAttribute("alt", "");
-        img.className = "w-full h-40 object-cover";
-        a.appendChild(img);
+      if (!courses.length) { document.getElementById("empty").classList.remove("hidden"); }
+
+      for (const c of courses) {
+        const a = document.createElement("a");
+        a.href = `/app/course/${encodeURIComponent(c.slug)}`;
+        a.className = "block bg-white rounded-2xl shadow overflow-hidden hover:shadow-lg transition";
+        // Build with DOM APIs (textContent/setAttribute) — never innerHTML with Firestore data.
+        if (c.coverImage) {
+          const img = document.createElement("img");
+          img.setAttribute("src", c.coverImage);
+          img.setAttribute("alt", "");
+          img.className = "w-full h-40 object-cover";
+          a.appendChild(img);
+        }
+        const body = document.createElement("div");
+        body.className = "p-4";
+        const h2 = document.createElement("h2");
+        h2.className = "font-bold text-lg";
+        h2.textContent = c.title ?? "";
+        const p = document.createElement("p");
+        p.className = "text-sm text-gray-600 mt-1";
+        p.textContent = c.description ?? "";
+        body.append(h2, p);
+        a.appendChild(body);
+        list.appendChild(a);
       }
-      const body = document.createElement("div");
-      body.className = "p-4";
-      const h2 = document.createElement("h2");
-      h2.className = "font-bold text-lg";
-      h2.textContent = c.title ?? "";
-      const p = document.createElement("p");
-      p.className = "text-sm text-gray-600 mt-1";
-      p.textContent = c.description ?? "";
-      body.append(h2, p);
-      a.appendChild(body);
-      list.appendChild(a);
     }
   </script>
 </body>
