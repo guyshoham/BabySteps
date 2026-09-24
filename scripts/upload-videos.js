@@ -10,26 +10,32 @@
 //   --dry-run   show the plan (what would upload, skip, or is missing) and exit
 //   --force     re-upload even if an object of the same size is already there
 //   --verify    skip uploading; only report which r2Keys exist in the bucket
+//   --course <id>  work on one course only. Needed once more than one course has
+//               lessons; optional while only one does.
 //
 // Matching rule: a local file matches a lesson when its filename equals the last
 // segment of that lesson's r2Key (`rolling/lesson-01.mp4` ← `lesson-01.mp4`).
+// Only one course is handled per run, so `rolling/lesson-01.mp4` and
+// `tummy-time/lesson-01.mp4` never compete for the same file.
 // Subdirectories are searched too, so a folder that already mirrors the key layout
 // works as-is. Anything unmatched is reported rather than guessed at.
-import { readdir, stat } from "node:fs/promises";
+import { stat } from "node:fs/promises";
 import { createReadStream } from "node:fs";
-import { basename, extname, join, resolve } from "node:path";
+import { basename, extname, resolve } from "node:path";
 import {
-  S3Client, HeadObjectCommand, PutObjectCommand, ListObjectsV2Command,
+  HeadObjectCommand, PutObjectCommand, ListObjectsV2Command,
   CreateMultipartUploadCommand, UploadPartCommand,
   CompleteMultipartUploadCommand, AbortMultipartUploadCommand,
 } from "@aws-sdk/client-s3";
 import { DATA, validate } from "./course-data.js";
+import { r2Client } from "../lib/r2.js";
+import { mb, walk, parseCourseFlag, selectCourseLessons, positionalArg } from "./fs-utils.js";
 
 const args = process.argv.slice(2);
 const DRY_RUN = args.includes("--dry-run");
 const FORCE = args.includes("--force");
 const VERIFY_ONLY = args.includes("--verify");
-const sourceDir = args.find((a) => !a.startsWith("--"));
+const sourceDir = positionalArg(args, ["--course"]);
 
 // Files at or above this size are uploaded in parts. R2 accepts a single PUT up to
 // 5 GB, but a multipart upload retries one 64 MB part instead of the whole file.
@@ -41,13 +47,6 @@ const CONTENT_TYPES = {
   ".webm": "video/webm", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png",
 };
 
-for (const k of ["R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET"]) {
-  if (!process.env[k]) {
-    console.error(`missing env var ${k} — run with: node --env-file=.env scripts/upload-videos.js …`);
-    process.exit(1);
-  }
-}
-
 const errors = validate(DATA);
 if (errors.length) {
   console.error("aborted — fix course-data.js first:");
@@ -55,28 +54,23 @@ if (errors.length) {
   process.exit(1);
 }
 
-const BUCKET = process.env.R2_BUCKET;
-const s3 = new S3Client({
-  region: "auto",
-  endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-  credentials: {
-    accessKeyId: process.env.R2_ACCESS_KEY_ID,
-    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
-  },
-});
-
-const mb = (bytes) => (bytes / 1024 / 1024).toFixed(1) + " MB";
-
-async function walk(dir) {
-  const out = [];
-  for (const entry of await readdir(dir, { withFileTypes: true })) {
-    if (entry.name.startsWith(".")) continue;
-    const full = join(dir, entry.name);
-    if (entry.isDirectory()) out.push(...(await walk(full)));
-    else out.push(full);
-  }
-  return out;
+const flag = parseCourseFlag(args);
+const selected = flag.error ? flag : selectCourseLessons(DATA, flag.course);
+if (selected.error) {
+  console.error(selected.error);
+  process.exit(1);
 }
+const LESSONS = selected.lessons;
+
+for (const k of ["R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET"]) {
+  if (!process.env[k]) {
+    console.error(`missing env var ${k} — run with: node --env-file=.env scripts/upload-videos.js …`);
+    process.exit(1);
+  }
+}
+
+const BUCKET = process.env.R2_BUCKET;
+const s3 = r2Client();
 
 async function headObject(key) {
   try {
@@ -135,18 +129,19 @@ async function report() {
   } while (token);
 
   let missing = 0;
-  for (const l of DATA.lessons) {
+  for (const l of LESSONS) {
     const size = listed.get(l.r2Key);
     if (size === undefined) { console.log("  ✗ MISSING", l.r2Key, `(lesson ${l.id})`); missing++; }
     else console.log("  ✓", l.r2Key, mb(size));
   }
+  // Orphans are checked against every course, so another course's files are not flagged.
   const referenced = new Set(DATA.lessons.map((l) => l.r2Key));
   for (const key of listed.keys()) {
     if (!referenced.has(key)) console.log("  ·  orphan (in bucket, not referenced by any lesson):", key);
   }
   console.log(missing === 0
-    ? `\nall ${DATA.lessons.length} lesson videos are in place`
-    : `\n${missing} of ${DATA.lessons.length} lesson videos still missing`);
+    ? `\nall ${LESSONS.length} ${selected.courseId} lesson videos are in place`
+    : `\n${missing} of ${LESSONS.length} ${selected.courseId} lesson videos still missing`);
   return missing;
 }
 
@@ -158,8 +153,8 @@ if (VERIFY_ONLY) {
 }
 
 if (!sourceDir) {
-  console.error("usage: node --env-file=.env scripts/upload-videos.js <folder-with-videos> [--dry-run] [--force]");
-  console.error("       node --env-file=.env scripts/upload-videos.js --verify");
+  console.error("usage: node --env-file=.env scripts/upload-videos.js <folder-with-videos> [--course id] [--dry-run] [--force]");
+  console.error("       node --env-file=.env scripts/upload-videos.js --verify [--course id]");
   process.exit(1);
 }
 
@@ -174,7 +169,7 @@ for (const f of files) {
 
 const plan = [];
 const unmatchedLessons = [];
-for (const l of DATA.lessons) {
+for (const l of LESSONS) {
   const wanted = l.r2Key.split("/").pop();
   const local = byName.get(wanted);
   if (local) plan.push({ lesson: l, local, key: l.r2Key });
@@ -184,7 +179,8 @@ const usedFiles = new Set(plan.map((p) => p.local));
 const unusedFiles = files.filter((f) => !usedFiles.has(f));
 
 console.log(`source: ${dir}`);
-console.log(`matched ${plan.length} of ${DATA.lessons.length} lessons\n`);
+console.log(`course: ${selected.courseId}`);
+console.log(`matched ${plan.length} of ${LESSONS.length} lessons\n`);
 
 if (unmatchedLessons.length) {
   console.log("lessons with no matching local file — rename the file, or change r2Key in course-data.js:");

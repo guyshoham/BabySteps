@@ -90,6 +90,9 @@ export function validate({ courses, lessons }) {
   const lessonIds = new Set();
   const keys = new Set();
   const orderPerCourse = new Map();
+  // The video scripts match local files by the last part of the key, so two keys
+  // in one course must not end in the same file name.
+  const basenamePerCourse = new Map();
   for (const l of lessons) {
     if (lessonIds.has(l.id)) errors.push(`duplicate lesson id: ${l.id}`);
     lessonIds.add(l.id);
@@ -97,6 +100,16 @@ export function validate({ courses, lessons }) {
     if (!l.r2Key) errors.push(`lesson ${l.id}: empty r2Key`);
     if (keys.has(l.r2Key)) errors.push(`lesson ${l.id}: r2Key "${l.r2Key}" is used by another lesson`);
     keys.add(l.r2Key);
+    if (l.r2Key) {
+      const names = basenamePerCourse.get(l.courseId) ?? new Map();
+      const name = l.r2Key.split("/").pop();
+      const other = names.get(name);
+      if (other && other !== l.r2Key) {
+        errors.push(`lesson ${l.id}: r2Key "${l.r2Key}" has the same file name as "${other}" in ${l.courseId}`);
+      }
+      if (!other) names.set(name, l.r2Key);
+      basenamePerCourse.set(l.courseId, names);
+    }
     if (l.kind !== "video" && l.kind !== "image") errors.push(`lesson ${l.id}: kind must be "video" or "image"`);
     const seen = orderPerCourse.get(l.courseId) ?? new Set();
     if (seen.has(l.order)) errors.push(`lesson ${l.id}: order ${l.order} already used in ${l.courseId}`);
