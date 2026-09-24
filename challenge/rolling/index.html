@@ -109,6 +109,55 @@
             background: var(--brand-brown);
         }
 
+        .hero-facts {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--brand-brown);
+            line-height: 1.7;
+            margin: 0 auto 20px;
+            max-width: 580px;
+        }
+
+        /* ─── FAQ ─────────────────────────────── */
+        .faq-list { display: flex; flex-direction: column; gap: 12px; }
+        .faq-item {
+            border: 1.5px solid rgba(112,66,41,0.12);
+            border-radius: 12px;
+            background: #fff;
+            transition: border-color 0.2s;
+        }
+        .faq-item[open] { border-color: var(--brand-peach-dark); background: var(--brand-peach); }
+        .faq-item summary {
+            list-style: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 18px 20px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        .faq-item summary::-webkit-details-marker { display: none; }
+        .faq-item summary::after {
+            content: '+';
+            flex-shrink: 0;
+            font-size: 1.4rem;
+            font-weight: 400;
+            line-height: 1;
+            color: var(--brand-brown);
+        }
+        .faq-item[open] summary::after { content: '−'; }
+        .faq-item summary:focus-visible { outline: 2px solid var(--brand-brown); outline-offset: 2px; border-radius: 12px; }
+        .faq-item p {
+            margin: 0;
+            padding: 0 20px 20px;
+            font-size: 0.92rem;
+            line-height: 1.8;
+            color: #7a5a48;
+        }
+
         /* ─── Social proof bar ────────────────── */
         .proof-bar {
             background: var(--brand-brown);
@@ -227,6 +276,9 @@
             לעזור לבייבי שלך להתהפך —<br>
             <span style="color:var(--brand-brown); font-weight:300;">בצורה רגועה, מאורגנת ומקצועית</span>
         </h1>
+
+        <!-- DRAFT (C4): replace every [לאשר: ...] before merge -->
+        <p class="hero-facts">לתינוקות בגילאי [לאשר: 3-7] חודשים · 10 סרטוני הדרכה ובונוס · 6 טיפי זהב · צופים מהנייד</p>
 
         <p class="hero-subtitle" style="line-height:1.8; color:var(--text-mid); max-width:580px; margin:0 auto 32px; font-weight:400;">
             היי אהובה, כאן ירדן. בניתי עבורך קורס דיגיטלי ממוקד שייתן לך את כל הכלים לעזור לתינוק שלך לעבור את שלב ההתהפכות — בביטחון מלא.
@@ -405,6 +457,8 @@
                     <div>
                         <h3 style="font-size:1.05rem; font-weight:700; margin:0 0 6px;">ליווי אישי בווטסאפ ⭐</h3>
                         <p style="font-size:0.9rem; color:#7a5a48; margin:0; line-height:1.7;">שולחת לי סרטון של התרגול — ואני מחזירה פידבק ודיוק אישי.</p>
+                        <!-- DRAFT (C5): replace every [לאשר: ...] before merge -->
+                        <p style="font-size:0.82rem; color:var(--brand-brown); font-weight:600; margin:6px 0 0; line-height:1.6;">ליווי בווטסאפ [לאשר: 30 יום] מהרכישה, מענה תוך [לאשר: 48 שעות] בימי חול</p>
                     </div>
                     <span style="font-size:11px; font-weight:700; background:var(--brand-brown); color:#fff; padding:3px 10px; border-radius:3px; align-self:flex-start; white-space:nowrap;">הכי שווה</span>
                 </div>
@@ -450,6 +504,57 @@
     </div>
 </section>
 
+<!-- ░░ FAQ ░░ -->
+<!-- DRAFT (C3): replace every [לאשר: ...] before merge -->
+<section id="faq" class="section-pad" style="background:#fff;">
+    <div style="max-width:760px; margin:0 auto;">
+
+        <div style="text-align:center; margin-bottom:40px;">
+            <p style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brand-brown); font-weight:700; margin-bottom:12px;">לפני שמתחילות</p>
+            <h2 class="section-heading" style="font-weight:800; color:var(--text-dark); margin-bottom:0;">שאלות נפוצות</h2>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="faq-list">
+            <details class="faq-item">
+                <summary>מאיזה גיל מתאים הקורס?</summary>
+                <p>הקורס מתאים לתינוקות בגילאי [לאשר: 3-7] חודשים: כאלה שעוד לא מתהפכים, מתהפכים רק לפעמים או רק לצד אחד. כל תינוק מתפתח בקצב שלו, ואין צורך למהר.</p>
+            </details>
+
+            <details class="faq-item">
+                <summary>לכמה זמן יש לי גישה?</summary>
+                <p>הגישה לקורס היא [לאשר: ל-12 חודשים / ללא הגבלת זמן] מרגע הרכישה. אפשר לחזור לכל סרטון כמה פעמים שתרצי.</p>
+            </details>
+
+            <details class="faq-item">
+                <summary>אפשר לצפות מהנייד?</summary>
+                <p>כן. הקורס נפתח בדפדפן בנייד, בטאבלט או במחשב, בלי להתקין אפליקציה. נכנסים עם המייל והסיסמה שלך, וממשיכים מאיפה שעצרת.</p>
+            </details>
+
+            <details class="faq-item">
+                <summary>מה אם זה לא עוזר?</summary>
+                <p>[לאשר: מדיניות ההחזר, למשל החזר מלא תוך 14 יום מהרכישה]. וחשוב לי שתדעי: אם משהו לא מתקדם, כתבי לי בווטסאפ ונחשוב יחד מה לדייק.</p>
+            </details>
+
+            <details class="faq-item">
+                <summary>איך עובד הליווי בווטסאפ?</summary>
+                <p>את מצלמת סרטון קצר של התרגול עם התינוק ושולחת לי בווטסאפ [לאשר: למספר 054-236-6243]. אני צופה ומחזירה לך פידבק ודיוק אישי. הליווי פתוח [לאשר: 30 יום] מהרכישה, עם מענה תוך [לאשר: 48 שעות] בימי חול.</p>
+            </details>
+
+            <details class="faq-item">
+                <summary>לאיזה מייל תגיע הגישה?</summary>
+                <p>אם שילמת ב-PayPal, הגישה מגיעה למייל של חשבון ה-PayPal ששילם. במייל יש קישור לבחירת סיסמה. לא מצאת אותו? בדקי גם בתיקיית הספאם. אם שילמת בביט או ב-Paybox, שלחי לי בווטסאפ את המייל שאליו תרצי לקבל את הגישה.</p>
+            </details>
+
+            <details class="faq-item">
+                <summary>מתאים גם לפגים?</summary>
+                <p>[לאשר: ניסוח התשובה]. אצל פגים מסתכלים בדרך כלל על הגיל המתוקן. לפני שמתחילות, התייעצי עם רופא/ת הילדים או עם אנשי המקצוע שמלווים אתכם. הקורס לא מחליף ייעוץ רפואי.</p>
+            </details>
+        </div>
+
+    </div>
+</section>
+
 <!-- ░░ PRICING ░░ -->
 <section id="register" class="section-pad" style="background:#fff;">
     <div style="max-width:860px; margin:0 auto;">
@@ -483,8 +588,8 @@
                         <li style="display:flex; align-items:center; gap:10px; font-size:0.88rem; color:var(--text-mid);">
                             <span style="color:var(--brand-brown); font-weight:700;">✓</span> גישה מלאה לכל הסרטונים
                         </li>
-                        <li style="display:flex; align-items:center; gap:10px; font-size:0.88rem; color:var(--text-mid);">
-                            <span style="color:var(--brand-brown); font-weight:700;">✓</span> ליווי אישי בווטסאפ
+                        <li style="display:flex; align-items:flex-start; gap:10px; font-size:0.88rem; color:var(--text-mid);">
+                            <span style="color:var(--brand-brown); font-weight:700;">✓</span> <span>ליווי אישי בווטסאפ<br><span style="font-size:0.8rem; color:#7a5a48;">[לאשר: 30 יום] מהרכישה, מענה תוך [לאשר: 48 שעות] בימי חול</span></span>
                         </li>
                     </ul>
                     <a href="https://www.paypal.com/ncp/payment/SDBZ5YS6JNKLQ" target="_blank" rel="noopener" class="btn-primary btn-pulse" style="width:100%; text-align:center; display:block; font-size:1rem;">שלמי וקבלי גישה מיידית ←</a>
