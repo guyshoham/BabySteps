@@ -9,3 +9,6 @@
 @import './components/Divider/Divider.css';
 @import './components/Avatar/Avatar.css';
 @import './components/StarRating/StarRating.css';
+@import './components/Button/Button.css';
+@import './components/Badge/Badge.css';
+@import './components/Card/Card.css';
