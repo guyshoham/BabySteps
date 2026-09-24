@@ -28,3 +28,6 @@
 @import './components/ProblemCard/ProblemCard.css';
 @import './components/CredentialPill/CredentialPill.css';
 @import './components/HighlightBox/HighlightBox.css';
+@import './components/TestimonialCard/TestimonialCard.css';
+@import './components/PriceCard/PriceCard.css';
+@import './components/CourseCard/CourseCard.css';

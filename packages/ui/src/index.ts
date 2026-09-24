@@ -33,3 +33,6 @@ export { FeatureSteps, type FeatureStepsProps, type FeatureStep } from './compon
 export { ProblemCard, type ProblemCardProps } from './components/ProblemCard/ProblemCard';
 export { CredentialPill, type CredentialPillProps } from './components/CredentialPill/CredentialPill';
 export { HighlightBox, type HighlightBoxProps, type BoxTone } from './components/HighlightBox/HighlightBox';
+export { TestimonialCard, type TestimonialCardProps } from './components/TestimonialCard/TestimonialCard';
+export { PriceCard, type PriceCardProps } from './components/PriceCard/PriceCard';
+export { CourseCard, type CourseCardProps } from './components/CourseCard/CourseCard';
