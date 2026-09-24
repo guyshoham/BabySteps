@@ -12,7 +12,8 @@
 </head>
 <body class="min-h-screen bg-[#fdf6f0] p-4">
   <header class="max-w-2xl mx-auto py-4">
-    <a href="/app/my-courses" class="text-sm underline text-[#704229]">→ הקורסים שלי</a>
+    <!-- ?all=1 shows the list even with one course, so sign-out stays reachable. -->
+    <a href="/app/my-courses?all=1" class="text-sm underline text-[#704229]">→ הקורסים שלי</a>
     <h1 id="title" class="text-2xl font-bold mt-2"></h1>
     <p id="desc" class="text-gray-600"></p>
   </header>
@@ -21,7 +22,22 @@
     <span class="w-6 h-6 border-4 border-[#704229]/20 border-t-[#704229] rounded-full animate-spin" aria-hidden="true"></span>
     <span>טוען...</span>
   </div>
+  <section id="progress-box" class="max-w-2xl mx-auto bg-white rounded-2xl shadow p-4 mb-4 hidden">
+    <p id="progress-text" class="font-medium text-[#704229]"></p>
+    <div id="progress-bar" role="progressbar" aria-valuemin="0" aria-label="התקדמות בקורס"
+         class="mt-2 h-2 w-full bg-[#704229]/15 rounded-full overflow-hidden">
+      <div id="progress-fill" class="h-full bg-[#704229] rounded-full" style="width:0%"></div>
+    </div>
+    <a id="continue" href="#"
+       class="mt-4 block text-center bg-[#704229] text-white rounded-lg px-4 py-3 font-semibold"></a>
+  </section>
   <main id="lessons" class="max-w-2xl mx-auto space-y-2"></main>
+  <section id="feedback" class="max-w-2xl mx-auto bg-white rounded-2xl shadow p-4 mt-6 text-center hidden">
+    <p class="font-bold text-[#704229]">צלמי את התרגול ושלחי לי לפידבק אישי</p>
+    <p class="text-sm text-gray-600 mt-1">סרטון קצר מהבית מספיק. אני אחזור אלייך עם טיפים שמתאימים לתינוק שלך.</p>
+    <a id="feedback-link" href="#" target="_blank" rel="noopener"
+       class="inline-block mt-3 border border-[#704229] text-[#704229] rounded-lg px-4 py-2 font-semibold">שלחי לי בוואטסאפ</a>
+  </section>
   <div id="problem" class="max-w-2xl mx-auto text-center bg-white rounded-2xl shadow p-6 hidden">
     <p id="problem-title" class="font-bold text-lg text-[#704229]"></p>
     <p id="problem-text" class="text-sm text-gray-600 mt-2"></p>
@@ -36,6 +52,7 @@
     import {
       requireAuth, db, collection, query, where, orderBy, getDocs, doc, getDoc,
     } from "/app/firebase-client.js";
+    import { courseProgress, continueLabel, whatsAppCourseFeedbackUrl } from "/app/course-progress.js";
 
     const slug = decodeURIComponent(location.pathname.split("/").pop());
     const user = await requireAuth();
@@ -85,16 +102,43 @@
       document.getElementById("title").textContent = c.title ?? "";
       document.getElementById("desc").textContent = c.description ?? "";
 
+      const lessonHref = (id) => `/app/lesson/${encodeURIComponent(id)}`;
+      const lessonIds = lessonsSnap.docs.map((d) => d.id);
+      const prog = courseProgress(lessonIds, completed);
+      // The current lesson is the next one to watch; none when the course is finished.
+      const currentId = prog.done < prog.total ? prog.nextId : null;
+
+      if (prog.total > 0) {
+        document.getElementById("progress-text").textContent =
+          `${prog.done} מתוך ${prog.total} שיעורים`;
+        const bar = document.getElementById("progress-bar");
+        bar.setAttribute("aria-valuemax", String(prog.total));
+        bar.setAttribute("aria-valuenow", String(prog.done));
+        bar.setAttribute("aria-valuetext", `${prog.done} מתוך ${prog.total} שיעורים`);
+        document.getElementById("progress-fill").style.width =
+          `${Math.round((prog.done / prog.total) * 100)}%`;
+        const cont = document.getElementById("continue");
+        cont.href = lessonHref(prog.nextId);
+        cont.textContent = continueLabel(prog);
+        document.getElementById("progress-box").classList.remove("hidden");
+      }
+
+      const feedback = document.getElementById("feedback-link");
+      feedback.href = whatsAppCourseFeedbackUrl(c.title);
+      document.getElementById("feedback").classList.remove("hidden");
+
       const wrap = document.getElementById("lessons");
       lessonsSnap.docs.forEach((d, i) => {
         const l = d.data();
         const done = completed.has(d.id);
+        const current = d.id === currentId;
         const a = document.createElement("a");
-        a.href = `/app/lesson/${encodeURIComponent(d.id)}`;
-        a.className = "flex items-center gap-3 bg-white rounded-xl shadow px-4 py-3 hover:shadow-md transition";
+        a.href = lessonHref(d.id);
+        a.className = `flex items-center gap-3 bg-white rounded-xl shadow px-4 py-3 hover:shadow-md transition border-2 ${current ? "border-[#704229]" : "border-transparent"}`;
+        if (current) a.setAttribute("aria-current", "step");
         // Build with DOM APIs — never innerHTML with Firestore data.
         const badge = document.createElement("span");
-        badge.className = `w-6 h-6 flex items-center justify-center rounded-full ${done ? "bg-green-500 text-white" : "bg-gray-200 text-gray-600"} text-sm`;
+        badge.className = `w-6 h-6 flex items-center justify-center rounded-full ${done ? "bg-[#2f9e6b] text-white" : "bg-gray-200 text-gray-600"} text-sm`;
         badge.textContent = done ? "✓" : String(i + 1);
         const label = document.createElement("span");
         label.className = "font-medium";
