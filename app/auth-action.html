@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>בחירת סיסמה — מתחילים בקטן</title>
+  <link rel="icon" type="image/png" href="/assets/logos/logo-peach.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>body{font-family:'Rubik',sans-serif}[hidden]{display:none!important}</style>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-[#fdf6f0] p-4">
+  <!--
+    Firebase email action handler (set as the custom action URL in the Firebase
+    console). Firebase adds: mode, oobCode, apiKey, continueUrl, lang.
+    Only resetPassword is handled here; that is the welcome and reset email.
+  -->
+  <main class="w-full max-w-sm bg-white rounded-2xl shadow p-6">
+    <h1 id="title" class="text-xl font-bold text-center mb-4">רגע אחד…</h1>
+
+    <p id="loading" class="text-sm text-center text-gray-600">בודקות את הקישור</p>
+
+    <form id="reset-form" class="space-y-3" hidden novalidate>
+      <p id="for-email" class="text-sm text-center text-gray-700"></p>
+      <div>
+        <label for="password" class="block text-sm font-bold text-[#704229] mb-1">סיסמה חדשה</label>
+        <div class="flex gap-2">
+          <input id="password" type="password" required minlength="8" dir="ltr"
+                 class="w-full border rounded-lg px-3 py-2" autocomplete="new-password"
+                 aria-describedby="pw-hint" />
+          <button type="button" id="toggle" aria-controls="password" aria-pressed="false"
+                  class="shrink-0 text-sm text-[#704229] underline px-1">הצגה</button>
+        </div>
+        <p id="pw-hint" class="text-xs text-gray-600 mt-1">לפחות 8 תווים</p>
+      </div>
+      <button type="submit" id="save" class="w-full bg-[#704229] text-white rounded-lg py-2 font-semibold">
+        שמירת הסיסמה
+      </button>
+    </form>
+
+    <p id="msg" role="status" aria-live="polite" class="text-sm text-red-600 mt-3 text-center"></p>
+
+    <a id="to-login" href="/app/login" hidden
+       class="block w-full text-center bg-[#704229] text-white rounded-lg py-2 font-semibold mt-4">
+      לכניסה לקורסים
+    </a>
+  </main>
+
+  <script type="module">
+    import { auth, verifyPasswordResetCode, confirmPasswordReset } from "/app/firebase-client.js";
+    import { safeNext } from "/app/safe-next.js";
+
+    const MIN_LENGTH = 8;
+    const params = new URLSearchParams(location.search);
+    const mode = params.get("mode");
+    const code = params.get("oobCode");
+
+    const $ = (id) => document.getElementById(id);
+    const title = $("title");
+    const loading = $("loading");
+    const form = $("reset-form");
+    const msg = $("msg");
+    const toLogin = $("to-login");
+    const password = $("password");
+    const toggle = $("toggle");
+    const save = $("save");
+
+    // Keep continueUrl only if it is on this site under /app/. Otherwise go to login.
+    function loginHref() {
+      try {
+        const url = new URL(params.get("continueUrl") || "", location.origin);
+        if (url.origin !== location.origin) return "/app/login";
+        const path = url.pathname + url.search;
+        return safeNext(path) === path ? `/app/login?next=${encodeURIComponent(path)}` : "/app/login";
+      } catch {
+        return "/app/login";
+      }
+    }
+    toLogin.href = loginHref();
+
+    function showError(text) {
+      msg.className = "text-sm text-red-600 mt-3 text-center";
+      msg.textContent = text;
+    }
+
+    function codeError(err) {
+      switch (err?.code) {
+        case "auth/expired-action-code":
+          return "הקישור כבר לא בתוקף. אפשר לבקש קישור חדש בלחיצה על \"שכחתי סיסמה\" בדף הכניסה.";
+        case "auth/invalid-action-code":
+          return "הקישור לא תקין או שכבר השתמשת בו. אפשר לבקש קישור חדש בלחיצה על \"שכחתי סיסמה\" בדף הכניסה.";
+        case "auth/user-disabled":
+        case "auth/user-not-found":
+          return "לא מצאנו את החשבון הזה. כתבי לנו ונעזור.";
+        case "auth/network-request-failed":
+          return "אין חיבור לאינטרנט כרגע. בדקי את החיבור ונסי שוב.";
+        default:
+          return "משהו השתבש. נסי לפתוח את הקישור שוב, או לבקש קישור חדש בדף הכניסה.";
+      }
+    }
+
+    function dead(heading, text) {
+      loading.hidden = true;
+      form.hidden = true;
+      title.textContent = heading;
+      showError(text);
+      toLogin.hidden = false;
+    }
+
+    toggle.addEventListener("click", () => {
+      const show = password.type === "password";
+      password.type = show ? "text" : "password";
+      toggle.textContent = show ? "הסתרה" : "הצגה";
+      toggle.setAttribute("aria-pressed", String(show));
+    });
+
+    async function startReset() {
+      if (!code) return dead("הקישור לא שלם", "חסר חלק מהקישור. נסי ללחוץ שוב על הקישור שבמייל.");
+      let email;
+      try {
+        email = await verifyPasswordResetCode(auth, code);
+      } catch (err) {
+        return dead("הקישור לא עובד", codeError(err));
+      }
+      loading.hidden = true;
+      title.textContent = "בחירת סיסמה";
+      $("for-email").textContent = "בחירת סיסמה עבור ";
+      const b = document.createElement("bdi");
+      b.className = "font-semibold";
+      b.textContent = email;
+      $("for-email").appendChild(b);
+      form.hidden = false;
+      password.focus();
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        msg.textContent = "";
+        const value = password.value;
+        if (value.length < MIN_LENGTH) {
+          showError(`הסיסמה קצרה מדי. בחרי לפחות ${MIN_LENGTH} תווים.`);
+          password.focus();
+          return;
+        }
+        save.disabled = true;
+        save.textContent = "שומרות…";
+        try {
+          await confirmPasswordReset(auth, code, value);
+        } catch (err) {
+          save.disabled = false;
+          save.textContent = "שמירת הסיסמה";
+          if (err?.code === "auth/weak-password") {
+            showError("הסיסמה חלשה מדי. נסי סיסמה ארוכה יותר, עם אותיות ומספרים.");
+            password.focus();
+            return;
+          }
+          if (err?.code === "auth/network-request-failed") {
+            showError(codeError(err));
+            return;
+          }
+          return dead("הקישור לא עובד", codeError(err));
+        }
+        form.hidden = true;
+        title.textContent = "הסיסמה נשמרה";
+        msg.className = "text-sm text-green-700 mt-3 text-center";
+        msg.textContent = "מעכשיו אפשר להיכנס לקורסים עם האימייל והסיסמה החדשה.";
+        toLogin.hidden = false;
+        toLogin.focus();
+      });
+    }
+
+    if (mode === "resetPassword") {
+      startReset();
+    } else {
+      loading.hidden = true;
+      title.textContent = "הקישור הזה לא מטופל כאן";
+      msg.className = "text-sm text-gray-700 mt-3 text-center";
+      msg.textContent = "הדף הזה משמש רק לבחירת סיסמה. אם קיבלת מייל אחר ולא ברור מה לעשות, כתבי לנו ונעזור. אפשר להמשיך לדף הכניסה.";
+      toLogin.hidden = false;
+    }
+  </script>
+</body>
+</html>
