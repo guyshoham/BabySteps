@@ -20,6 +20,7 @@
 
   <script type="module">
     import { requireAuth, db, signOut } from "/app/firebase-client.js";
+    import { visibleCourses } from "/app/course-list.js";
     import { collection, getDocs, doc, getDoc }
       from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -31,13 +32,17 @@
     const enrollSnap = await getDocs(collection(db, "users", user.uid, "enrollments"));
     const list = document.getElementById("list");
 
-    if (enrollSnap.empty) { document.getElementById("empty").classList.remove("hidden"); }
+    // Fetch all enrolled courses at once, then hide unpublished ones and sort by `order`.
+    const courseSnaps = await Promise.all(
+      enrollSnap.docs.map((enr) => getDoc(doc(db, "courses", enr.id)))
+    );
+    const courses = visibleCourses(
+      courseSnaps.filter((s) => s.exists()).map((s) => s.data())
+    );
 
-    for (const enr of enrollSnap.docs) {
-      const courseId = enr.id;
-      const courseSnap = await getDoc(doc(db, "courses", courseId));
-      if (!courseSnap.exists()) continue;
-      const c = courseSnap.data();
+    if (!courses.length) { document.getElementById("empty").classList.remove("hidden"); }
+
+    for (const c of courses) {
       const a = document.createElement("a");
       a.href = `/app/course/${encodeURIComponent(c.slug)}`;
       a.className = "block bg-white rounded-2xl shadow overflow-hidden hover:shadow-lg transition";

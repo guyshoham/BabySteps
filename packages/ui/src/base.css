@@ -1,12 +1,76 @@
-/* Fonts: Hebrew and Latin subsets only */
-@import '@fontsource/rubik/hebrew-400.css';
-@import '@fontsource/rubik/hebrew-500.css';
-@import '@fontsource/rubik/hebrew-700.css';
-@import '@fontsource/rubik/latin-400.css';
-@import '@fontsource/rubik/latin-500.css';
-@import '@fontsource/rubik/latin-700.css';
-@import '@fontsource/varela-round/hebrew-400.css';
-@import '@fontsource/varela-round/latin-400.css';
+/*
+ * Fonts: Hebrew and Latin subsets, woff2 only.
+ * Written out by hand instead of importing the @fontsource CSS, so that:
+ * - only woff2 ships (every browser we support reads it; woff is dead weight);
+ * - each face keeps its unicode-range, so a page loads only the subsets it uses.
+ * ?no-inline: library mode inlines every asset as base64 and ignores
+ * build.assetsInlineLimit. This query makes Vite emit the font as a file in
+ * dist/fonts/ instead, so styles.css stays small.
+ */
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('@fontsource/rubik/files/rubik-hebrew-400-normal.woff2?no-inline') format('woff2');
+  unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('@fontsource/rubik/files/rubik-latin-400-normal.woff2?no-inline') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  src: url('@fontsource/rubik/files/rubik-hebrew-500-normal.woff2?no-inline') format('woff2');
+  unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  src: url('@fontsource/rubik/files/rubik-latin-500-normal.woff2?no-inline') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url('@fontsource/rubik/files/rubik-hebrew-700-normal.woff2?no-inline') format('woff2');
+  unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
+}
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url('@fontsource/rubik/files/rubik-latin-700-normal.woff2?no-inline') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Varela Round';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('@fontsource/varela-round/files/varela-round-hebrew-400-normal.woff2?no-inline') format('woff2');
+  unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
+}
+@font-face {
+  font-family: 'Varela Round';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('@fontsource/varela-round/files/varela-round-latin-400-normal.woff2?no-inline') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 
 .bs-root {
   font-family: var(--font-body);

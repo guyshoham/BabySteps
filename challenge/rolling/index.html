@@ -518,8 +518,7 @@
 
         </div>
 
-        <!-- Guarantee note -->
-        <p style="text-align:center; font-size:0.85rem; color:#9a7a68; margin-top:28px;">
+        <p style="text-align:center; font-size:0.85rem; color:var(--text-mid); margin-top:28px;">
             יש שאלה לפני הרכישה? <a href="https://wa.me/972542366243" style="color:var(--brand-brown); font-weight:600; text-decoration:underline;">דברי איתי ישירות בווטסאפ</a>
         </p>
 
@@ -661,10 +660,23 @@
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
     /* ── Sticky CTA (mobile) ─────────────────────────────────────── */
+    // Hide the bar while the price section or the footer is on screen:
+    // there it repeats the price card or covers the footer.
     const stickyCta = document.getElementById('stickyCta');
+    const stickyHiders = new Set();
+    const hiderObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) stickyHiders.add(entry.target);
+            else stickyHiders.delete(entry.target);
+        });
+        checkScroll();
+    });
+    [document.getElementById('register'), document.querySelector('footer')]
+        .forEach(el => { if (el) hiderObserver.observe(el); });
+
     function checkScroll() {
         updateProgress();
-        if (window.innerWidth < 768 && window.scrollY > 150) {
+        if (window.innerWidth < 768 && window.scrollY > 150 && stickyHiders.size === 0) {
             stickyCta.style.display = 'flex';
         } else {
             stickyCta.style.display = 'none';
