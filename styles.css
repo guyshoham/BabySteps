@@ -139,7 +139,7 @@ body {
     letter-spacing: 0.05em;
     margin-bottom: 6px;
 }
-.footer-tagline { font-size: 0.85rem; opacity: 0.6; margin-bottom: 32px; }
+.footer-tagline { font-size: 0.85rem; opacity: 0.8; margin-bottom: 32px; }
 .footer-links {
     display: flex;
     justify-content: center;
@@ -167,7 +167,7 @@ body {
     border-top: 1px solid rgba(255,255,255,0.1);
     padding-top: 24px;
     font-size: 12px;
-    opacity: 0.4;
+    opacity: 0.8;
 }
 
 /* ─── Buttons ─────────────────────────── */
@@ -396,13 +396,13 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    background: #25D366;
+    background: #0f7a3d;
     color: #fff;
     font-weight: 700;
     letter-spacing: 0.02em;
     padding: 14px 32px;
     border-radius: 6px;
-    border: 2px solid #25D366;
+    border: 2px solid #0f7a3d;
     transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
     text-decoration: none;
@@ -412,10 +412,10 @@ body {
     font-size: 1rem;
 }
 .btn-whatsapp:hover {
-    background: #1ebe5d;
-    border-color: #1ebe5d;
+    background: #0c6a34;
+    border-color: #0c6a34;
     transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(37,211,102,0.32);
+    box-shadow: 0 8px 24px rgba(15,122,61,0.32);
 }
 @media (min-width: 768px) {
     .btn-whatsapp { padding: 16px 40px; }
