@@ -2,6 +2,9 @@
   "name": "babysteps-courses",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
   "workspaces": [
     "packages/*"
   ],
