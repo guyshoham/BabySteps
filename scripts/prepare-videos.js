@@ -12,14 +12,17 @@
 //   node scripts/prepare-videos.js "<source folder>" --fast   # hardware encoder
 //
 // Output goes to ./staging/ by default (gitignored); pass --out <dir> to change it.
+// Pass --course <id> to pick the course. It is needed once more than one course has
+// lessons, because lesson numbers repeat across courses.
 //
 // Matching: a leading number in the filename picks the lesson ("7 - מעקב מבט.mov" → the
 // lesson whose r2Key is rolling/lesson-07.mp4). Images named "… N.png" map to tip N.
 // Anything it can't place is reported, never guessed at.
-import { readdir, mkdir, stat, copyFile } from "node:fs/promises";
+import { mkdir, stat, copyFile } from "node:fs/promises";
 import { basename, extname, join, resolve } from "node:path";
 import { spawn } from "node:child_process";
 import { DATA, validate } from "./course-data.js";
+import { mb, walk, parseCourseFlag, selectCourseLessons, positionalArg } from "./fs-utils.js";
 
 const args = process.argv.slice(2);
 const DRY_RUN = args.includes("--dry-run");
@@ -27,7 +30,7 @@ const FAST = args.includes("--fast");
 const FORCE = args.includes("--force");
 const outIdx = args.indexOf("--out");
 const OUT_DIR = resolve(outIdx >= 0 ? args[outIdx + 1] : "staging");
-const sourceDir = args.find((a, i) => !a.startsWith("--") && args[i - 1] !== "--out");
+const sourceDir = positionalArg(args, ["--out", "--course"]);
 
 const errors = validate(DATA);
 if (errors.length) {
@@ -35,12 +38,18 @@ if (errors.length) {
   for (const e of errors) console.error("  ✗", e);
   process.exit(1);
 }
+const flag = parseCourseFlag(args);
+const selected = flag.error ? flag : selectCourseLessons(DATA, flag.course);
+if (selected.error) {
+  console.error(selected.error);
+  process.exit(1);
+}
+const LESSONS = selected.lessons;
 if (!sourceDir) {
-  console.error('usage: node scripts/prepare-videos.js "<source folder>" [--dry-run] [--fast] [--out dir]');
+  console.error('usage: node scripts/prepare-videos.js "<source folder>" [--course id] [--dry-run] [--fast] [--out dir]');
   process.exit(1);
 }
 
-const mb = (b) => (b / 1024 / 1024).toFixed(1) + " MB";
 const VIDEO_EXT = new Set([".mov", ".mp4", ".m4v", ".webm", ".avi"]);
 const IMAGE_EXT = new Set([".png", ".jpg", ".jpeg", ".webp"]);
 
@@ -68,20 +77,10 @@ async function probe(file) {
   });
 }
 
-async function walk(dir) {
-  const out = [];
-  for (const e of await readdir(dir, { withFileTypes: true })) {
-    if (e.name.startsWith(".")) continue;
-    const full = join(dir, e.name);
-    if (e.isDirectory()) out.push(...(await walk(full)));
-    else out.push(full);
-  }
-  return out;
-}
-
 // Index the expected outputs by the number embedded in their key, per kind.
-const videoLessons = DATA.lessons.filter((l) => l.kind === "video");
-const imageLessons = DATA.lessons.filter((l) => l.kind === "image");
+// Only the selected course's lessons, so numbers can't clash across courses.
+const videoLessons = LESSONS.filter((l) => l.kind === "video");
+const imageLessons = LESSONS.filter((l) => l.kind === "image");
 const lessonByNumber = new Map();
 for (const l of videoLessons) {
   const m = l.r2Key.match(/lesson-(\d+)\./);
@@ -94,12 +93,13 @@ for (const l of imageLessons) {
   if (m) tipByNumber.set(Number(m[1]), l);
 }
 // The highest lesson number + 1 is the bonus, by the source's own numbering.
+// This is per course, since only one course is loaded per run.
 const BONUS_NUMBER = Math.max(...lessonByNumber.keys()) + 1;
 
 // Lessons may pin their source file by name, for originals that don't follow the
 // "N - title" convention.
 const lessonBySourceName = new Map(
-  DATA.lessons.filter((l) => l.sourceName).map((l) => [l.sourceName, l])
+  LESSONS.filter((l) => l.sourceName).map((l) => [l.sourceName, l])
 );
 
 function place(file) {
@@ -137,11 +137,12 @@ for (const f of files) {
   else unplaced.push(f);
 }
 const placed = new Set(plan.map((p) => p.lesson.id));
-const missing = DATA.lessons.filter((l) => !placed.has(l.id));
+const missing = LESSONS.filter((l) => !placed.has(l.id));
 
 console.log(`source: ${resolve(sourceDir)}`);
 console.log(`output: ${OUT_DIR}`);
-console.log(`placed ${plan.length} of ${DATA.lessons.length} lessons\n`);
+console.log(`course: ${selected.courseId}`);
+console.log(`placed ${plan.length} of ${LESSONS.length} lessons\n`);
 
 if (unplaced.length) {
   console.log("source files not placed (ignored):");
