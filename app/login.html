@@ -14,16 +14,22 @@
   <main class="w-full max-w-sm bg-white rounded-2xl shadow p-6">
     <h1 class="text-xl font-bold text-center mb-4">כניסה לקורסים</h1>
     <form id="login-form" class="space-y-3">
-      <input id="email" type="email" required placeholder="אימייל"
-             class="w-full border rounded-lg px-3 py-2" autocomplete="email" />
-      <input id="password" type="password" required placeholder="סיסמה"
-             class="w-full border rounded-lg px-3 py-2" autocomplete="current-password" />
+      <div>
+        <label for="email" class="block text-sm font-bold text-[#704229] mb-1">אימייל</label>
+        <input id="email" type="email" required dir="ltr" placeholder="name@example.com"
+               class="w-full border rounded-lg px-3 py-2" autocomplete="email" />
+      </div>
+      <div>
+        <label for="password" class="block text-sm font-bold text-[#704229] mb-1">סיסמה</label>
+        <input id="password" type="password" required dir="ltr"
+               class="w-full border rounded-lg px-3 py-2" autocomplete="current-password" />
+      </div>
       <button type="submit" class="w-full bg-[#704229] text-white rounded-lg py-2 font-semibold">
         כניסה
       </button>
     </form>
     <button id="reset" class="w-full text-sm text-[#704229] mt-3 underline">שכחתי סיסמה</button>
-    <p id="msg" class="text-sm text-red-600 mt-3 text-center"></p>
+    <p id="msg" role="status" aria-live="polite" class="text-sm text-red-600 mt-3 text-center"></p>
   </main>
 
   <script type="module">
