@@ -1,8 +1,25 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
+  "routes": [
+    { "src": "^/(docs|lib|scripts|tests|packages|staging)(/.*)?$", "status": 404, "dest": "/__not-found" },
+    { "src": "^/\\..*$", "status": 404, "dest": "/__not-found" },
+    { "src": "^/.*\\.md$", "status": 404, "dest": "/__not-found" },
+    { "src": "^/(firestore\\.rules|package\\.json|package-lock\\.json|vitest\\.config\\.js|vercel\\.json)$", "status": 404, "dest": "/__not-found" }
+  ],
   "rewrites": [
     { "source": "/app/course/:slug", "destination": "/app/course" },
     { "source": "/app/lesson/:id", "destination": "/app/lesson" }
+  ],
+  "headers": [
+    {
+      "source": "/app/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
+      ]
+    }
   ]
 }
