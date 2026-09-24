@@ -29,6 +29,7 @@
   font-family: var(--font-heading);
   font-size: 1.125rem;
   color: var(--color-brand-700);
+  white-space: nowrap;
 }
 
 .bs-app-header__user {

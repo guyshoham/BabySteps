@@ -8,7 +8,7 @@ Hebrew and RTL first.
 | Command | What it does |
 | --- | --- |
 | `npm run ui:storybook` | Storybook on http://localhost:6006 |
-| `npm run ui:build` | Builds `packages/ui/dist/` (JS, CSS, fonts, `.d.ts`) |
+| `npm run ui:build` | Builds `packages/ui/dist/` (JS, `styles.css` with the fonts inlined, `.d.ts`) |
 | `npm test` | Root tests, then this package's tests |
 
 ## Using it

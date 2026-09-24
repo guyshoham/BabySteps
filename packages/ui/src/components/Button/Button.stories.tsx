@@ -30,3 +30,12 @@ export const FullWidth: Story = {
   render: (args) => <div style={{ maxWidth: 360 }}><Button {...args} /></div>,
 };
 export const AsLink: Story = { args: { href: '#register', children: 'לקורס ולרכישה', icon: 'arrow' } };
+export const LongLabelFullWidth: Story = {
+  args: {
+    fullWidth: true,
+    size: 'lg',
+    children: 'שלמי עכשיו וקבלי גישה מיידית לכל הסרטונים וליווי אישי בווטסאפ, ללא עיכובים',
+    icon: 'arrow',
+  },
+  render: (args) => <div style={{ width: 320 }}><Button {...args} /></div>,
+};

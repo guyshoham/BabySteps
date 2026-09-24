@@ -78,6 +78,28 @@
   --bs-ink-soft: color-mix(in srgb, var(--color-on-brand) 82%, transparent);
 }
 
+/* Light surfaces stop the cocoa text leak: reset the three inherited tone
+   properties so nested headings/soft text fall back to their own defaults,
+   and set color explicitly so plain text does not inherit cocoa's white. */
+.bs-card,
+.bs-faq__item,
+.bs-feature-steps__item,
+.bs-sticky-cta,
+.bs-highlight-box,
+.bs-course-progress,
+.bs-lesson__row,
+.bs-tone--cream,
+.bs-tone--white,
+.bs-tone--peach,
+.bs-tone--mint,
+.bs-tone--sky,
+.bs-tone--blush {
+  --bs-tone-ink: initial;
+  --bs-heading: initial;
+  --bs-ink-soft: initial;
+  color: var(--color-ink);
+}
+
 .bs-visually-hidden {
   position: absolute;
   width: 1px;

@@ -21,9 +21,10 @@
     box-shadow var(--duration-fast) var(--ease-soft);
 }
 
-/* LTR values (email, phone) still line up with the RTL label. */
+/* LTR values (email, phone) still line up with the RTL label: `end` in the
+   input's own (ltr) direction is the same edge the RTL label sits on. */
 .bs-text-field__input[dir='ltr'] {
-  text-align: right;
+  text-align: end;
 }
 
 .bs-text-field__input::placeholder {

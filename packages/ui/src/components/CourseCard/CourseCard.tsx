@@ -45,7 +45,6 @@ export function CourseCard({
       as="article"
       padding="none"
       hoverLift={!comingSoon}
-      aria-disabled={comingSoon || undefined}
       className={cx('bs-course-card', comingSoon && 'bs-course-card--soon', className)}
       {...rest}
     >
@@ -67,10 +66,10 @@ export function CourseCard({
             ))}
           </ul>
         )}
-        {(price || cta) && (
+        {(price || (cta && !comingSoon)) && (
           <div className="bs-course-card__footer">
             {price && <span className="bs-course-card__price">{price}</span>}
-            {cta}
+            {!comingSoon && cta}
           </div>
         )}
       </div>

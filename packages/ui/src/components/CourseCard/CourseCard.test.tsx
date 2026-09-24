@@ -14,9 +14,11 @@ describe('CourseCard', () => {
     expect(container).toHaveTextContent('🤱');
   });
 
-  it('marks a coming-soon course as disabled', () => {
-    const { container } = render(<CourseCard title="בקרוב" comingSoon status="בקרוב" />);
-    expect(container.firstElementChild).toHaveAttribute('aria-disabled', 'true');
+  it('does not render a cta for a coming-soon course, keeping it out of tab order', () => {
+    const { container } = render(
+      <CourseCard title="בקרוב" comingSoon status="בקרוב" cta={<button>לקורס</button>} />,
+    );
     expect(container.firstElementChild).toHaveClass('bs-course-card--soon');
+    expect(screen.queryByRole('button', { name: 'לקורס' })).not.toBeInTheDocument();
   });
 });

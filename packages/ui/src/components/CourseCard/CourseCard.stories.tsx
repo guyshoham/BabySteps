@@ -40,7 +40,12 @@ export const ComingSoon: Story = {
 export const LongText: Story = {
   args: {
     title: 'קורס מקיף להתפתחות מוטורית בשנה הראשונה: התהפכות, זחילה, ישיבה ועמידה',
-    description: 'תיאור ארוך במיוחד שבודק שהטקסט נשבר יפה בתוך הכרטיס ולא יוצא ממנו גם במסך צר של טלפון נייד.',
+    description:
+      'תיאור ארוך במיוחד שבודק שהטקסט נשבר יפה בתוך הכרטיס ולא יוצא ממנו גם במסך צר של טלפון נייד: https://babysteps.example/courses/rolling-over-program-for-babies-from-three-months',
   },
+  decorators: [narrow],
+};
+export const PortraitImage: Story = {
+  args: { image: '/about.jpg', imageAlt: 'תמונה לאורך של הכשרה' },
   decorators: [narrow],
 };
