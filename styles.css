@@ -58,6 +58,16 @@ body {
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(112,66,41,0.08);
 }
+/* Quiet "course login" text link in the nav */
+.nav-login {
+    color: var(--brand-brown);
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    text-decoration: none;
+    padding: 8px 4px;
+}
+.nav-login:hover { text-decoration: underline; }
 
 /* ─── Buttons ─────────────────────────── */
 .btn-primary {
