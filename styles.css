@@ -69,6 +69,107 @@ body {
 }
 .nav-login:hover { text-decoration: underline; }
 
+/* Brand block (logo + name) at the start of the nav */
+.site-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+.site-brand-logo {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.site-brand-name {
+    font-weight: 800;
+    font-size: 15px;
+    color: var(--text-dark);
+    line-height: 1;
+}
+.site-brand-tag {
+    font-size: 11px;
+    color: var(--brand-brown);
+    letter-spacing: 0.08em;
+    font-weight: 600;
+}
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+/* Outlined WhatsApp "contact" link in the home page nav */
+.nav-contact {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--brand-brown);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 1.5px solid rgba(112,66,41,0.2);
+    background: transparent;
+    transition: background 0.2s;
+}
+.nav-contact:hover,
+.nav-contact:focus-visible { background: var(--brand-peach); }
+
+/* ─── Footer ──────────────────────────── */
+.site-footer {
+    background: var(--brand-brown);
+    color: rgba(255,255,255,0.9);
+    text-align: center;
+}
+.footer-body { max-width: 600px; margin: 0 auto; }
+.footer-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 16px;
+    display: block;
+    opacity: 0.9;
+}
+.footer-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+}
+.footer-tagline { font-size: 0.85rem; opacity: 0.6; margin-bottom: 32px; }
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+}
+.footer-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+.footer-link:hover,
+.footer-link:focus-visible { background: rgba(255,255,255,0.2); }
+.footer-meta {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 24px;
+    font-size: 12px;
+    opacity: 0.4;
+}
+
 /* ─── Buttons ─────────────────────────── */
 .btn-primary {
     display: inline-block;
