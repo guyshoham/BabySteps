@@ -31,7 +31,7 @@
     <button id="reset" class="w-full text-sm text-[#704229] mt-3 underline">שכחתי סיסמה</button>
     <p id="msg" role="status" aria-live="polite" class="text-sm text-red-600 mt-3 text-center"></p>
     <div class="mt-5 pt-4 border-t text-sm text-gray-600 text-center space-y-2">
-      <p>פעם ראשונה? בחרי סיסמה דרך הקישור שקיבלת במייל, או לחצי על "שכחתי סיסמה".</p>
+      <p>פעם ראשונה? בחרי סיסמה דרך הקישור שקיבלת במייל. הקישור בתוקף לשעה. אם עבר יותר זמן, לחצי "שכחתי סיסמה" ותקבלי קישור חדש.</p>
       <p>צריכה עזרה?
         <a href="https://wa.me/972542366243" target="_blank" rel="noopener"
            class="text-[#704229] underline font-medium">כתבי לנו בוואטסאפ</a>
@@ -70,7 +70,7 @@
       try {
         await resetPassword(email);
         msg.className = "text-sm text-green-700 mt-3 text-center";
-        msg.textContent = "שלחנו לך מייל לבחירת סיסמה. בדקי גם בספאם.";
+        msg.textContent = "שלחנו לך מייל לבחירת סיסמה. הקישור בתוקף לשעה. בדקי גם בספאם.";
       } catch (e) {
         msg.textContent = messageFor(e?.code, "reset");
       }
