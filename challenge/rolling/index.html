@@ -197,7 +197,6 @@
 <nav class="site-nav">
     <div class="nav-progress" id="navProgress" style="width:0%"></div>
     <div class="nav-inner" style="max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;">
-        <!-- Logo placeholder — replace src with your actual logo -->
         <a href="../../" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
             <img src="../../assets/logos/logo-peach.png" alt="מתחילים בקטן - ירדן שוהם" style="width:52px; height:52px; border-radius:50%; object-fit:cover;">
             <div>
@@ -205,7 +204,10 @@
                 <div style="font-size:11px; color:var(--brand-brown); letter-spacing:0.08em; font-weight:600;">מתחילים בקטן</div>
             </div>
         </a>
-        <a href="#register" class="btn-primary hide-mobile" style="padding:10px 24px; font-size:14px;">לרכישה ←</a>
+        <div style="display:flex; align-items:center; gap:12px;">
+            <a href="/app/login" class="nav-login">כניסה לקורס</a>
+            <a href="#register" class="btn-primary hide-mobile" style="padding:10px 24px; font-size:14px;">לרכישה ←</a>
+        </div>
     </div>
 </nav>
 
@@ -554,6 +556,13 @@
                onmouseout="this.style.background='rgba(255,255,255,0.1)'">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m13.73635 5.85251 4.00467 -4.11665 2.3248 2.3808 -4.20064 4.00466h5.9085v3.30473h-5.9365l4.22865 4.10766 -2.3248 2.3338L12.0005 12.099l-5.74052 5.76852 -2.3248 -2.3248 4.22864 -4.10766h-5.9375V8.12132h5.9085L3.93417 4.11666l2.3248 -2.3808 4.00468 4.11665V0h3.4727zm-3.4727 10.30614h3.4727V24h-3.4727z"/></svg>
                 Linktree
+            </a>
+            <a href="/app/login"
+               style="display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; padding:10px 20px; border-radius:6px; font-size:13px; font-weight:600; text-decoration:none; transition:background 0.2s;"
+               onmouseover="this.style.background='rgba(255,255,255,0.2)'"
+               onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+                כניסה לקורס
             </a>
         </div>
 
