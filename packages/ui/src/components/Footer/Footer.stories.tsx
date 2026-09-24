@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Footer } from './Footer';
+import { storyAssets } from '../../../.storybook/assets';
 
 const meta = {
   title: 'Layout/Footer',
   component: Footer,
   parameters: { bsFlush: true },
   args: {
-    logo: { src: '/logo-peach.png', alt: 'מתחילים בקטן' },
+    logo: { src: storyAssets.logoPeach, alt: 'מתחילים בקטן' },
     title: 'ירדן שוהם · מתחילים בקטן',
     tagline: 'מלווה התפתחותית · קורסים דיגיטליים לתינוקות',
     social: [

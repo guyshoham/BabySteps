@@ -19,6 +19,7 @@ import {
   TestimonialCard,
   VideoFrame,
 } from '../index';
+import { storyAssets } from '../../.storybook/assets';
 
 const grid = (min: number) => ({
   display: 'grid',
@@ -30,7 +31,7 @@ function LandingPage() {
   return (
     <div style={{ paddingBlockEnd: 96 }}>
       <SiteNav
-        logo={{ src: '/logo-peach.png', alt: '' }}
+        logo={{ src: storyAssets.logoPeach, alt: '' }}
         title="מתחילים בקטן"
         links={[
           { label: 'מה בקורס', href: '#content' },
@@ -50,7 +51,7 @@ function LandingPage() {
           </>
         }
         proof={<><StarRating value={5} size={16} /><span>200+ אמהות מרוצות</span></>}
-        media={<VideoFrame poster="/rolling-teaser-poster.jpg" caption="הצצה לקורס" />}
+        media={<VideoFrame poster={storyAssets.teaserPoster} caption="הצצה לקורס" />}
       />
       <Divider variant="wave" from="peach" tone="white" />
       <Section tone="white">
@@ -136,7 +137,7 @@ function LandingPage() {
         </div>
       </Section>
       <Footer
-        logo={{ src: '/logo-peach.png', alt: 'מתחילים בקטן' }}
+        logo={{ src: storyAssets.logoPeach, alt: 'מתחילים בקטן' }}
         title="ירדן שוהם · מתחילים בקטן"
         tagline="מלווה התפתחותית · קורסים דיגיטליים לתינוקות"
         social={[

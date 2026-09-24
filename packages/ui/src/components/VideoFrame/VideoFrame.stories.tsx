@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { VideoFrame } from './VideoFrame';
+import { storyAssets } from '../../../.storybook/assets';
 
 const meta = {
   title: 'Landing/VideoFrame',
   component: VideoFrame,
-  args: { poster: '/rolling-teaser-poster.jpg', caption: 'הצצה לקורס, דקה וחצי' },
+  args: { poster: storyAssets.teaserPoster, caption: 'הצצה לקורס, דקה וחצי' },
 } satisfies Meta<typeof VideoFrame>;
 
 export default meta;

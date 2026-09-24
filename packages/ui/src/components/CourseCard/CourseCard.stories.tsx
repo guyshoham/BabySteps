@@ -1,6 +1,7 @@
 import type { Decorator, Meta, StoryObj } from '@storybook/react-vite';
 import { CourseCard } from './CourseCard';
 import { Button } from '../Button/Button';
+import { storyAssets } from '../../../.storybook/assets';
 
 const meta = {
   title: 'Landing/CourseCard',
@@ -22,7 +23,7 @@ type Story = StoryObj<typeof meta>;
 const narrow: Decorator = (Story) => <div style={{ maxWidth: 380 }}><Story /></div>;
 
 export const Available: Story = { decorators: [narrow] };
-export const WithImage: Story = { args: { image: '/rolling-teaser-poster.jpg', imageAlt: 'תינוק על מזרן' }, decorators: [narrow] };
+export const WithImage: Story = { args: { image: storyAssets.teaserPoster, imageAlt: 'תינוק על מזרן' }, decorators: [narrow] };
 export const ComingSoon: Story = {
   args: {
     title: 'קורס שכיבה על הבטן',
@@ -46,6 +47,6 @@ export const LongText: Story = {
   decorators: [narrow],
 };
 export const PortraitImage: Story = {
-  args: { image: '/about.jpg', imageAlt: 'תמונה לאורך של הכשרה' },
+  args: { image: storyAssets.aboutPhoto, imageAlt: 'תמונה לאורך של הכשרה' },
   decorators: [narrow],
 };

@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { SiteNav } from './SiteNav';
+import { storyAssets } from '../../../.storybook/assets';
 
 const meta = {
   title: 'Layout/SiteNav',
   component: SiteNav,
   parameters: { bsFlush: true },
   args: {
-    logo: { src: '/logo-peach.png', alt: '' },
+    logo: { src: storyAssets.logoPeach, alt: '' },
     title: 'מתחילים בקטן',
     links: [
       { label: 'הקורסים', href: '#courses' },

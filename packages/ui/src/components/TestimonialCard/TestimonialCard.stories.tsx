@@ -1,5 +1,6 @@
 import type { Decorator, Meta, StoryObj } from '@storybook/react-vite';
 import { TestimonialCard } from './TestimonialCard';
+import { storyAssets } from '../../../.storybook/assets';
 
 const meta = {
   title: 'Landing/TestimonialCard',
@@ -17,7 +18,7 @@ type Story = StoryObj<typeof meta>;
 const narrow: Decorator = (Story) => <div style={{ maxWidth: 380 }}><Story /></div>;
 
 export const Default: Story = { decorators: [narrow] };
-export const WithPhoto: Story = { args: { avatar: '/about.jpg', name: 'כרמל' }, decorators: [narrow] };
+export const WithPhoto: Story = { args: { avatar: storyAssets.aboutPhoto, name: 'כרמל' }, decorators: [narrow] };
 export const NoRating: Story = { args: { rating: null }, decorators: [narrow] };
 export const LongText: Story = {
   args: {

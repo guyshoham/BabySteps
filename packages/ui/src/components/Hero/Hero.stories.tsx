@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Hero } from './Hero';
 import { Button } from '../Button/Button';
 import { StarRating } from '../StarRating/StarRating';
+import { storyAssets } from '../../../.storybook/assets';
 
 const meta = {
   title: 'Landing/Hero',
@@ -31,7 +32,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Centered: Story = {};
 export const WithImage: Story = {
-  args: { media: <img src="/about.jpg" alt="ירדן שוהם עם תינוק" /> },
+  args: { media: <img src={storyAssets.aboutPhoto} alt="ירדן שוהם עם תינוק" /> },
 };
 export const MintTone: Story = {
   args: { tone: 'mint', tag: 'אתגר 5 ימים · חינם', title: <>5 ימים של <em>שכיבה על הבטן</em>, בלי בכי</>, proof: undefined },

@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { CourseProgressCard } from './CourseProgressCard';
+import { storyAssets } from '../../../.storybook/assets';
 
 const meta = {
   title: 'App/CourseProgressCard',
   component: CourseProgressCard,
-  args: { title: 'קורס התהפכות', lessonsDone: 4, lessonsTotal: 10, href: '#', image: '/rolling-teaser-poster.jpg' },
+  args: { title: 'קורס התהפכות', lessonsDone: 4, lessonsTotal: 10, href: '#', image: storyAssets.teaserPoster },
   decorators: [(Story) => <div style={{ maxWidth: 380 }}><Story /></div>],
 } satisfies Meta<typeof CourseProgressCard>;
 
