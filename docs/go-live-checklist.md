@@ -332,3 +332,31 @@ The page does nothing until Firebase sends links to it:
 - [ ] Open the same link a second time. It should say the link is not valid, in Hebrew.
 
 To undo, clear the custom action URL in the same place. Links go back to Firebase's page.
+
+## Web Analytics (TODO S1)
+
+The four marketing pages (`index.html`, `challenge/rolling/`, `challenge/rolling/thank-you`,
+`challenge/tummy-time/`) load `/_vercel/insights/script.js` in the `<head>`. It counts page
+views. It uses no cookies, so no cookie banner is needed. The student pages under `/app/` do
+not load it on purpose: that area is private.
+
+The funnel to watch: visits to `/challenge/rolling` compared with visits to
+`/challenge/rolling/thank-you`. PayPal sends buyers to the thank-you page after payment,
+once the payment link's return URL points there. So its visits are close to the number of sales.
+
+Hobby includes 50,000 events a month, with a 1 month reporting window. If the limit is hit,
+collection pauses. It never costs money. Custom events (for example a count of PayPal or
+WhatsApp clicks) need the Pro plan, so this change does not send any.
+
+- [ ] Vercel dashboard, the project, Analytics, then "Enable".
+- [ ] Redeploy (any new deploy works). Until then the script URL returns 404. That is expected.
+- [ ] Open the live site in a normal window. In DevTools, Network, check a request to
+      `/_vercel/insights/view`. Ad blockers can hide it, so test without one.
+- [ ] After a few minutes, check the Analytics page in the dashboard shows the visit.
+
+Later, on Pro: add a click listener in `site.js` for `a[href*="paypal"]` and `a[href*="wa.me"]`
+that calls `window.va && window.va('event', { name: 'paypal_click' })` (or `whatsapp_click`).
+Add the `window.va` queue snippet from the Vercel docs before the script tag, so clicks made
+before the script loads are not lost.
+
+To undo, remove the script line from the four pages, or disable Analytics in the dashboard.
