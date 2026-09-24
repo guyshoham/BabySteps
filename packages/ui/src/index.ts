@@ -17,3 +17,6 @@ export { StarRating, type StarRatingProps } from './components/StarRating/StarRa
 export { Button, type ButtonProps, type ButtonVariant, type ButtonSize } from './components/Button/Button';
 export { Badge, type BadgeProps } from './components/Badge/Badge';
 export { Card, type CardProps } from './components/Card/Card';
+export { VideoFrame, type VideoFrameProps } from './components/VideoFrame/VideoFrame';
+export { FAQ, type FAQProps, type FAQItem } from './components/FAQ/FAQ';
+export { StickyCTA, type StickyCTAProps } from './components/StickyCTA/StickyCTA';
