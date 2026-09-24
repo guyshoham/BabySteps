@@ -52,7 +52,7 @@ a.bs-lesson__row:hover {
 .bs-lesson__state {
   font-size: var(--text-caption);
   font-weight: 700;
-  color: var(--color-accent);
+  color: var(--color-brand-600);
 }
 
 .bs-lesson__time {

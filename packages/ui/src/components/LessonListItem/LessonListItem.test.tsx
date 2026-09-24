@@ -26,6 +26,14 @@ describe('LessonListItem', () => {
     expect(screen.getByText('השיעור הבא')).toBeVisible();
   });
 
+  it('renders an <li> root so the list has only list items as children', () => {
+    const { container } = inList(<LessonListItem title="תרגיל 1" href="/app/lesson/l1" />);
+    const list = container.querySelector('ol')!;
+    expect(list.children).toHaveLength(1);
+    expect(list.firstElementChild?.tagName).toBe('LI');
+    expect(screen.getAllByRole('listitem')).toHaveLength(1);
+  });
+
   it('omits an invalid duration', () => {
     const { container } = inList(<LessonListItem title="תרגיל 3" durationSec={-1} />);
     expect(container.querySelector('.bs-lesson__time')).toBeNull();
