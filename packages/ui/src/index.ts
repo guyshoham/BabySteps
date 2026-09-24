@@ -17,3 +17,5 @@ export { StarRating, type StarRatingProps } from './components/StarRating/StarRa
 export { Button, type ButtonProps, type ButtonVariant, type ButtonSize } from './components/Button/Button';
 export { Badge, type BadgeProps } from './components/Badge/Badge';
 export { Card, type CardProps } from './components/Card/Card';
+export { SiteNav, type SiteNavProps } from './components/SiteNav/SiteNav';
+export { Footer, type FooterProps, type SocialLink } from './components/Footer/Footer';
