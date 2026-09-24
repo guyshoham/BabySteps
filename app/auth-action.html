@@ -42,6 +42,19 @@
 
     <p id="msg" role="status" aria-live="polite" class="text-sm text-red-600 mt-3 text-center"></p>
 
+    <!-- Shown when the link expired (after 1 hour) or was already used. -->
+    <form id="resend-form" class="space-y-3 mt-4" hidden novalidate>
+      <div>
+        <label for="resend-email" class="block text-sm font-bold text-[#704229] mb-1">האימייל שלך</label>
+        <input id="resend-email" type="email" required dir="ltr" autocomplete="email"
+               class="w-full border rounded-lg px-3 py-2" />
+      </div>
+      <button type="submit" id="resend" class="w-full bg-[#704229] text-white rounded-lg py-2 font-semibold">
+        שלחי לי קישור חדש
+      </button>
+    </form>
+    <p id="resend-msg" role="status" aria-live="polite" class="text-sm text-red-600 mt-3 text-center"></p>
+
     <a id="to-login" href="/app/login" hidden
        class="block w-full text-center bg-[#704229] text-white rounded-lg py-2 font-semibold mt-4">
       לכניסה לקורסים
@@ -49,8 +62,9 @@
   </main>
 
   <script type="module">
-    import { auth, verifyPasswordResetCode, confirmPasswordReset } from "/app/firebase-client.js";
+    import { auth, verifyPasswordResetCode, confirmPasswordReset, resetPassword } from "/app/firebase-client.js";
     import { safeNext } from "/app/safe-next.js";
+    import { messageFor } from "/app/auth-errors.js";
 
     const MIN_LENGTH = 8;
     const params = new URLSearchParams(location.search);
@@ -88,9 +102,9 @@
     function codeError(err) {
       switch (err?.code) {
         case "auth/expired-action-code":
-          return "הקישור כבר לא בתוקף. אפשר לבקש קישור חדש בלחיצה על \"שכחתי סיסמה\" בדף הכניסה.";
+          return "הקישור כבר לא בתוקף, כי הוא עובד רק שעה. אפשר לבקש כאן קישור חדש.";
         case "auth/invalid-action-code":
-          return "הקישור לא תקין או שכבר השתמשת בו. אפשר לבקש קישור חדש בלחיצה על \"שכחתי סיסמה\" בדף הכניסה.";
+          return "הקישור לא תקין או שכבר השתמשת בו. אפשר לבקש כאן קישור חדש.";
         case "auth/user-disabled":
         case "auth/user-not-found":
           return "לא מצאנו את החשבון הזה. כתבי לנו ונעזור.";
@@ -109,6 +123,48 @@
       toLogin.hidden = false;
     }
 
+    // Expired or used link: let her ask for a new one right here.
+    const RESEND_CODES = ["auth/expired-action-code", "auth/invalid-action-code"];
+    const resendForm = $("resend-form");
+    const resendEmail = $("resend-email");
+    const resendBtn = $("resend");
+    const resendMsg = $("resend-msg");
+
+    function deadCode(err, knownEmail) {
+      dead("הקישור לא עובד", codeError(err));
+      if (!RESEND_CODES.includes(err?.code)) return;
+      if (knownEmail) resendEmail.value = knownEmail;
+      resendForm.hidden = false;
+      resendEmail.focus();
+    }
+
+    resendForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      resendMsg.className = "text-sm text-red-600 mt-3 text-center";
+      resendMsg.textContent = "";
+      const email = resendEmail.value.trim();
+      if (!email) {
+        resendMsg.textContent = "הזיני את האימייל שלך ונשלח קישור חדש.";
+        resendEmail.focus();
+        return;
+      }
+      resendBtn.disabled = true;
+      resendBtn.textContent = "שולחות…";
+      try {
+        await resetPassword(email);
+      } catch (err) {
+        resendBtn.disabled = false;
+        resendBtn.textContent = "שלחי לי קישור חדש";
+        resendMsg.textContent = messageFor(err?.code, "reset");
+        return;
+      }
+      resendForm.hidden = true;
+      title.textContent = "קישור חדש בדרך";
+      msg.textContent = "";
+      resendMsg.className = "text-sm text-green-700 mt-3 text-center";
+      resendMsg.textContent = "שלחנו קישור חדש. הוא בתוקף לשעה. בדקי גם בספאם.";
+    });
+
     toggle.addEventListener("click", () => {
       const show = password.type === "password";
       password.type = show ? "text" : "password";
@@ -122,7 +178,7 @@
       try {
         email = await verifyPasswordResetCode(auth, code);
       } catch (err) {
-        return dead("הקישור לא עובד", codeError(err));
+        return deadCode(err);
       }
       loading.hidden = true;
       title.textContent = "בחירת סיסמה";
@@ -159,7 +215,7 @@
             showError(codeError(err));
             return;
           }
-          return dead("הקישור לא עובד", codeError(err));
+          return deadCode(err, email);
         }
         form.hidden = true;
         title.textContent = "הסיסמה נשמרה";
