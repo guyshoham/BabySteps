@@ -201,10 +201,6 @@ what is still open.
 
 ## Housekeeping
 
-- [ ] **[H1] P3 — Delete `staging/`.** 748 MB of transcoded videos, gitignored. **Fix:** once R2
-  playback is confirmed good, `rm -rf staging/`.
-- [ ] **[H5] P3 — Delete old design-sync leftovers.** `.gitignore:21-22`. `.ds-sync/` (46 MB) and
-  `ds-bundle/` (9.3 MB) are from an old sync tool that `.design-sync/` replaced. They are untracked
-  but still on disk and still in `.gitignore`. `.superpowers/` and `.playwright-mcp/` (screenshots
-  and logs) are leftovers too. **Fix:** `rm -rf .ds-sync ds-bundle .playwright-mcp .superpowers`,
-  then drop lines 21 and 22 from `.gitignore`. **[CONFIRMED]**
+- [ ] **[H1] P3 — Delete `staging/`.** 696 MB of the web-ready videos (the same 18 files as in R2,
+  checked 2026-09-25). **Fix:** Guy uploads `staging/` to Google Drive as a backup first, then
+  `rm -rf staging/`.
