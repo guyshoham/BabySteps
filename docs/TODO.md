@@ -82,15 +82,11 @@ what is still open.
   plan against issuing by hand) and add a Make step after the HTTP call that issues and emails the
   receipt with the buyer email and PayPal `txnId`. Until then, issue each receipt by hand the same
   day. Bit/Paybox sales always need a manual receipt.
-- [ ] **[F3] P2 — "Paid but no access" playbook and a manual enroll tool.** `lib/enroll-core.js:39`.
-  When the email fails, `/api/enroll` returns 502 and Make marks the run failed, but nobody is told.
-  Other cases: email in spam, buyer paid with her partner's PayPal so the email went to him, a typo.
-  Bit/Paybox buyers and these cases need a curl call with the secret
-  (`docs/go-live-checklist.md:160`), which Yarden cannot run. **Fix:** turn on Make's error email to
-  Yarden. Add `scripts/enroll-manual.js <email> [courseId]` in the style of
-  `scripts/create-tester.js`. Add a short section to `docs/go-live-checklist.md`: check Make history
-  and re-run, check the user in Firebase Auth, send a reset from the login page, or enroll another
-  email by hand. Add the FAQ line "הגישה נשלחת למייל של חשבון ה-PayPal ששילם".
+- [ ] **[F3] P2 — Get told when an enrollment fails.** When the welcome email fails,
+  `/api/enroll` returns 502 and Make marks the run failed, but nobody is told. **Fix:** turn on
+  Make's error email for the scenario (Scenario settings, "Notify on error") to Guy and Yarden.
+  Add the FAQ line "הגישה נשלחת למייל של חשבון ה-PayPal ששילם" when C3 lands. The manual enroll
+  script and the playbook ("Paid but no access" in `docs/go-live-checklist.md`) are done.
 - [ ] **[F4] P2 — Tell existing students about a new course.** `lib/enroll-core.js:31`. The welcome
   email goes only to users who never signed in. When tummy time launches, a returning student who
   pays gets no email at all and may think the payment failed. **Fix:** when the enrollment is new
@@ -210,7 +206,7 @@ what is still open.
 - [ ] **[B1] P2 — Beta launch for real testimonials.** Before the public launch, give 5 to 10
   followers the course free or at half price in exchange for honest feedback within two weeks and a
   short quote with the baby's age. This tests the whole flow on real phones and fills C2 and C7
-  with true social proof. **Fix:** Yarden picks the group, Guy enrolls them with the F3 script, and
+  with true social proof. **Fix:** Yarden picks the group, Guy enrolls them with `scripts/enroll-manual.js`, and
   a Google Form collects feedback and consent to publish.
 - [ ] **[B2] P3 — Email list and a free mini-challenge.** `challenge/tummy-time/index.html:123`. The
   "update me" button opens a WhatsApp chat, so Yarden must answer each one by hand and cannot

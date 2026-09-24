@@ -158,8 +158,8 @@ Scenario: **PayPal (new notification) → filter → HTTP**.
       so the email uses Firebase's built-in Hebrew reset text. `%APP_NAME%` in that text is
       the project's public-facing name (Project settings → General).
 - [ ] Note the manual Bit/Paybox path on the sales page. Those buyers never touch PayPal,
-      so enroll them by hand with the curl in step 6 (same command, real email). They get
-      the same Firebase welcome email.
+      so enroll them by hand with `scripts/enroll-manual.js` (see "Paid but no access"
+      below). They get the same Firebase welcome email.
 
 ## 6. Verify end to end
 
@@ -203,6 +203,36 @@ Then check Firebase Auth for the email and `users/<uid>/enrollments/rolling`.
 **Security:** Make accepts IPNs without checking them with PayPal. Keep `MAKE_HOOK_URL`
 private (only in `.env`, never in the repo). If it leaks, regenerate the webhook in Make and
 update PayPal's IPN URL.
+
+## Paid but no access
+
+A buyer says she paid but cannot get in. Go down this list in order.
+
+1. **Did the payment reach Make?** Open the scenario's History in Make. Find the run by
+   time or by the buyer's email.
+   - No run: the IPN never arrived, or the filter dropped it. Check the payment in PayPal,
+     then enroll her by hand (step 4).
+   - Failed run: open it. A `502` means she is enrolled but the welcome email failed.
+     Re-run it from History. Enroll is idempotent, so this is safe.
+2. **Is she in Firebase?** Firebase console, Authentication, search her email.
+   - Found, never signed in: the email went to spam, or she lost it. Ask her to use
+     "שכחתי סיסמה" on `/app/login`. It sends a new link.
+   - Not found: the access went to another email. Most often the PayPal account that paid
+     is her partner's. Ask which email the PayPal account uses, or enroll her own email
+     (step 4).
+3. **Wrong email or a typo?** Enroll the right email (step 4). The access on the wrong
+   email stays. Delete that user in Firebase Auth if it is clearly a typo.
+4. **Enroll by hand** (also for every Bit/Paybox sale). Run from the repo root:
+
+       node --env-file=.env scripts/enroll-manual.js <email> [courseId] --ref <payment note> --dry-run
+       node --env-file=.env scripts/enroll-manual.js <email> [courseId] --ref <payment note>
+
+   `courseId` is `rolling` or `tummy-time`. `--ref` is free text, for example
+   `bit-2026-09-24`, and is saved on the enrollment. The script sends the "choose a password"
+   email only if she never signed in. If she already logs in, it prints that; tell her the
+   course is now in her account. `--no-email` skips the email.
+
+Remember the receipt (TODO F2) for every manual sale.
 
 ## After go-live
 

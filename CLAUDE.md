@@ -58,6 +58,8 @@ PayPal ──▶ Make ──▶ POST /api/enroll ──▶ emails student their 
 - `lib/course-map.js` — PayPal productId → courseId map (`COURSE_MAP` env)
 - `lib/enroll-core.js` — `runEnroll(deps, body)`, pure + idempotent (deps injected for tests)
 - `lib/video-core.js` — `runVideoUrl(deps, {idToken, lessonId})`, pure gatekeeper logic
+- `lib/manual-enroll-core.js` + `scripts/enroll-manual.js` — enroll a buyer by hand (Bit/Paybox,
+  wrong email). Playbook: "Paid but no access" in `docs/go-live-checklist.md`
 - `lib/firebase-admin.js` — Admin SDK singleton + real deps (`ensureUser`, `ensureEnrollment`,
   `verifyToken`, `getLesson`, `isEnrolled`); lazy init, no env reads at import
 - `lib/r2.js` — `signUrl(r2Key)` → presigned R2 GET URL (S3-compatible, 2h default)
