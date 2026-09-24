@@ -15,6 +15,8 @@ export interface CourseProgressCardProps extends Omit<AnchorHTMLAttributes<HTMLA
   href: string;
   /** Overrides the automatic "start / continue / watch again" label. */
   ctaLabel?: ReactNode;
+  /** Heading tag for the title. Pick the level that follows the page outline. Default "h3". */
+  headingLevel?: 'h2' | 'h3';
 }
 
 function safeCount(n: number): number {
@@ -29,6 +31,7 @@ export function CourseProgressCard({
   progress,
   href,
   ctaLabel,
+  headingLevel: Heading = 'h3',
   className,
   ...rest
 }: CourseProgressCardProps) {
@@ -52,7 +55,7 @@ export function CourseProgressCard({
         )}
       </div>
       <div className="bs-course-progress__body">
-        <h3 className="bs-course-progress__title">{title}</h3>
+        <Heading className="bs-course-progress__title">{title}</Heading>
         <ProgressBar value={pct} label={`${done} מתוך ${total} שיעורים`} />
         <span className="bs-course-progress__cta">
           {label}

@@ -27,4 +27,12 @@ describe('CourseProgressCard', () => {
     const { container } = render(<CourseProgressCard title="קורס" lessonsDone={1} lessonsTotal={4} href="/x" />);
     expect(container.querySelector('img')).toBeNull();
   });
+
+  it('uses an h3 title by default and accepts another heading level', () => {
+    const { unmount } = render(<CourseProgressCard title="קורס" lessonsDone={1} lessonsTotal={4} href="/x" />);
+    expect(screen.getByRole('heading', { level: 3, name: 'קורס' })).toBeInTheDocument();
+    unmount();
+    render(<CourseProgressCard title="קורס" lessonsDone={1} lessonsTotal={4} href="/x" headingLevel="h2" />);
+    expect(screen.getByRole('heading', { level: 2, name: 'קורס' })).toBeInTheDocument();
+  });
 });

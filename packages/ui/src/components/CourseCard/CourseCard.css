@@ -80,7 +80,17 @@
 }
 
 .bs-course-card--soon {
+  pointer-events: none;
+}
+
+/* Mute only the picture. Text stays at full contrast. */
+.bs-course-card--soon .bs-course-card__img,
+.bs-course-card--soon .bs-course-card__emoji {
   opacity: 0.6;
   filter: saturate(0.4);
-  pointer-events: none;
+}
+
+.bs-course-card--soon .bs-course-card__title,
+.bs-course-card--soon .bs-course-card__desc {
+  color: var(--color-ink-muted);
 }
