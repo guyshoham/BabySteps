@@ -14,7 +14,12 @@ export default async function handler(req, res) {
   }
   try {
     const map = loadCourseMap();
-    const result = await runEnroll({ map, ensureUser, ensureEnrollment, sendWelcome }, req.body);
+    // The body (email, paypalProductId, paymentRef, amount, currency) goes through as is.
+    const requireAmount = process.env.REQUIRE_AMOUNT === "1";
+    const result = await runEnroll(
+      { map, ensureUser, ensureEnrollment, sendWelcome, requireAmount },
+      req.body,
+    );
     return res.status(result.status).json(result.body);
   } catch (e) {
     console.error("enroll error", e);
