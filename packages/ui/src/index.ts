@@ -22,3 +22,6 @@ export { Alert, type AlertProps, type AlertVariant } from './components/Alert/Al
 export { ProgressBar, type ProgressBarProps } from './components/ProgressBar/ProgressBar';
 export { SiteNav, type SiteNavProps } from './components/SiteNav/SiteNav';
 export { Footer, type FooterProps, type SocialLink } from './components/Footer/Footer';
+export { VideoFrame, type VideoFrameProps } from './components/VideoFrame/VideoFrame';
+export { FAQ, type FAQProps, type FAQItem } from './components/FAQ/FAQ';
+export { StickyCTA, type StickyCTAProps } from './components/StickyCTA/StickyCTA';
