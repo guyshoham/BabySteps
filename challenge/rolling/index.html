@@ -413,6 +413,14 @@
         }
         .faq__item[open] summary .icon { transform: rotate(-90deg); }
         .faq__item summary:hover { color: var(--c-brown); }
+        /* The answer sits in .faq__body (added by JS) so its height can animate. */
+        .faq__body { overflow: hidden; }
+        .faq__body > p { transition: opacity var(--dur-enter) var(--ease-out), transform var(--dur-enter) var(--ease-out); }
+        .faq__item.is-closing .faq__body > p,
+        .faq__item:not([open]) .faq__body > p { opacity: 0; transform: translateY(-4px); }
+        @media (prefers-reduced-motion: reduce) {
+            .faq__body > p { transition: none; transform: none; }
+        }
         .faq__item p {
             padding-block-end: var(--s-5);
             font-size: var(--fs-body);
@@ -792,6 +800,44 @@
             update();
         });
         [hero, ...hiders].forEach(el => el && io.observe(el));
+    })();
+
+    /* ── FAQ open and close ────────────────────────────────────────
+       Native <details> still works without JS. With JS the answer height
+       eases open and closed, and the text fades in. Reduced motion keeps
+       the plain instant toggle. */
+    (function () {
+        const items = document.querySelectorAll('.faq__item');
+        const still = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const OPTS = { duration: 320, easing: 'cubic-bezier(0.65, 0, 0.35, 1)' }; // --ease-in-out
+        items.forEach((item) => {
+            const summary = item.querySelector('summary');
+            if (!summary) return;
+            const body = document.createElement('div');
+            body.className = 'faq__body';
+            while (summary.nextSibling) body.appendChild(summary.nextSibling);
+            item.appendChild(body);
+            let anim = null;
+            summary.addEventListener('click', (e) => {
+                if (still() || !body.animate) return; // native toggle
+                e.preventDefault();
+                // A closed <details> can still report its hidden content's height,
+                // so opening from closed always starts at 0.
+                const from = item.open ? body.getBoundingClientRect().height : 0;
+                if (anim) anim.cancel();
+                if (item.open && !item.classList.contains('is-closing')) {
+                    item.classList.add('is-closing');
+                    anim = body.animate({ height: [from + 'px', '0px'] }, OPTS);
+                    anim.onfinish = () => { item.open = false; item.classList.remove('is-closing'); anim = null; };
+                } else {
+                    item.classList.remove('is-closing');
+                    item.open = true;
+                    const to = body.scrollHeight;
+                    anim = body.animate({ height: [from + 'px', to + 'px'] }, OPTS);
+                    anim.onfinish = () => { anim = null; };
+                }
+            });
+        });
     })();
 </script>
 
