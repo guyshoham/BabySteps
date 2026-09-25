@@ -77,6 +77,10 @@ PayPal ──▶ Make ──▶ POST /api/enroll ──▶ Firebase emails the s
   is not a secret; `firestore.rules` protect the data).
 - `app/firebase-client.js` — web SDK init + `requireAuth/signIn/signOut/resetPassword`
 - `app/login.html`, `app/my-courses.html`, `app/course.html`, `app/lesson.html` — gated pages
+- `app/lesson-switch.js` — pure helpers for the lesson page's in-place switch. A click on
+  another lesson of the course swaps it without a page load (`showLesson` in `lesson.html`,
+  `history.pushState`, one `AbortController` per lesson for the video listeners). Links keep
+  their real `href`; any failure falls back to `location.assign`.
 - `firestore.rules` — security rules (publish to Firebase)
 - `vercel.json` — `cleanUrls` + rewrites for `/app/course/:slug` and `/app/lesson/:id`
 - `scripts/course-data.js` — the one source for courses and lessons (`DATA` + `validate`). Read

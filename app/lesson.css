@@ -55,6 +55,13 @@
   text-wrap: balance;
   min-block-size: 1.2em;
 }
+/* Focus lands on the title after a lesson switch. A ring only for keyboard use. */
+.lesson-title:focus { outline: none; }
+.lesson-title:focus-visible {
+  outline: 2px solid var(--c-brown);
+  outline-offset: 4px;
+  border-radius: var(--r-sm);
+}
 
 .lesson-where {
   position: relative; /* the step tooltip is placed inside this box */
@@ -246,6 +253,29 @@
   inline-size: 100%;
   block-size: 100%;
   object-fit: contain;
+}
+/* Switching lessons in place: the frame keeps its size and gets a light
+   veil until the new video answers. Only the frame waits, nothing moves. */
+.media-frame { position: relative; }
+.media-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-color: rgba(253, 246, 240, 0.12);
+  opacity: 0;
+}
+.media-frame.is-image::after { background-color: rgba(112, 66, 41, 0.08); }
+.media-frame.is-loading::after { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .media-frame::after { transition: opacity var(--dur-state) var(--ease-out); }
+  /* Same shimmer as .app-skeleton (app.css). */
+  .media-frame.is-loading::after {
+    background-image: linear-gradient(90deg,
+      transparent 0%, rgba(253, 246, 240, 0.10) 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: app-shimmer 1.4s linear infinite;
+  }
 }
 .lesson-msg { text-align: center; color: var(--c-error); font-weight: 500; }
 .lesson-msg:not(:empty) { margin-block-start: var(--s-3); }
