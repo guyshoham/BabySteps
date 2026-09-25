@@ -1,0 +1,413 @@
+/* Lesson page (app/lesson.html). Tokens only: assets/css/tokens.css, loaded by
+   app/app.css. Spec: docs/design/2026-09-26-art-direction.md, WP7 and
+   signature moments 2 (lesson done) and 3 (course finished).
+   Logical properties only, so the layout follows dir="rtl".
+   Motion is CSS transitions on transform, opacity and stroke-dashoffset.
+   Under reduced motion every state appears at once (block at the end). */
+
+/* ─── Page ─────────────────────────────── */
+/* The body also has .app-page (app.css): 16px padding the header bleeds
+   over, and the header's space held until app-shell.js adds it. */
+.lesson-page {
+  padding-block-end: var(--s-7);
+  font-size: var(--fs-body);
+  line-height: 1.7;
+  color: var(--c-ink-soft);
+  background: var(--c-cream);
+}
+.lesson-page.has-upnext { padding-block-end: calc(var(--s-9) + var(--s-5)); }
+.lesson-page h1, .lesson-page h2, .lesson-page p { margin: 0; }
+.lesson-page a { text-decoration: none; }
+
+.lesson-page {
+  /* Room for the video: the first screen at 390x844 must still show the
+     done button and the next lesson under it. */
+  --media-h: clamp(240px, calc(100svh - 330px), 720px);
+}
+.lesson {
+  inline-size: 100%;
+  max-inline-size: 48rem;
+  margin-inline: auto;
+}
+
+/* Loading shapes use WP5's .app-skeleton (app.css); these set the size. */
+.skel-title { inline-size: 55%; block-size: 0.9em; margin-block: 0.15em; }
+.skel-position { inline-size: 6.5em; block-size: 0.9em; margin-block: 0.3em; }
+
+/* ─── Title block ──────────────────────── */
+.lesson-back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  min-block-size: 44px;
+  margin-block-start: calc(-1 * var(--s-2));
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--c-brown);
+}
+.lesson-back:hover { color: var(--c-brown-hover); text-decoration: underline; text-underline-offset: 3px; }
+
+.lesson-title {
+  font-size: var(--fs-h2);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--c-ink);
+  text-wrap: balance;
+  min-block-size: 1.2em;
+}
+
+.lesson-where {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-block: var(--s-2) var(--s-4);
+  min-block-size: 22px;
+}
+.lesson-position {
+  flex-shrink: 0;
+  font-size: var(--fs-small);
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--c-ink-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Step bar: one small equal step per lesson ("small steps"). Done steps are
+   brown, the current one stands a little taller. */
+.steps {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  max-inline-size: 22rem;
+  block-size: 10px;
+}
+.step {
+  position: relative;
+  flex: 1;
+  block-size: 6px;
+  border-radius: 2px; /* same as the course page step bar */
+  background: var(--c-line);
+  overflow: hidden;
+}
+.step.is-current { block-size: 10px; }
+.step::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--c-brown);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-enter) var(--ease-out) 160ms;
+}
+[dir="rtl"] .step::after { transform-origin: right; } /* fills from the start side */
+.step.is-done::after { transform: scaleX(1); }
+
+/* ─── Media ────────────────────────────── */
+/* The videos are portrait (9:16). The frame has a fixed size from the first
+   paint, so the page never shifts when the video arrives. */
+.media-frame {
+  block-size: var(--media-h);
+  aspect-ratio: 9 / 16;
+  max-inline-size: 100%;
+  margin-inline: auto;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--c-ink);
+  box-shadow: var(--shadow-1);
+}
+/* Until the lesson kind is known, the media and the side column are
+   invisible, so the frame can take its shape without moving anything seen. */
+.lesson-body.is-pending { visibility: hidden; }
+/* Tips are 3:4 portrait images. They get a 3:4 frame; the shape is set
+   while the body is still invisible (see .is-pending). */
+.media-frame.is-image {
+  aspect-ratio: 3 / 4;
+  inline-size: 100%;
+  block-size: auto;
+  max-block-size: var(--media-h);
+  background: var(--c-paper);
+}
+.media-frame video,
+.media-frame img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+}
+.lesson-msg { text-align: center; color: var(--c-error); font-weight: 500; }
+.lesson-msg:not(:empty) { margin-block-start: var(--s-3); }
+
+/* ─── Side: done, nav, cards ───────────── */
+.lesson-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  margin-block-start: var(--s-4);
+}
+.is-waiting { visibility: hidden; }
+
+/* The done toggle (moment 2). Not done: an outline button with an empty
+   ring. Done: it fills brown (200ms), then the tick draws itself (360ms). */
+.done-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  inline-size: 100%;
+  min-block-size: 48px;
+  padding: var(--s-2) var(--s-5);
+  border: 1.5px solid var(--c-brown);
+  border-radius: var(--r-md);
+  background: var(--c-paper);
+  color: var(--c-brown);
+  font: 500 var(--fs-body) / 1.2 var(--font-sans);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-state) var(--ease-out),
+    color var(--dur-state) var(--ease-out),
+    transform var(--dur-press) var(--ease-out);
+}
+.done-btn:hover { background: var(--c-peach); }
+.done-btn:active { transform: scale(0.98); }
+.done-btn:disabled { cursor: progress; }
+.done-btn.is-done { background: var(--c-brown); color: var(--c-paper); }
+.done-btn.is-done:hover { background: var(--c-brown-hover); }
+.done-check {
+  inline-size: 22px;
+  block-size: 22px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.done-tick {
+  stroke-width: 2;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset var(--dur-enter) var(--ease-out) var(--dur-press);
+}
+.done-btn.is-done .done-tick { stroke-dashoffset: 0; }
+
+/* Prev and next, right under the done button (L9). */
+.lesson-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-3);
+}
+.nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-1);
+  min-block-size: 48px;
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--c-paper);
+  box-shadow: var(--shadow-1);
+  color: var(--c-brown);
+  font-weight: 500;
+  transition:
+    box-shadow var(--dur-state) var(--ease-out),
+    background-color var(--dur-state) var(--ease-out),
+    color var(--dur-state) var(--ease-out),
+    transform var(--dur-press) var(--ease-out);
+}
+.nav-btn:hover { box-shadow: var(--shadow-2); }
+.nav-btn:active { transform: scale(0.98); }
+.nav-btn.is-empty { visibility: hidden; }
+/* After the video ends, "next" becomes the main action. */
+.nav-next.is-primary { background: var(--c-brown); color: var(--c-paper); }
+.nav-next.is-primary:hover { background: var(--c-brown-hover); }
+
+/* Last lesson, lessons still open (L10). */
+.lesson-left {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-1) var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--c-paper);
+  box-shadow: var(--shadow-1);
+}
+.lesson-left-text { color: var(--c-ink); font-weight: 500; }
+.lesson-left-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  min-block-size: 44px;
+  color: var(--c-brown);
+  font-weight: 500;
+}
+.lesson-left-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Buttons inside the cards (WP5 gives .app-btn its look). */
+.lesson-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-block-size: 48px;
+  padding: var(--s-2) var(--s-5);
+  font-weight: 500;
+}
+.lesson-btn:active { transform: scale(0.98); }
+
+/* Finish card (moment 3). The one peach place on the page: Yarden's small
+   portrait with the arc drawn around it once, and her note. */
+.finish {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--s-4);
+  margin-block-start: var(--s-3);
+  padding: var(--s-5);
+  border-radius: var(--r-lg);
+  background: var(--c-peach);
+}
+.finish-portrait {
+  position: relative;
+  inline-size: 104px;
+  block-size: 104px;
+}
+.finish-portrait img {
+  position: absolute;
+  inset: 12px;
+  inline-size: 80px;
+  block-size: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.finish-arc {
+  position: absolute;
+  inset: 0;
+  inline-size: 104px;
+  block-size: 104px;
+  fill: none;
+  stroke: var(--c-brown);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+.finish-arc path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset var(--dur-draw) var(--ease-in-out) 120ms;
+}
+.finish.is-drawn .finish-arc path { stroke-dashoffset: 0; }
+.finish-title { font-size: var(--fs-h3); font-weight: 700; line-height: 1.3; color: var(--c-ink); }
+.finish-text { margin-block-start: var(--s-1); text-wrap: pretty; }
+.finish-sign { margin-block-start: var(--s-1); font-weight: 500; color: var(--c-brown); }
+.finish-btn, .finish-more { grid-column: 1 / -1; }
+.finish-more { font-size: var(--fs-small); color: var(--c-ink-soft); }
+
+/* WhatsApp feedback card. */
+.feedback {
+  margin-block-start: var(--s-3);
+  padding: var(--s-5);
+  border-radius: var(--r-lg);
+}
+.feedback-title { font-size: var(--fs-h3); font-weight: 500; line-height: 1.3; color: var(--c-ink); text-wrap: balance; }
+.feedback-text { margin-block: var(--s-2) var(--s-4); font-size: var(--fs-body); color: var(--c-ink-soft); }
+
+/* ─── Up next bar ──────────────────────── */
+/* Slides up from the bottom edge (360ms). When closed it waits for the
+   slide to end, then hides. */
+.upnext {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-end: 0;
+  z-index: 40;
+  padding: var(--s-3) var(--gutter) calc(var(--s-3) + env(safe-area-inset-bottom, 0px));
+  border-start-start-radius: var(--r-lg);
+  border-start-end-radius: var(--r-lg);
+  background: var(--c-paper);
+  box-shadow: 0 -2px 4px rgba(112, 66, 41, .06), 0 -12px 32px rgba(112, 66, 41, .12);
+  transform: translateY(calc(100% + var(--s-5)));
+  visibility: hidden;
+  transition:
+    transform var(--dur-enter) var(--ease-out),
+    visibility 0s linear var(--dur-enter);
+}
+.upnext.is-open {
+  transform: none;
+  visibility: visible;
+  transition: transform var(--dur-enter) var(--ease-out);
+}
+.upnext-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  max-inline-size: 48rem;
+  margin-inline: auto;
+}
+.upnext-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  inline-size: 40px;
+  block-size: 40px;
+  border-radius: var(--r-md);
+  background: var(--c-peach);
+  color: var(--c-brown);
+}
+.upnext-text { flex: 1; min-inline-size: 0; line-height: 1.4; }
+.upnext-kicker { font-size: var(--fs-small); color: var(--c-ink-muted); }
+.upnext-title {
+  color: var(--c-ink);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.upnext-go {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  flex-shrink: 0;
+  min-block-size: 44px;
+  padding: var(--s-2) var(--s-4);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* ─── Desktop and tablet: video on the start side, actions beside it ── */
+@media (min-width: 768px) {
+  .lesson-page { --media-h: clamp(320px, calc(100svh - 240px), 760px); }
+  .lesson-body {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: var(--s-6);
+  }
+  .media-frame.is-image { inline-size: auto; block-size: var(--media-h); }
+  /* A floating card at the foot of the side column, so it never covers the
+     video or its controls. Width: the page column minus the 9:16 video
+     and the gap between them. */
+  .upnext {
+    inset-inline-start: auto;
+    inset-inline-end: max(var(--s-4), calc((100% - 48rem) / 2));
+    inset-block-end: var(--s-4);
+    inline-size: calc(min(48rem, 100% - 2 * var(--s-4)) - var(--media-h) * 9 / 16 - var(--s-6));
+    padding: var(--s-3) var(--s-4);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-2);
+  }
+  .lesson-side {
+    position: sticky;
+    inset-block-start: calc(var(--nav-h) + var(--s-5));
+    margin-block-start: 0;
+  }
+}
+
+/* ─── Motion off ───────────────────────── */
+/* First renders (a lesson done before) and reduced motion: states jump. */
+.is-instant, .is-instant *, .is-instant *::after { transition: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .lesson-page *,
+  .lesson-page *::after { transition: none !important; }
+}
