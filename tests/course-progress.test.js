@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
-  courseProgress, continueLabel, whatsAppCourseFeedbackUrl,
+  courseProgress, continueLabel, whatsAppCourseFeedbackUrl, stepStates, progressText,
 } from "../app/course-progress.js";
 import { WHATSAPP_NUMBER } from "../app/lesson-extras.js";
 
@@ -39,6 +39,23 @@ describe("continueLabel", () => {
     expect(continueLabel({ done: 0, total: 4 })).toBe("התחילי מהשיעור הראשון");
     expect(continueLabel({ done: 2, total: 4 })).toBe("המשיכי מאיפה שעצרת");
     expect(continueLabel({ done: 4, total: 4 })).toBe("צפי שוב מההתחלה");
+  });
+});
+
+describe("stepStates", () => {
+  it("marks each lesson done or not, in order, gaps included", () => {
+    expect(stepStates(L, new Set(["l2", "l4"]))).toEqual([false, true, false, true]);
+    expect(stepStates(L, ["l1", "other"])).toEqual([true, false, false, false]);
+  });
+  it("handles missing input", () => {
+    expect(stepStates(undefined, undefined)).toEqual([]);
+    expect(stepStates(L, undefined)).toEqual([false, false, false, false]);
+  });
+});
+
+describe("progressText", () => {
+  it("says how many lessons are done", () => {
+    expect(progressText({ done: 3, total: 18 })).toBe("3 מתוך 18 שיעורים");
   });
 });
 

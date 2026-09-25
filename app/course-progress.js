@@ -24,6 +24,19 @@ export function continueLabel({ done, total }) {
   return "המשיכי מאיפה שעצרת";
 }
 
+// One entry per lesson, in order, for the step bar: true when that lesson is done.
+// A gap stays a gap, so the bar shows exactly which steps are done.
+export function stepStates(lessonIds, completedIds) {
+  const ids = Array.isArray(lessonIds) ? lessonIds : [];
+  const completed = completedIds instanceof Set ? completedIds : new Set(completedIds ?? []);
+  return ids.map((id) => completed.has(id));
+}
+
+// The progress line and the step bar's spoken value: "3 מתוך 18 שיעורים".
+export function progressText({ done, total }) {
+  return `${done} מתוך ${total} שיעורים`;
+}
+
 // Link for sending Yarden a video of the practice from this course.
 export function whatsAppCourseFeedbackUrl(title) {
   const t = String(title ?? "").trim();
