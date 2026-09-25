@@ -3,58 +3,134 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="robots" content="noindex, nofollow" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>שיעור — מתחילים בקטן</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="color-scheme" content="light" />
+  <title>שיעור | מתחילים בקטן</title>
   <link rel="icon" type="image/png" href="/assets/logos/logo-peach.png" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/app/app.css" />
+  <link rel="stylesheet" href="/app/lesson.css" />
   <link rel="manifest" href="/app/manifest.webmanifest" />
   <meta name="theme-color" content="#704229" />
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-title" content="מתחילים בקטן" />
 </head>
-<body class="min-h-screen p-4">
-  <div class="max-w-3xl mx-auto py-4">
-    <a id="back" href="/app/my-courses" class="text-sm app-link">→ חזרה לקורס</a>
-    <h1 id="title" class="text-2xl font-bold mt-2"></h1>
-  </div>
-  <main class="max-w-3xl mx-auto">
-    <video id="video" class="block mx-auto w-auto max-w-full object-contain app-rounded-lg app-shadow bg-black"
-           style="max-height:80vh;max-height:80svh" controls playsinline
-           controlsList="nodownload" oncontextmenu="return false"></video>
-    <img id="image" class="block mx-auto w-auto max-w-full object-contain app-rounded-lg app-shadow hidden"
-         style="max-height:80vh;max-height:80svh" alt="" oncontextmenu="return false" />
-    <p id="msg" class="text-center text-red-600 mt-3"></p>
-    <!-- Shown once every lesson of the course is done. -->
-    <section id="finish" class="hidden mt-4 p-5 app-rounded-lg bg-[#704229] text-white app-shadow text-center">
-      <h2 class="text-xl font-bold">סיימת את הקורס! 🎉</h2>
-      <p class="mt-2 leading-relaxed">כל הכבוד לך! אשמח מאוד לשמוע איך היה לך. כמה מילים קצרות ממך יעזרו לאמהות אחרות להחליט.</p>
-      <a id="testimonial" target="_blank" rel="noopener"
-         class="inline-block mt-4 px-5 py-3 app-rounded bg-white text-[#704229] font-bold">שלחי לי כמה מילים בווטסאפ</a>
-      <p class="mt-4 text-sm opacity-90">ואל תשכחי: את תמיד יכולה לצלם תרגול ולשלוח לי לפידבק אישי.</p>
-    </section>
-    <!-- Personal WhatsApp feedback, as promised on the sales page. -->
-    <section id="feedback" class="hidden mt-4 p-5 app-card text-center">
-      <h2 class="text-lg font-bold text-[#704229]">צלמי את התרגול ושלחי לי לפידבק אישי</h2>
-      <p class="mt-2 text-sm app-muted leading-relaxed">אני אצפה בסרטון ואחזיר לך דיוק אישי.</p>
-      <a id="whatsapp" target="_blank" rel="noopener"
-         class="mt-4 px-5 py-3 app-btn">שלחי לי בווטסאפ</a>
-    </section>
-    <nav id="nav" class="hidden flex items-center justify-between gap-3 mt-4">
-      <a id="prev" class="invisible px-4 py-3 app-rounded bg-white app-shadow text-[#704229] font-medium">→ הקודם</a>
-      <a id="next" class="invisible px-4 py-3 app-rounded bg-white app-shadow text-[#704229] font-medium">לשיעור הבא ←</a>
-    </nav>
+<body class="app-page lesson-page">
+  <main class="lesson">
+    <header class="lesson-head">
+      <a id="back" href="/app/my-courses" class="lesson-back">
+        <svg class="app-icon icon--dir" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-back"/></svg>חזרה לקורס
+      </a>
+      <h1 id="title" class="lesson-title"><span class="app-skeleton skel-title" aria-hidden="true"></span></h1>
+      <!-- "שיעור 3 מתוך 18" and one small step per lesson. Filled once the course loads. -->
+      <div class="lesson-where">
+        <p id="position" class="lesson-position"><span class="app-skeleton skel-position" aria-hidden="true"></span></p>
+        <div id="steps" class="steps" role="img" aria-label=""></div>
+      </div>
+    </header>
+
+    <div id="lesson-body" class="lesson-body is-pending">
+      <div class="lesson-media">
+        <!-- The frame keeps its size before the video loads, so nothing jumps.
+             The body stays invisible until the lesson kind (video or tip) is known. -->
+        <div id="frame" class="media-frame">
+          <video id="video" controls playsinline
+                 controlsList="nodownload" oncontextmenu="return false"></video>
+          <img id="image" hidden alt="" oncontextmenu="return false" />
+        </div>
+        <p id="msg" class="lesson-msg"></p>
+      </div>
+
+      <div class="lesson-side">
+        <!-- The done toggle. Hidden (space kept) until the lesson has loaded. -->
+        <button id="done" type="button" class="done-btn is-waiting" aria-pressed="false">
+          <svg class="done-check" viewBox="0 0 24 24" aria-hidden="true">
+            <path class="done-ring" d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/>
+            <path class="done-tick" pathLength="1" d="M9 12l2 2l4 -4"/>
+          </svg>
+          <span class="done-label">סמני כבוצע</span>
+        </button>
+
+        <nav id="nav" class="lesson-nav is-waiting" aria-label="שיעורים">
+          <a id="prev" class="nav-btn is-empty">
+            <svg class="app-icon icon--dir" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-back"/></svg><span>הקודם</span>
+          </a>
+          <a id="next" class="nav-btn nav-next is-empty">
+            <span class="nav-label">לשיעור הבא</span><svg class="app-icon icon--dir nav-next-icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-forward"/></svg>
+          </a>
+        </nav>
+
+        <!-- Last lesson only, while other lessons are still open. -->
+        <section id="left" class="lesson-left" hidden>
+          <p id="left-text" class="lesson-left-text"></p>
+          <a id="left-link" class="lesson-left-link">
+            <span>המשיכי מאיפה שעצרת</span><svg class="app-icon icon--dir" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-forward"/></svg>
+          </a>
+        </section>
+
+        <!-- Shown once every lesson of the course is done. -->
+        <section id="finish" class="finish" hidden aria-labelledby="finish-title">
+          <div class="finish-portrait">
+            <img src="/assets/yarden-portrait.jpg" width="80" height="80" alt="ירדן שוהם" loading="lazy" />
+            <svg class="finish-arc" viewBox="0 0 104 104" aria-hidden="true">
+              <path pathLength="1" d="M97.1 68.4A48 48 0 1 0 6.9 68.4"/>
+            </svg>
+          </div>
+          <div class="finish-note">
+            <h2 id="finish-title" class="finish-title">סיימת את הקורס!</h2>
+            <p class="finish-text">כל הכבוד לך! אשמח מאוד לשמוע איך היה לך. כמה מילים קצרות ממך יעזרו לאמהות אחרות להחליט.</p>
+            <p class="finish-sign">ירדן</p>
+          </div>
+          <a id="testimonial" target="_blank" rel="noopener" class="app-btn lesson-btn finish-btn">
+            <svg class="app-icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-whatsapp"/></svg>שלחי לי כמה מילים בווטסאפ
+          </a>
+          <p class="finish-more">ואל תשכחי: את תמיד יכולה לצלם תרגול ולשלוח לי לפידבק אישי.</p>
+        </section>
+
+        <!-- Personal WhatsApp feedback, as promised on the sales page. -->
+        <section id="feedback" class="feedback app-card" hidden aria-labelledby="feedback-title">
+          <h2 id="feedback-title" class="feedback-title">צלמי את התרגול ושלחי לי לפידבק אישי</h2>
+          <p class="feedback-text">אני אצפה בסרטון ואחזיר לך דיוק אישי.</p>
+          <a id="whatsapp" target="_blank" rel="noopener" class="app-btn-outline lesson-btn">
+            <svg class="app-icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-whatsapp"/></svg>שלחי לי בווטסאפ
+          </a>
+        </section>
+      </div>
+    </div>
   </main>
+
+  <!-- "Up next": slides up when the video ends or passes 90%. -->
+  <div id="upnext" class="upnext" aria-hidden="true" inert>
+    <div class="upnext-inner">
+      <span class="upnext-icon"><svg class="app-icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-play"/></svg></span>
+      <div class="upnext-text">
+        <p class="upnext-kicker"></p>
+        <p class="upnext-title"></p>
+      </div>
+      <a class="app-btn upnext-go" href="/app/my-courses">
+        <span class="upnext-action"></span><svg class="app-icon icon--dir" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-forward"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <p id="live" class="app-sr-only" aria-live="polite"></p>
 
   <script type="module">
     import {
       requireAuth, db, signOut, collection, query, where, orderBy, getDocs, doc, getDoc, setDoc,
     } from "/app/firebase-client.js";
     import { mountAppHeader } from "/app/app-shell.js";
-    import { findNeighbors } from "/app/lesson-nav.js";
+    import {
+      findNeighbors, lessonPosition, positionLabel, stepStates, doneCountLabel, remainingLabel, upNext,
+    } from "/app/lesson-nav.js";
     import { shouldComplete } from "/app/lesson-progress.js";
     import { whatsAppFeedbackUrl, whatsAppTestimonialUrl, allDone } from "/app/lesson-extras.js";
+    import {
+      renderSteps, fillStep, setDoneButton, announce, setFinish, setUpNext, fillUpNext, lessonIcon,
+      DONE_ANNOUNCE, UNDONE_ANNOUNCE,
+    } from "/app/lesson-moment.js";
 
     const lessonId = decodeURIComponent(location.pathname.split("/").pop());
     const shell = mountAppHeader();
@@ -62,64 +138,142 @@
     shell.showUser(user.email, async () => {
       await signOut(); location.replace("/app/login");
     });
-    const msg = document.getElementById("msg");
-    const video = document.getElementById("video");
-
-    const image = document.getElementById("image");
+    const $ = (id) => document.getElementById(id);
+    const msg = $("msg");
+    const video = $("video");
+    const image = $("image");
+    const frame = $("frame");
+    const title = $("title");
+    const steps = $("steps");
+    const doneBtn = $("done");
+    const live = $("live");
+    const upnextBar = $("upnext");
+    // Error text under an empty frame reads as broken, so the frame goes.
+    const showError = (text) => {
+      msg.textContent = text;
+      frame.hidden = true;
+      doneBtn.hidden = true;
+    };
 
     const lessonSnap = await getDoc(doc(db, "lessons", lessonId));
-    if (!lessonSnap.exists()) { msg.textContent = "השיעור לא נמצא"; throw new Error("no lesson"); }
+    if (!lessonSnap.exists()) {
+      title.textContent = "";
+      $("lesson-body").classList.remove("is-pending");
+      showError("השיעור לא נמצא");
+      throw new Error("no lesson");
+    }
     const lesson = lessonSnap.data();
-    document.getElementById("title").textContent = lesson.title;
-    document.getElementById("whatsapp").setAttribute("href", whatsAppFeedbackUrl(lesson.title));
-    document.getElementById("testimonial").setAttribute("href", whatsAppTestimonialUrl());
+    title.textContent = lesson.title;
+    document.title = `${lesson.title} | מתחילים בקטן`;
+    $("whatsapp").setAttribute("href", whatsAppFeedbackUrl(lesson.title));
+    $("testimonial").setAttribute("href", whatsAppTestimonialUrl());
     // Lessons are videos unless marked otherwise; older docs have no `kind`.
     const isImage = lesson.kind === "image";
+    frame.classList.toggle("is-image", isImage);
+    $("lesson-body").classList.remove("is-pending");
+
+    // Done state of this lesson, as shown on the page. Set from the saved
+    // progress doc below; declared here because the nav code reads it.
+    let isDone = false;
 
     // Back link and prev/next buttons. Runs alongside the video load, so a slow
     // query never delays playback.
-    const next = document.getElementById("next");
+    const next = $("next");
     // Finish card state: this course's lesson ids and the ones already done.
     let courseLessonIds = null;
+    const courseLessons = new Map();
+    let courseUrl = "/app/my-courses";
     const completedIds = new Set();
+    const lessonHref = (id) => `/app/lesson/${encodeURIComponent(id)}`;
     const checkFinished = () => {
       if (!courseLessonIds) return;
-      document.getElementById("finish").classList.toggle("hidden", !allDone(courseLessonIds, completedIds));
+      setFinish($("finish"), allDone(courseLessonIds, completedIds));
+    };
+    // Done ids with this lesson's live state, for the step bar and up next.
+    const doneNow = () => {
+      const s = new Set(completedIds);
+      if (isDone) s.add(lessonId); else s.delete(lessonId);
+      return s;
+    };
+    const refreshSteps = () => {
+      if (!courseLessonIds) return;
+      renderSteps(steps, stepStates(courseLessonIds, doneNow(), lessonId),
+        doneCountLabel(courseLessonIds, doneNow()));
     };
     const navReady = (async () => {
       const [courseSnap, lessonsSnap] = await Promise.all([
         getDoc(doc(db, "courses", lesson.courseId)),
         getDocs(query(collection(db, "lessons"), where("courseId", "==", lesson.courseId), orderBy("order"))),
       ]);
-      const courseUrl = courseSnap.exists()
+      courseUrl = courseSnap.exists()
         ? `/app/course/${encodeURIComponent(courseSnap.data().slug)}`
         : "/app/my-courses";
-      document.getElementById("back").setAttribute("href", courseUrl);
+      $("back").setAttribute("href", courseUrl);
+      lessonsSnap.docs.forEach((d) => courseLessons.set(d.id, d.data()));
       courseLessonIds = lessonsSnap.docs.map(d => d.id);
+      $("position").textContent = positionLabel(lessonPosition(courseLessonIds, lessonId));
+      refreshSteps();
       const n = findNeighbors(courseLessonIds, lessonId);
       const show = (el, id) => {
         if (!id) return;
-        el.setAttribute("href", `/app/lesson/${encodeURIComponent(id)}`);
-        el.classList.remove("invisible");
+        el.setAttribute("href", lessonHref(id));
+        el.classList.remove("is-empty");
       };
-      show(document.getElementById("prev"), n.prev);
+      show($("prev"), n.prev);
       if (n.next) {
         show(next, n.next);
       } else {
-        // Last lesson: the "next" slot leads back to the course.
-        next.textContent = "→ חזרה לקורס";
+        // Last lesson: the "next" slot leads back to the course, with no
+        // arrow, so it does not look like a second "back" button.
+        next.querySelector(".nav-label").textContent = "לכל השיעורים";
+        next.querySelector(".nav-next-icon").remove();
         next.setAttribute("href", courseUrl);
-        next.classList.remove("invisible");
+        next.classList.remove("is-empty");
       }
-      document.getElementById("nav").classList.remove("hidden");
+      $("nav").classList.remove("is-waiting");
     })().catch((e) => console.error("lesson nav failed", e));
+
+    // Last lesson with other lessons still open: say how many, and link to
+    // the first of them.
+    const showWhatsLeft = () => {
+      const u = upNext(courseLessonIds, completedIds, lessonId);
+      if (u.type !== "open") { $("left").hidden = true; return; }
+      $("left-text").textContent = `${remainingLabel(u.remaining)}.`;
+      $("left-link").setAttribute("href", lessonHref(u.id));
+      $("left").hidden = false;
+    };
+
+    // The bar at the bottom: what to watch next, or what is left.
+    let upnextOpen = false;
+    const openUpNext = async () => {
+      await navReady;
+      if (!courseLessonIds || upnextOpen) return;
+      const u = upNext(courseLessonIds, doneNow(), lessonId);
+      const target = u.id ? courseLessons.get(u.id) : null;
+      if (u.type === "next") {
+        fillUpNext(upnextBar, { icon: lessonIcon(target), kicker: "השיעור הבא",
+          title: target?.title, href: lessonHref(u.id), action: "לשיעור הבא" });
+      } else if (u.type === "open") {
+        fillUpNext(upnextBar, { icon: lessonIcon(target), kicker: remainingLabel(u.remaining),
+          title: target?.title, href: lessonHref(u.id), action: "להמשך" });
+      } else {
+        fillUpNext(upnextBar, { icon: "i-circle-check", kicker: "סיימת את כל השיעורים",
+          title: "", href: courseUrl, action: "לכל השיעורים" });
+      }
+      upnextOpen = true;
+      setUpNext(upnextBar, true);
+    };
+    const closeUpNext = () => {
+      if (!upnextOpen) return;
+      upnextOpen = false;
+      setUpNext(upnextBar, false);
+    };
 
     // When a video ends, make the next step big and easy to tap.
     const highlightNext = async () => {
       await navReady;
-      next.classList.remove("bg-white", "text-[#704229]", "px-4", "py-3");
-      next.classList.add("bg-[#704229]", "text-white", "px-6", "py-4", "text-lg");
-      next.scrollIntoView({ behavior: "smooth", block: "center" });
+      next.classList.add("is-primary");
+      openUpNext();
     };
 
     const progSnap = await getDoc(doc(db, "users", user.uid, "progress", lessonId));
@@ -143,18 +297,16 @@
     };
 
     // "Mark as done" toggle under the player. Starts from the saved progress doc.
-    let isDone = progSnap.exists() && progSnap.data().completed === true;
-    const doneBtn = document.createElement("button");
-    doneBtn.id = "done";
-    doneBtn.type = "button";
-    doneBtn.className = "block mx-auto mt-3 px-5 py-2 app-rounded app-shadow font-medium";
+    isDone = progSnap.exists() && progSnap.data().completed === true;
+    // The state last drawn on the page. The moment plays only when it changes
+    // during this visit; the first render is instant.
+    let shownDone = null;
     const renderDone = () => {
-      doneBtn.textContent = isDone ? "בוצע ✓" : "סמני כבוצע";
-      doneBtn.setAttribute("aria-pressed", String(isDone));
-      doneBtn.classList.toggle("bg-[#704229]", isDone);
-      doneBtn.classList.toggle("text-white", isDone);
-      doneBtn.classList.toggle("bg-white", !isDone);
-      doneBtn.classList.toggle("text-[#704229]", !isDone);
+      const animate = shownDone !== null && shownDone !== isDone;
+      setDoneButton(doneBtn, isDone, { animate });
+      fillStep(steps, lessonId, isDone, { instant: !animate });
+      if (animate) announce(live, isDone ? DONE_ANNOUNCE : UNDONE_ANNOUNCE);
+      shownDone = isDone;
     };
     // Only updates the button; callers save the doc themselves.
     const markDone = () => { isDone = true; renderDone(); };
@@ -185,6 +337,8 @@
         snap.docs.forEach((d) => { if (d.data().completed) completedIds.add(d.id); });
         if (isDone) completedIds.add(lessonId); else completedIds.delete(lessonId);
         checkFinished();
+        refreshSteps();
+        showWhatsLeft();
       })
       .catch((e) => console.error("loading progress failed", e));
 
@@ -192,17 +346,17 @@
     const resp = await fetch(`/api/video-url?lessonId=${encodeURIComponent(lessonId)}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    if (resp.status === 403) { msg.textContent = "אין לך גישה לשיעור הזה"; throw new Error("403"); }
-    if (!resp.ok) { msg.textContent = isImage ? "שגיאה בטעינת הטיפ" : "שגיאה בטעינת הסרטון"; throw new Error("video-url failed"); }
+    if (resp.status === 403) { showError("אין לך גישה לשיעור הזה"); throw new Error("403"); }
+    if (!resp.ok) { showError(isImage ? "שגיאה בטעינת הטיפ" : "שגיאה בטעינת הסרטון"); throw new Error("video-url failed"); }
     const { url } = await resp.json();
     // Show the toggle only once the lesson has loaded (not next to an error).
-    msg.before(doneBtn);
-    document.getElementById("feedback").classList.remove("hidden");
+    doneBtn.classList.remove("is-waiting");
+    $("feedback").hidden = false;
 
     if (isImage) {
       // Tips are images: show them instead of the player, and count as done once seen.
-      video.classList.add("hidden");
-      image.classList.remove("hidden");
+      video.remove();
+      image.hidden = false;
       image.setAttribute("alt", lesson.title ?? "");
       image.addEventListener("load", () => { markDone(); save({ completed: true }); });
       image.setAttribute("src", url);
@@ -225,6 +379,15 @@
         if (video.currentTime - lastSaved > 10) { lastSaved = video.currentTime; savePosition({}); }
       });
       video.addEventListener("ended", () => { markDone(); savePosition({ completed: true }); highlightNext(); });
+
+      // Up next bar: open while she is past 90% (or at the end), closed again
+      // if she goes back to watch an earlier part. Display only, saves nothing.
+      const syncUpNext = () => {
+        if (video.ended || shouldComplete(video.currentTime, video.duration)) openUpNext();
+        else closeUpNext();
+      };
+      video.addEventListener("timeupdate", syncUpNext);
+      video.addEventListener("seeked", syncUpNext);
     }
   </script>
 </body>
