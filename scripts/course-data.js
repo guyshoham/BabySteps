@@ -21,7 +21,7 @@ export const DATA = {
       published: true,
       description:
         "כל הכלים ללוות את התינוק בשלב ההתהפכות: 10 סרטוני הדרכה, 6 טיפי זהב ובונוס הכנה לזחילה.",
-      coverImage: "/assets/videos/rolling-teaser-poster.jpg",
+      coverImage: "/assets/photos/yarden-course-cover.jpg",
     },
     {
       id: "tummy-time",
