@@ -46,6 +46,15 @@
            peach band (D) → the offer, two ways to pay (E) → FAQ → footer.
            Phones get a sticky buy bar. */
 
+        /* U25 and CLS: Rubik loads late (media="print" swap). Until then the
+           text uses Arial scaled to Rubik's width, so the hero lines wrap the
+           same way before and after the swap and the teaser does not jump. */
+        @font-face {
+            font-family: 'Rubik Fallback';
+            src: local('Arial'), local('ArialMT');
+            size-adjust: 102.5%;
+        }
+        .sales { font-family: 'Rubik', 'Rubik Fallback', system-ui, sans-serif; }
         .sales h2 { margin: 0; }
         .sr-only {
             position: absolute;
@@ -184,6 +193,8 @@
         }
 
         /* ── About Yarden: photo and her words ── */
+        /* The list above already ends in open space: one gap, not two. */
+        .about { padding-block-start: 0; }
         .about__grid { display: grid; gap: var(--s-6); }
         .about__photo {
             margin: 0;
