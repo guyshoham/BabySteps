@@ -62,10 +62,10 @@ describe("progressText", () => {
 describe("whatsAppCourseFeedbackUrl", () => {
   const textOf = (url) => new URL(url).searchParams.get("text");
   it("points at Yarden's number with the course title", () => {
-    const u = new URL(whatsAppCourseFeedbackUrl("קורס התהפכות"));
+    const u = new URL(whatsAppCourseFeedbackUrl("קורס מתהפכים"));
     expect(u.origin).toBe("https://wa.me");
     expect(u.pathname).toBe(`/${WHATSAPP_NUMBER}`);
-    expect(textOf(u.href)).toBe("היי ירדן, צילמתי את התרגול מהקורס: קורס התהפכות");
+    expect(textOf(u.href)).toBe("היי ירדן, צילמתי את התרגול מהקורס: קורס מתהפכים");
   });
   it("encodes URL characters in the title", () => {
     const url = whatsAppCourseFeedbackUrl(`a & b #1 ?x=y`);

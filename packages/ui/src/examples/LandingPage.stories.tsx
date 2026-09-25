@@ -129,7 +129,7 @@ function LandingPage() {
       <Section tone="cream">
         <SectionHeading title="עוד קורסים" />
         <div style={grid(280)}>
-          <CourseCard title="קורס התהפכות" emoji="🔄" status="זמין עכשיו" price="₪175" meta={['10 סרטונים', 'ליווי בווטסאפ']} cta={<Button size="sm" icon="arrow">לקורס</Button>} />
+          <CourseCard title="קורס מתהפכים" emoji="🔄" status="זמין עכשיו" price="₪175" meta={['10 סרטונים', 'ליווי בווטסאפ']} cta={<Button size="sm" icon="arrow">לקורס</Button>} />
           <CourseCard title="קורס שכיבה על הבטן" emoji="🤱" tone="mint" status="בקרוב" comingSoon description="לעודד את התינוק ליהנות מהשכיבה על הבטן." />
         </div>
       </Section>

@@ -5,7 +5,7 @@ import { storyAssets } from '../../../.storybook/assets';
 const meta = {
   title: 'App/CourseProgressCard',
   component: CourseProgressCard,
-  args: { title: 'קורס התהפכות', lessonsDone: 4, lessonsTotal: 10, href: '#', image: storyAssets.teaserPoster },
+  args: { title: 'קורס מתהפכים', lessonsDone: 4, lessonsTotal: 10, href: '#', image: storyAssets.teaserPoster },
   decorators: [(Story) => <div style={{ maxWidth: 380 }}><Story /></div>],
 } satisfies Meta<typeof CourseProgressCard>;
 
