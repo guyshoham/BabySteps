@@ -2,6 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
+  "regions": ["fra1"],
   "routes": [
     { "src": "^/(docs|lib|scripts|tests|packages|staging)(/.*)?$", "status": 404, "dest": "/404.html" },
     { "src": "^/\\..*$", "status": 404, "dest": "/404.html" },
@@ -17,6 +18,24 @@
       "source": "/assets/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=2592000" }
+      ]
+    },
+    {
+      "source": "/assets/css/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=300, stale-while-revalidate=86400" }
+      ]
+    },
+    {
+      "source": "/app/(.*)\\.(js|css|webmanifest)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=300, stale-while-revalidate=86400" }
+      ]
+    },
+    {
+      "source": "/(site\\.js|styles\\.css)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=300, stale-while-revalidate=86400" }
       ]
     },
     {
