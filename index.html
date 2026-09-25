@@ -3,17 +3,18 @@
 <head>
     <script>document.documentElement.classList.add('js')</script>
     <script defer src="/_vercel/insights/script.js"></script>
-    <link rel="icon" type="image/png" href="assets/logos/logo-peach.png">
-    <link rel="apple-touch-icon" href="assets/logos/logo-peach.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ירדן שוהם — מתחילים בקטן | קורסים דיגיטליים לתינוקות</title>
+    <meta name="color-scheme" content="light">
+    <title>ירדן שוהם, מתחילים בקטן | קורסים דיגיטליים לתינוקות</title>
     <meta name="description" content="קורסים דיגיטליים קצרים להורים לתינוקות, מאת ירדן שוהם, מלווה התפתחותית. קורס התהפכות זמין עכשיו, קורס שכיבה על הבטן בקרוב.">
     <link rel="canonical" href="https://baby-steps-murex.vercel.app/">
+    <link rel="icon" type="image/png" href="assets/logos/logo-peach.png">
+    <link rel="apple-touch-icon" href="assets/logos/logo-peach.png">
 
     <!-- Open Graph meta tags -->
-    <meta property="og:title" content="ירדן שוהם — מתחילים בקטן">
-    <meta property="og:description" content="קורסים דיגיטליים לליווי התפתחות התינוק — מאת ירדן שוהם, מלווה התפתחותית מוסמכת.">
+    <meta property="og:title" content="ירדן שוהם, מתחילים בקטן">
+    <meta property="og:description" content="קורסים דיגיטליים לליווי התפתחות התינוק, מאת ירדן שוהם, מלווה התפתחותית מוסמכת.">
     <meta property="og:image" content="https://baby-steps-murex.vercel.app/assets/og-home.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -23,324 +24,403 @@
     <meta property="og:site_name" content="מתחילים בקטן">
     <meta name="twitter:card" content="summary_large_image">
 
+    <!-- The hero photo is the largest thing in the first screen. -->
+    <link rel="preload" as="image" href="assets/about.jpg" fetchpriority="high">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap"></noscript>
+    <!-- Only the weights this page uses: 300 lead, 400 body, 500 labels, 700 headings. -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap"></noscript>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* ─── Home page specific styles ──────── */
+        /* ─── Home page ──────────────────────────
+           Shape (docs/design/2026-09-26-art-direction.md, 4 and 9 WP2):
+           split hero (A) → about her, peach band (B) → inside the course,
+           real app screenshots → the courses (one card + one quiet line). */
 
-        /* Course cards grid */
-        .courses-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 24px;
-            max-width: 860px;
-            margin: 0 auto;
+        /* Headings on this page are start aligned and tight to their text. */
+        .home h2 { margin: 0; }
+
+        /* ── Hero: photo and name ─────────────── */
+        .hero {
+            padding-block: var(--s-4) var(--s-7);
         }
-        @media (min-width: 640px) {
-            .courses-grid {
-                grid-template-columns: repeat(2, 1fr);
+        .hero__grid {
+            display: grid;
+            gap: var(--s-5);
+        }
+        .hero__photo {
+            margin: 0;
+            border-radius: var(--r-xl);
+            overflow: hidden;
+            aspect-ratio: 4 / 5;
+            background: var(--c-peach);
+        }
+        .hero__photo img {
+            inline-size: 100%;
+            block-size: 100%;
+            object-fit: cover;
+            /* Her face and the baby both stay inside the 4:5 frame. */
+            object-position: 50% 40%;
+        }
+        .hero__text { --stack-gap: var(--s-4); }
+        .hero__text .btn { align-self: flex-start; margin-block-start: var(--s-2); }
+        .hero__lead { font-weight: 300; }
+
+        @media (min-width: 1024px) {
+            .hero { padding-block: var(--s-7) var(--s-8); }
+            .hero__grid {
+                grid-template-columns: repeat(12, minmax(0, 1fr));
+                align-items: center;
+                gap: var(--s-6);
+            }
+            /* In RTL, column 1 is the right edge: text on the start side. */
+            .hero__text { grid-column: 1 / span 5; grid-row: 1; }
+            /* 6 columns wide, but never taller than the first screen. */
+            .hero__photo {
+                grid-column: 7 / span 6;
+                grid-row: 1;
+                justify-self: end;
+                inline-size: min(100%, calc((100svh - var(--nav-h) - 2 * var(--s-7)) * 0.8));
             }
         }
 
-        /* Individual course card */
-        .course-card {
-            background: #fff;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1.5px solid rgba(112,66,41,0.1);
-            transition: transform 0.22s cubic-bezier(0.22,1,0.36,1),
-                        box-shadow 0.22s cubic-bezier(0.22,1,0.36,1),
-                        border-color 0.2s;
-            display: flex;
-            flex-direction: column;
-        }
-        .course-card.active:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 16px 48px rgba(112,66,41,0.14);
-            border-color: var(--brand-brown);
-        }
-        .course-card.coming-soon:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 16px 48px rgba(112,66,41,0.10);
-        }
-        .course-card-image-area {
-            height: 160px;
+        /* ── About: her own words on peach ────── */
+        .about__head {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 64px;
-            position: relative;
-            overflow: hidden;
+            gap: var(--s-4);
         }
-        .course-card-photo {
+        .about__portrait {
+            inline-size: 64px;
+            block-size: 64px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        .about__text {
+            font-size: var(--fs-lead);
+            font-weight: 400;
+            line-height: 1.75;
+            color: var(--c-ink-soft);
+            max-inline-size: var(--measure);
+        }
+        .about__text strong { color: var(--c-ink); font-weight: 500; }
+        @media (min-width: 1024px) {
+            /* Indent the text column one step in, so it does not sit on the
+               same edge as the hero text above. */
+            .about .stack { padding-inline-start: calc(100% / 12); }
+        }
+
+        /* ── Inside the course: two real screenshots ── */
+        .inside__grid {
+            display: grid;
+            gap: var(--s-6);
+        }
+        .inside__text { --stack-gap: var(--s-3); }
+        .shots {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--s-3);
+            align-items: start;
+            margin: 0;
+            padding: 0;
+        }
+        /* The second phone sits lower: two moments, not a grid of equal tiles. */
+        .shots > li:nth-child(2) { margin-block-start: var(--s-7); }
+        .shot { margin: 0; }
+        .shot__frame {
+            padding: 6px;
+            background: var(--c-paper);
+            border-radius: var(--r-lg);
+            box-shadow: var(--shadow-1);
+        }
+        .shot__frame img {
+            inline-size: 100%;
+            block-size: auto;
+            aspect-ratio: 600 / 1298;
+            border-radius: calc(var(--r-lg) - 6px);
+        }
+        .shot figcaption {
+            margin-block-start: var(--s-3);
+            padding-inline: var(--s-2);
+        }
+        @media (min-width: 768px) {
+            .shots { gap: var(--s-5); max-inline-size: 560px; }
+        }
+        @media (min-width: 1024px) {
+            .inside__grid {
+                grid-template-columns: repeat(12, minmax(0, 1fr));
+                align-items: center;
+            }
+            .inside__text { grid-column: 1 / span 5; }
+            .shots { grid-column: 7 / span 6; justify-self: end; inline-size: 100%; }
+        }
+
+        /* ── Courses ─────────────────────────── */
+        .courses .stack { --stack-gap: var(--s-5); }
+
+        /* The rolling course: one wide card you can tap anywhere. */
+        /* a.course-card beats the shared a.card { display: block }. */
+        a.course-card {
+            display: grid;
+            padding: 0;
+            overflow: hidden;
+            color: inherit;
+            text-decoration: none;
+        }
+        .course-card__media { position: relative; margin: 0; aspect-ratio: 4 / 3; background: var(--c-peach); }
+        /* The photo fills its cell; the text decides the card height. */
+        .course-card__media img {
             position: absolute;
             inset: 0;
-            width: 100%;
-            height: 100%;
+            inline-size: 100%;
+            block-size: 100%;
             object-fit: cover;
-            object-position: center 60%;
+            /* U27: keep her head in the frame. */
+            object-position: 50% 22%;
         }
-        .course-card.coming-soon .course-card-photo {
-            opacity: 0.8;
+        .course-card__body {
+            padding: var(--s-5);
+            --stack-gap: var(--s-4);
         }
-        .course-card-image-area .badge-live,
-        .course-card-image-area .badge-coming-soon {
-            z-index: 1;
-        }
-        .course-card-body {
-            padding: 24px 24px 28px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        .course-card-title {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: var(--text-dark);
-            margin: 0 0 10px;
-            line-height: 1.3;
-        }
-        .course-card-desc {
-            font-size: 0.9rem;
-            color: var(--text-mid);
-            line-height: 1.75;
-            margin: 0 0 20px;
-            flex: 1;
-        }
-
-        /* Coming soon badge */
-        .badge-coming-soon {
-            position: absolute;
-            top: 14px;
-            left: 14px;
-            background: #6f6f6f;
-            color: #fff;
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: 0.06em;
-            padding: 5px 14px;
-            border-radius: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.18);
-        }
-        .badge-live {
-            position: absolute;
-            top: 14px;
-            left: 14px;
-            background: var(--brand-brown);
-            color: #fff;
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            padding: 4px 12px;
-            border-radius: 20px;
-        }
-
-        /* Hero branding section */
-        .hero-brand-tagline {
-            font-size: 1rem;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--brand-brown);
+        .course-card__title {
+            font-size: var(--fs-h2);
             font-weight: 700;
+            line-height: 1.2;
+            color: var(--c-ink);
+        }
+        .course-card__facts {
+            display: grid;
+            gap: var(--s-3);
+            margin-block: var(--s-1);
+        }
+        .course-card__facts li {
+            display: flex;
+            align-items: center;
+            gap: var(--s-3);
+            font-size: var(--fs-body);
+            color: var(--c-ink-soft);
+            line-height: 1.5;
+        }
+        .course-card__facts .icon { color: var(--c-brown); }
+        .course-card__buy {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: var(--s-4);
+            padding-block-start: var(--s-4);
+            border-block-start: 1px solid var(--c-line);
+        }
+        .course-card__price {
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1;
+            color: var(--c-brown);
+        }
+        .course-card:hover .btn--primary {
+            background: var(--c-brown-hover);
+            border-color: var(--c-brown-hover);
+        }
+        @media (min-width: 768px) {
+            a.course-card { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+            .course-card__media { aspect-ratio: auto; order: 2; min-block-size: 420px; }
+            .course-card__media img { object-position: 50% 30%; }
+            .course-card__body { padding: var(--s-7) var(--s-6); align-self: center; }
         }
 
-        /* Credential pills */
-        .cred-pill {
+        /* Tummy time: one quiet line, not a second card. */
+        .soon {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--s-2) var(--s-5);
+            padding: var(--s-4) var(--s-2);
+            border-block-end: 1px solid var(--c-line);
+            color: inherit;
+            text-decoration: none;
+        }
+        .soon__name {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--s-2) var(--s-3);
+            font-size: var(--fs-h3);
+            font-weight: 500;
+            color: var(--c-ink);
+        }
+        .soon__badge {
+            display: inline-block;
+            padding: 2px var(--s-2);
+            border-radius: var(--r-sm);
+            background: var(--c-peach);
+            color: var(--c-brown);
+            font-size: var(--fs-label);
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        .soon__link {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            background: rgba(255,255,255,0.75);
-            border: 1px solid rgba(112,66,41,0.15);
-            color: var(--brand-brown);
-            font-size: 12px;
-            font-weight: 600;
-            padding: 5px 14px;
-            border-radius: 20px;
+            gap: var(--s-1);
+            min-block-size: 44px;
+            color: var(--c-brown);
+            font-size: var(--fs-body);
+            font-weight: 500;
         }
-        .cred-pill::before {
-            content: '✓';
-            font-weight: 800;
-        }
+        .soon:hover .soon__link { text-decoration: underline; text-underline-offset: 3px; }
+        .soon__desc { flex-basis: 100%; order: 3; }
     </style>
 </head>
-<body>
+<body class="home">
 
-<!-- ░░ NAV ░░ -->
-<nav class="site-nav">
-    <div class="nav-inner" style="max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;">
-        <div class="site-brand">
-            <img src="assets/logos/logo-peach.png" alt="מתחילים בקטן - ירדן שוהם" class="site-brand-logo" width="52" height="52" decoding="async">
-            <div>
-                <div class="site-brand-name">ירדן שוהם</div>
-                <div class="site-brand-tag">מתחילים בקטן</div>
-            </div>
-        </div>
-        <div class="nav-actions">
-        <a href="/app/login" class="nav-login">כניסה לקורס</a>
-        <a href="https://wa.me/972542366243" target="_blank" rel="noopener" class="nav-contact">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            צרי קשר
+<a class="skip-link" href="#main">דלגי לתוכן</a>
+
+<nav class="site-nav" aria-label="ראשי">
+    <div class="site-nav__inner container">
+        <a class="site-brand" href="/">
+            <img class="site-brand-logo" src="/assets/logos/logo-peach.png" alt="" width="44" height="44" decoding="async">
+            <span>
+                <span class="site-brand-name">ירדן שוהם</span>
+                <span class="site-brand-tag">מתחילים בקטן</span>
+            </span>
         </a>
+        <div class="nav-actions">
+            <a class="nav-login" href="/app/login">כניסה לקורס</a>
         </div>
     </div>
 </nav>
 
-<!-- ░░ HERO ░░ -->
-<header class="hero-pad" style="background:var(--brand-peach); overflow:hidden; position:relative;">
+<main id="main">
 
-    <div style="position:absolute; top:-80px; left:-80px; width:400px; height:400px; border-radius:50%; background:rgba(252,210,170,0.4); pointer-events:none;"></div>
-    <div style="position:absolute; bottom:-60px; right:-40px; width:280px; height:280px; border-radius:50%; background:rgba(232,243,239,0.6); pointer-events:none;"></div>
-
-    <div style="max-width:700px; margin:0 auto; text-align:center; position:relative; z-index:2;">
-
-        <!-- Profile photo -->
-        <div style="margin-bottom:24px;">
-            <img src="assets/yarden-portrait.jpg" alt="ירדן שוהם, מלווה התפתחותית, מחייכת" width="88" height="88" decoding="async" style="display:block; margin:0 auto; width:88px; height:88px; border-radius:50%; object-fit:cover; box-shadow:0 4px 24px rgba(112,66,41,0.18); border:3px solid #fff;">
+    <!-- Hero: her photo, her name, one line, one button -->
+    <header class="hero">
+        <div class="container hero__grid">
+            <figure class="hero__photo">
+                <img src="assets/about.jpg" alt="ירדן שוהם מחייכת אל תינוק ששוכב על כרית הנקה" width="750" height="1000" fetchpriority="high" decoding="async">
+            </figure>
+            <div class="hero__text stack">
+                <h1 class="t-display enter">ירדן שוהם</h1>
+                <p class="t-lead hero__lead enter" style="--i:1">מלווה התפתחותית מוסמכת. כאן תמצאי קורסים דיגיטליים שיעזרו לך ללוות את התינוק שלך בצעדים קטנים, מהבית.</p>
+                <a class="btn btn--primary enter" style="--i:2" href="/challenge/rolling/">
+                    לקורס ההתהפכות
+                    <svg class="icon icon--dir" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-forward"/></svg>
+                </a>
+            </div>
         </div>
+    </header>
 
-        <p class="hero-brand-tagline" style="margin-bottom:12px;">מתחילים בקטן</p>
-
-        <h1 class="hero-title" style="font-weight:800; color:var(--text-dark); margin-bottom:16px;">
-            ירדן שוהם
-        </h1>
-
-        <p class="hero-subtitle" style="line-height:1.8; color:var(--text-mid); max-width:520px; margin:0 auto 28px; font-weight:400;">
-            מלווה התפתחותית מוסמכת, מדריכת בייבי יוגה ועיסוי תינוקות. כאן תמצאי קורסים דיגיטליים שיעזרו לך ללוות את התינוק שלך בצעדים קטנים — מהבית, בביטחון מלא.
-        </p>
-
-        <!-- Credential pills -->
-        <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
-            <span class="cred-pill">מלווה התפתחותית מוסמכת</span>
-            <span class="cred-pill">מדריכת בייבי יוגה</span>
-            <span class="cred-pill">200+ אמהות מרוצות</span>
-        </div>
-
-    </div>
-</header>
-
-<!-- ░░ COURSES GRID ░░ -->
-<section class="section-pad" style="background:#fff;">
-    <div style="max-width:900px; margin:0 auto;">
-
-        <div style="text-align:center; margin-bottom:48px;">
-            <p style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brand-brown); font-weight:700; margin-bottom:12px;">הקורסים שלי</p>
-            <h2 class="section-heading" style="font-weight:800; color:var(--text-dark); margin-bottom:0;">בחרי את הקורס שלך</h2>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="courses-grid">
-
-            <!-- Card 1: Rolling — LIVE -->
-            <a href="challenge/rolling/" style="text-decoration:none;" class="course-card active reveal reveal-delay-1">
-                <div class="course-card-image-area" style="background:var(--brand-peach);">
-                    <img class="course-card-photo" src="assets/card-rolling.jpg" alt="ירדן שוהם מסבירה בסרטון מקורס ההתהפכות" width="800" height="356" loading="lazy" decoding="async">
-                    <span class="badge-live">זמין עכשיו</span>
+    <!-- About: one short text column on the peach band -->
+    <section class="section section--peach about" aria-labelledby="about-title">
+        <div class="container">
+            <div class="stack stack--lg reveal">
+                <div class="about__head">
+                    <img class="about__portrait" src="assets/yarden-portrait.jpg" alt="" width="64" height="64" loading="lazy" decoding="async">
+                    <h2 id="about-title" class="t-h2">מי אני</h2>
                 </div>
-                <div class="course-card-body">
-                    <h3 class="course-card-title">קורס התהפכות</h3>
-                    <p class="course-card-desc">
-                        10 סרטוני הדרכה פרקטיים, 6 טיפי זהב וליווי אישי בווטסאפ — כל הכלים לעזור לתינוק שלך להתהפך בביטחון.
-                    </p>
-                    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
-                        <div style="display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text-mid);">
-                            <span style="color:#f5a623;">★★★★★</span>
-                            <span style="font-weight:600;">200+ אמהות</span>
+                <p class="about__text">
+                    אמא לשניים ומלווה התפתחותית מוסמכת מטעם <strong>"צעד ראשון"</strong>. מדריכת בייבי יוגה ועיסוי תינוקות. מגיעה מעולם החינוך עם למעלה מ-6 שנות ניסיון, ועובדת עם הורים ותינוקות מתוך אהבה אמיתית לכל רגע של התפתחות.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Inside the course: two real screenshots of the app at 390px -->
+    <section class="section inside" aria-labelledby="inside-title">
+        <div class="container inside__grid">
+            <div class="inside__text stack reveal">
+                <h2 id="inside-title" class="t-h2">כל השיעורים במקום אחד, בקצב שלך</h2>
+                <p class="t-body">כל הסרטונים וטיפי הזהב מחכים לך באתר, עם גישה לכל החיים.</p>
+            </div>
+            <ul class="shots" role="list">
+                <li>
+                    <figure class="shot">
+                        <div class="shot__frame">
+                            <picture>
+                                <source srcset="assets/shots/course-390.webp" type="image/webp">
+                                <img src="assets/shots/course-390.jpg" alt="צילום מסך של עמוד קורס ההתהפכות: רשימת השיעורים וכפתור להתחלה" width="600" height="1298" loading="lazy" decoding="async">
+                            </picture>
                         </div>
-                        <span data-price="rolling" style="font-size:1.1rem; font-weight:800; color:var(--brand-brown);">₪175</span>
-                    </div>
-                    <div style="margin-top:16px;">
-                        <span style="display:block; width:100%; text-align:center; background:var(--brand-brown); color:#fff; font-weight:700; font-size:0.95rem; padding:12px 20px; border-radius:6px; letter-spacing:0.02em;">לקורס ולרכישה ←</span>
-                    </div>
-                </div>
-            </a>
+                        <figcaption class="t-small">רשימת השיעורים</figcaption>
+                    </figure>
+                </li>
+                <li>
+                    <figure class="shot">
+                        <div class="shot__frame">
+                            <picture>
+                                <source srcset="assets/shots/lesson-390.webp" type="image/webp">
+                                <img src="assets/shots/lesson-390.jpg" alt="צילום מסך של שיעור בקורס: ירדן מסבירה בסרטון" width="600" height="1298" loading="lazy" decoding="async">
+                            </picture>
+                        </div>
+                        <figcaption class="t-small">שיעור וידאו</figcaption>
+                    </figure>
+                </li>
+            </ul>
+        </div>
+    </section>
 
-            <!-- Card 2: Tummy Time — COMING SOON -->
-            <a href="challenge/tummy-time/" style="text-decoration:none;" class="course-card coming-soon reveal reveal-delay-2">
-                <div class="course-card-image-area" style="background:var(--brand-mint);">
-                    <img class="course-card-photo" src="assets/card-tummy-time.jpg" alt="תינוק שוכב על כרית הנקה ומחייך" width="800" height="356" loading="lazy" decoding="async">
-                    <span class="badge-coming-soon">בקרוב</span>
-                </div>
-                <div class="course-card-body">
-                    <h3 class="course-card-title">קורס שכיבה על הבטן</h3>
-                    <p class="course-card-desc">
-                        בקרוב — קורס מקיף שיעזור לך לעודד את התינוק ליהנות מהשכיבה על הבטן ולחזק את הבסיס המוטורי שלו.
-                    </p>
-                    <div style="margin-top:auto;">
-                        <span style="display:block; width:100%; text-align:center; background:#fff; color:var(--brand-brown); font-weight:700; font-size:0.95rem; padding:12px 20px; border-radius:6px; letter-spacing:0.02em; border:1.5px solid var(--brand-brown);">
-                            עדכנו אותי כשזה יוצא ←
+    <!-- Courses: the rolling course, then tummy time as a quiet line -->
+    <section class="section courses" aria-labelledby="courses-title">
+        <div class="container stack">
+            <h2 id="courses-title" class="t-h2 reveal">הקורסים</h2>
+
+            <a class="card course-card" href="/challenge/rolling/">
+                <figure class="course-card__media">
+                    <picture>
+                        <source srcset="assets/stills/teaser-still-02.webp" type="image/webp">
+                        <img src="assets/stills/teaser-still-02.jpg" alt="ירדן יושבת על המזרן ומסבירה, מתוך סרטון הקורס" width="720" height="1280" loading="lazy" decoding="async">
+                    </picture>
+                </figure>
+                <div class="course-card__body stack">
+                    <h3 class="course-card__title">קורס התהפכות</h3>
+                    <p class="t-body">כל הכלים לעזור לתינוק שלך להתהפך בביטחון. לתינוקות בגיל 3 עד 7 חודשים.</p>
+                    <ul class="course-card__facts" role="list">
+                        <li><svg class="icon icon--24" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-play"/></svg>12 סרטונים</li>
+                        <li><svg class="icon icon--24" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-photo"/></svg>6 טיפי זהב</li>
+                        <li><svg class="icon icon--24" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-whatsapp"/></svg>ליווי אישי בווטסאפ</li>
+                        <li><svg class="icon icon--24" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-clock"/></svg>גישה לכל החיים</li>
+                    </ul>
+                    <div class="course-card__buy">
+                        <span class="course-card__price t-num"><span data-price="rolling">₪175</span></span>
+                        <span class="btn btn--primary">
+                            לקורס ההתהפכות
+                            <svg class="icon icon--dir" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-forward"/></svg>
                         </span>
                     </div>
                 </div>
             </a>
 
+            <a class="soon" href="/challenge/tummy-time/">
+                <span class="soon__name">קורס שכיבה על הבטן <span class="soon__badge">בקרוב</span></span>
+                <span class="soon__link">
+                    עדכנו אותי כשזה יוצא
+                    <svg class="icon icon--dir" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-forward"/></svg>
+                </span>
+                <span class="soon__desc t-small">קורס שיעזור לך לעודד את התינוק ליהנות מהשכיבה על הבטן ולחזק את הבסיס המוטורי שלו.</span>
+            </a>
         </div>
+    </section>
 
-    </div>
-</section>
+</main>
 
-<!-- ░░ ABOUT STRIP ░░ -->
-<section class="section-pad" style="background:var(--brand-peach);">
-    <div style="max-width:760px; margin:0 auto;">
-
-        <div class="reveal" style="display:flex; flex-direction:column; align-items:center; gap:28px; text-align:center;">
-
-            <img src="assets/about.jpg" alt="ירדן שוהם עם תינוק" width="160" height="160" loading="lazy" decoding="async"
-                 style="width:160px; height:160px; border-radius:50%; object-fit:cover; object-position:top center; box-shadow:0 8px 32px rgba(112,66,41,0.16); border:4px solid #fff;">
-
+<footer class="site-footer">
+    <div class="site-footer__inner container">
+        <div class="site-footer__brand">
+            <img class="site-footer__logo" src="/assets/logos/logo-peach.png" alt="" width="44" height="44" loading="lazy" decoding="async">
             <div>
-                <p style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brand-brown); font-weight:700; margin:0 0 10px;">מי אני?</p>
-                <h2 style="font-size:1.5rem; font-weight:800; color:var(--text-dark); margin:0 0 16px;">ירדן שוהם</h2>
-                <p style="font-size:1rem; line-height:1.9; color:var(--text-mid); max-width:580px; margin:0 auto;">
-                    אמא לשניים ומלווה התפתחותית מוסמכת מטעם <strong style="color:var(--text-dark);">"צעד ראשון"</strong>. מדריכת בייבי יוגה ועיסוי תינוקות. מגיעה מעולם החינוך עם למעלה מ-6 שנות ניסיון, ועובדת עם הורים ותינוקות מתוך אהבה אמיתית לכל רגע של התפתחות.
-                </p>
+                <p class="site-footer__name">ירדן שוהם, מתחילים בקטן</p>
+                <p class="site-footer__tag">מלווה התפתחותית. קורסים דיגיטליים לתינוקות.</p>
             </div>
-
         </div>
-
-    </div>
-</section>
-
-<!-- ░░ FOOTER ░░ -->
-<footer class="footer-inner site-footer">
-    <div class="footer-body">
-        <img src="assets/logos/logo-peach.png" alt="מתחילים בקטן" class="footer-logo" width="80" height="80" loading="lazy" decoding="async">
-        <div class="footer-title">ירדן שוהם — מתחילים בקטן</div>
-        <p class="footer-tagline">מלווה התפתחותית · קורסים דיגיטליים לתינוקות</p>
-
-        <div class="footer-links">
-            <a href="https://wa.me/972542366243"
-               target="_blank" rel="noopener"
-               class="footer-link">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                WhatsApp
-            </a>
-            <a href="https://www.instagram.com/yarden_shoham7/"
-               target="_blank" rel="noopener"
-               class="footer-link">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-                Instagram
-            </a>
-            <a href="https://linktr.ee/yarden_shoham"
-               target="_blank" rel="noopener"
-               class="footer-link">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m13.73635 5.85251 4.00467 -4.11665 2.3248 2.3808 -4.20064 4.00466h5.9085v3.30473h-5.9365l4.22865 4.10766 -2.3248 2.3338L12.0005 12.099l-5.74052 5.76852 -2.3248 -2.3248 4.22864 -4.10766h-5.9375V8.12132h5.9085L3.93417 4.11666l2.3248 -2.3808 4.00468 4.11665V0h3.4727zm-3.4727 10.30614h3.4727V24h-3.4727z"/></svg>
-                Linktree
-            </a>
-            <a href="/app/login"
-               class="footer-link">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-                כניסה לקורס
-            </a>
-        </div>
-
-        <div class="footer-meta">
-            © 2026 ירדן שוהם · כל הזכויות שמורות
-        </div>
+        <ul class="site-footer__links">
+            <li><a href="https://wa.me/972542366243" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-whatsapp"/></svg><bdi>WhatsApp</bdi></a></li>
+            <li><a href="https://www.instagram.com/yarden_shoham7/" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-instagram"/></svg><bdi>Instagram</bdi></a></li>
+            <li><a href="/app/login"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-lock"/></svg>כניסה לקורס</a></li>
+        </ul>
+        <p class="site-footer__meta">© 2026 ירדן שוהם. כל הזכויות שמורות.</p>
     </div>
 </footer>
 
