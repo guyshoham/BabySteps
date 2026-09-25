@@ -4,7 +4,7 @@ import { CourseProgressCard } from './CourseProgressCard';
 
 describe('CourseProgressCard', () => {
   it('computes progress from lessons and links to the course', () => {
-    render(<CourseProgressCard title="קורס התהפכות" lessonsDone={5} lessonsTotal={10} href="/app/course/rolling" />);
+    render(<CourseProgressCard title="קורס מתהפכים" lessonsDone={5} lessonsTotal={10} href="/app/course/rolling" />);
     expect(screen.getByRole('link')).toHaveAttribute('href', '/app/course/rolling');
     expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '50');
     expect(screen.getByText('להמשך צפייה')).toBeInTheDocument();
@@ -17,7 +17,7 @@ describe('CourseProgressCard', () => {
   });
 
   it('marks a finished course and never shows more done than total', () => {
-    render(<CourseProgressCard title="קורס התהפכות" lessonsDone={12} lessonsTotal={10} href="/x" />);
+    render(<CourseProgressCard title="קורס מתהפכים" lessonsDone={12} lessonsTotal={10} href="/x" />);
     expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '100');
     expect(screen.getByText('הושלם')).toBeInTheDocument();
     expect(screen.getByText('10 מתוך 10 שיעורים')).toBeInTheDocument();

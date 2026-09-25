@@ -4,7 +4,7 @@ import { CourseCard } from './CourseCard';
 
 describe('CourseCard', () => {
   it('shows the image with alt text when given', () => {
-    render(<CourseCard title="קורס התהפכות" image="/about.jpg" imageAlt="תינוק מתהפך" />);
+    render(<CourseCard title="קורס מתהפכים" image="/about.jpg" imageAlt="תינוק מתהפך" />);
     expect(screen.getByRole('img', { name: 'תינוק מתהפך' })).toHaveAttribute('src', '/about.jpg');
   });
 

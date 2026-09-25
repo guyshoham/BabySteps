@@ -39,7 +39,7 @@ function MyCourses() {
       <Container width="base" style={{ paddingBlock: 'var(--space-7)' }}>
         <SectionHeading align="start" level={1} title="הקורסים שלי" lead="שמחה שאת כאן. ממשיכות מאיפה שעצרת?" />
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'var(--space-5)' }}>
-          <CourseProgressCard title="קורס התהפכות" image={storyAssets.teaserPoster} lessonsDone={4} lessonsTotal={10} href="#" headingLevel="h2" />
+          <CourseProgressCard title="קורס מתהפכים" image={storyAssets.teaserPoster} lessonsDone={4} lessonsTotal={10} href="#" headingLevel="h2" />
           <CourseProgressCard title="קורס שכיבה על הבטן" lessonsDone={0} lessonsTotal={8} href="#" headingLevel="h2" />
         </div>
       </Container>

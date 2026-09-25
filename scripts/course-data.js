@@ -16,7 +16,7 @@ export const DATA = {
     {
       id: "rolling",
       slug: "rolling",
-      title: "קורס התהפכות",
+      title: "קורס מתהפכים",
       order: 1,
       published: true,
       description:

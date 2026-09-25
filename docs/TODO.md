@@ -167,11 +167,6 @@ what is still open.
 
 ## UI/UX
 
-- [ ] **[U5] P2 — One name for the course.** `challenge/rolling/index.html:569`. The course is "קורס
-  מתהפכים" on the sticky bar, the WhatsApp text (`:509`) and the thank-you page
-  (`challenge/rolling/thank-you.html:63`), but "קורס התהפכות" on home (`index.html:223`) and in the
-  app (`scripts/course-data.js:19`). **Fix:** pick one name with Yarden and use it everywhere,
-  including the PayPal item name.
 - [ ] **[U6] P2 — Brand the course app.** `app/course.html:54-58`, `app/my-courses.html:13-16`. The
   app uses default Tailwind grays and a `bg-green-500` done badge, with no logo and no link to the
   site. It feels like a different product from the warm sales page. **Fix:** design the four app

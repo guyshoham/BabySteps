@@ -7,7 +7,7 @@ const meta = {
   title: 'Landing/CourseCard',
   component: CourseCard,
   args: {
-    title: 'קורס התהפכות',
+    title: 'קורס מתהפכים',
     description: '10 סרטוני הדרכה פרקטיים, 6 טיפי זהב וליווי אישי בווטסאפ. כל הכלים לעזור לתינוק שלך להתהפך בביטחון.',
     emoji: '🔄',
     status: 'זמין עכשיו',
