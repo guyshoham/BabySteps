@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
-import { mountAppHeader, SITE_NAME } from "../app/app-shell.js";
+import { mountAppHeader, wirePasswordToggle, setBusy, SITE_NAME } from "../app/app-shell.js";
 
 const ROOT = join(import.meta.dirname, "..");
 
@@ -94,4 +94,69 @@ describe("home screen install", () => {
       expect(html).toContain('from "/app/app-shell.js"');
     });
   }
+});
+
+describe("wirePasswordToggle", () => {
+  function setup() {
+    document.body.innerHTML = '<input id="pw" type="password"><button id="t" type="button">x</button>';
+    const input = document.getElementById("pw");
+    const button = document.getElementById("t");
+    wirePasswordToggle(input, button);
+    return { input, button };
+  }
+
+  it("starts hidden and says what the click will do", () => {
+    const { input, button } = setup();
+    expect(input.type).toBe("password");
+    expect(button.textContent).toBe("הצגה");
+    expect(button.getAttribute("aria-pressed")).toBe("false");
+    expect(button.getAttribute("aria-controls")).toBe("pw");
+  });
+
+  it("shows, then hides the password again", () => {
+    const { input, button } = setup();
+    button.click();
+    expect(input.type).toBe("text");
+    expect(button.textContent).toBe("הסתרה");
+    expect(button.getAttribute("aria-pressed")).toBe("true");
+    button.click();
+    expect(input.type).toBe("password");
+    expect(button.textContent).toBe("הצגה");
+  });
+});
+
+describe("setBusy", () => {
+  it("disables the button with the busy text, and restores it", () => {
+    document.body.innerHTML = '<button id="b">כניסה</button>';
+    const btn = document.getElementById("b");
+    const done = setBusy(btn, "מתחברת...");
+    expect(btn.disabled).toBe(true);
+    expect(btn.textContent).toBe("מתחברת...");
+    expect(btn.getAttribute("aria-busy")).toBe("true");
+    done();
+    expect(btn.disabled).toBe(false);
+    expect(btn.textContent).toBe("כניסה");
+    expect(btn.hasAttribute("aria-busy")).toBe(false);
+  });
+});
+
+describe("WP5 pages", () => {
+  for (const page of ["login", "my-courses", "auth-action"]) {
+    const html = readFileSync(join(ROOT, `app/${page}.html`), "utf8");
+    it(`app/${page}.html is light only and its title has no dash`, () => {
+      expect(html).toContain('<meta name="color-scheme" content="light" />');
+      const title = html.match(/<title>([^<]*)<\/title>/)[1];
+      expect(title).not.toMatch(/[\u2013\u2014]/);
+    });
+    it(`app/${page}.html keeps every email field left to right`, () => {
+      const emails = html.match(/<input[^>]*type="email"[^>]*>/g) ?? [];
+      for (const tag of emails) expect(tag).toContain('dir="ltr"');
+    });
+  }
+
+  it("my-courses shows skeleton rows, not a spinner", () => {
+    const html = readFileSync(join(ROOT, "app/my-courses.html"), "utf8");
+    expect(html).toContain("app-skeleton");
+    expect(html).not.toContain("animate-spin");
+  });
 });

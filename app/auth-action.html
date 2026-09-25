@@ -5,72 +5,66 @@
   <meta name="robots" content="noindex, nofollow" />
   <meta name="referrer" content="no-referrer" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>בחירת סיסמה — מתחילים בקטן</title>
+  <meta name="color-scheme" content="light" />
+  <title>בחירת סיסמה | מתחילים בקטן</title>
   <link rel="icon" type="image/png" href="/assets/logos/logo-peach.png" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/app/app.css" />
   <link rel="manifest" href="/app/manifest.webmanifest" />
   <meta name="theme-color" content="#704229" />
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-title" content="מתחילים בקטן" />
-  <style>[hidden]{display:none!important}</style>
 </head>
-<body class="min-h-screen flex flex-col items-center p-4">
+<body class="app-page">
   <!--
     Firebase email action handler (set as the custom action URL in the Firebase
     console). Firebase adds: mode, oobCode, apiKey, continueUrl, lang.
     Only resetPassword is handled here; that is the welcome and reset email.
   -->
-  <main class="w-full max-w-sm app-card p-6 my-auto">
-    <h1 id="title" class="text-xl font-bold text-center mb-4">רגע אחד…</h1>
+  <main class="app-card app-auth">
+    <div class="app-auth-head">
+      <h1 id="title" class="app-h1">רגע אחד…</h1>
+      <p id="loading" class="app-lead" role="status">בודקות את הקישור</p>
+      <p id="for-email" class="app-lead" hidden></p>
+    </div>
 
-    <p id="loading" class="text-sm text-center app-mid">בודקות את הקישור</p>
-
-    <form id="reset-form" class="space-y-3" hidden novalidate>
-      <p id="for-email" class="text-sm text-center app-mid"></p>
-      <div>
-        <label for="password" class="block text-sm font-bold text-[#704229] mb-1">סיסמה חדשה</label>
-        <div class="flex gap-2">
+    <form id="reset-form" class="app-form" hidden novalidate>
+      <div class="app-field">
+        <label for="password" class="app-label">סיסמה חדשה</label>
+        <div class="app-password">
           <input id="password" type="password" required minlength="8" dir="ltr"
-                 class="w-full app-input px-3 py-2" autocomplete="new-password"
-                 aria-describedby="pw-hint" />
-          <button type="button" id="toggle" aria-controls="password" aria-pressed="false"
-                  class="shrink-0 text-sm app-link px-1">הצגה</button>
+                 class="app-input" autocomplete="new-password"
+                 aria-describedby="pw-hint msg" />
+          <button type="button" id="toggle" class="app-password-toggle" aria-pressed="false">הצגה</button>
         </div>
-        <p id="pw-hint" class="text-xs app-muted mt-1">לפחות 8 תווים</p>
+        <p id="pw-hint" class="app-help">לפחות 8 תווים</p>
       </div>
-      <button type="submit" id="save" class="w-full app-btn py-3">
-        שמירת הסיסמה
-      </button>
+      <button type="submit" id="save" class="app-btn">שמירת הסיסמה</button>
     </form>
 
-    <p id="msg" role="status" aria-live="polite" class="text-sm text-red-600 mt-3 text-center"></p>
+    <p id="msg" role="status" aria-live="polite" class="app-msg app-msg--error"></p>
 
     <!-- Shown when the link expired (after 1 hour) or was already used. -->
-    <form id="resend-form" class="space-y-3 mt-4" hidden novalidate>
-      <div>
-        <label for="resend-email" class="block text-sm font-bold text-[#704229] mb-1">האימייל שלך</label>
+    <form id="resend-form" class="app-form" hidden novalidate>
+      <div class="app-field">
+        <label for="resend-email" class="app-label">האימייל שלך</label>
         <input id="resend-email" type="email" required dir="ltr" autocomplete="email"
-               class="w-full app-input px-3 py-2" />
+               inputmode="email" autocapitalize="off" spellcheck="false" class="app-input" />
       </div>
-      <button type="submit" id="resend" class="w-full app-btn py-3">
-        שלחי לי קישור חדש
-      </button>
+      <button type="submit" id="resend" class="app-btn">שלחי לי קישור חדש</button>
     </form>
-    <p id="resend-msg" role="status" aria-live="polite" class="text-sm text-red-600 mt-3 text-center"></p>
+    <p id="resend-msg" role="status" aria-live="polite" class="app-msg app-msg--error"></p>
 
-    <a id="to-login" href="/app/login" hidden
-       class="block w-full app-btn py-3 mt-4">
-      לכניסה לקורסים
-    </a>
+    <a id="to-login" href="/app/login" hidden class="app-btn">לכניסה לקורסים</a>
   </main>
 
   <script type="module">
     import { auth, verifyPasswordResetCode, confirmPasswordReset, resetPassword } from "/app/firebase-client.js";
     import { safeNext } from "/app/safe-next.js";
     import { messageFor } from "/app/auth-errors.js";
-    import { mountAppHeader } from "/app/app-shell.js";
+    import { mountAppHeader, wirePasswordToggle } from "/app/app-shell.js";
 
     mountAppHeader();
 
@@ -103,7 +97,7 @@
     toLogin.href = loginHref();
 
     function showError(text) {
-      msg.className = "text-sm text-red-600 mt-3 text-center";
+      msg.className = "app-msg app-msg--error";
       msg.textContent = text;
     }
 
@@ -126,6 +120,7 @@
     function dead(heading, text) {
       loading.hidden = true;
       form.hidden = true;
+      $("for-email").hidden = true;
       title.textContent = heading;
       showError(text);
       toLogin.hidden = false;
@@ -148,7 +143,7 @@
 
     resendForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      resendMsg.className = "text-sm text-red-600 mt-3 text-center";
+      resendMsg.className = "app-msg app-msg--error";
       resendMsg.textContent = "";
       const email = resendEmail.value.trim();
       if (!email) {
@@ -169,16 +164,11 @@
       resendForm.hidden = true;
       title.textContent = "קישור חדש בדרך";
       msg.textContent = "";
-      resendMsg.className = "text-sm text-green-700 mt-3 text-center";
+      resendMsg.className = "app-msg app-msg--ok";
       resendMsg.textContent = "שלחנו קישור חדש. הוא בתוקף לשעה. בדקי גם בספאם.";
     });
 
-    toggle.addEventListener("click", () => {
-      const show = password.type === "password";
-      password.type = show ? "text" : "password";
-      toggle.textContent = show ? "הסתרה" : "הצגה";
-      toggle.setAttribute("aria-pressed", String(show));
-    });
+    wirePasswordToggle(password, toggle);
 
     async function startReset() {
       if (!code) return dead("הקישור לא שלם", "חסר חלק מהקישור. נסי ללחוץ שוב על הקישור שבמייל.");
@@ -192,9 +182,10 @@
       title.textContent = "בחירת סיסמה";
       $("for-email").textContent = "בחירת סיסמה עבור ";
       const b = document.createElement("bdi");
-      b.className = "font-semibold";
+      b.className = "app-brown";
       b.textContent = email;
       $("for-email").appendChild(b);
+      $("for-email").hidden = false;
       form.hidden = false;
       password.focus();
 
@@ -226,8 +217,9 @@
           return deadCode(err, email);
         }
         form.hidden = true;
+        $("for-email").hidden = true;
         title.textContent = "הסיסמה נשמרה";
-        msg.className = "text-sm text-green-700 mt-3 text-center";
+        msg.className = "app-msg app-msg--ok";
         msg.textContent = "מעכשיו אפשר להיכנס לקורסים עם האימייל והסיסמה החדשה.";
         toLogin.hidden = false;
         toLogin.focus();
@@ -239,7 +231,7 @@
     } else {
       loading.hidden = true;
       title.textContent = "הקישור הזה לא מטופל כאן";
-      msg.className = "text-sm app-mid mt-3 text-center";
+      msg.className = "app-msg app-msg--info";
       msg.textContent = "הדף הזה משמש רק לבחירת סיסמה. אם קיבלת מייל אחר ולא ברור מה לעשות, כתבי לנו ונעזור. אפשר להמשיך לדף הכניסה.";
       toLogin.hidden = false;
     }

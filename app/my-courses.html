@@ -4,35 +4,59 @@
   <meta charset="UTF-8" />
   <meta name="robots" content="noindex, nofollow" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>הקורסים שלי — מתחילים בקטן</title>
+  <meta name="color-scheme" content="light" />
+  <title>הקורסים שלי | מתחילים בקטן</title>
   <link rel="icon" type="image/png" href="/assets/logos/logo-peach.png" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/app/app.css" />
   <link rel="manifest" href="/app/manifest.webmanifest" />
   <meta name="theme-color" content="#704229" />
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-title" content="מתחילים בקטן" />
 </head>
-<body class="min-h-screen p-4">
-  <div class="max-w-3xl mx-auto py-4">
-    <h1 class="text-2xl font-bold">הקורסים שלי</h1>
+<body class="app-page">
+  <div class="app-wrap app-courses-head">
+    <h1 class="app-h1">הקורסים שלי</h1>
   </div>
-  <div id="loading" role="status" aria-live="polite"
-       class="max-w-3xl mx-auto flex items-center justify-center gap-3 py-12 text-[#704229]">
-    <span class="w-6 h-6 border-4 border-[#704229]/20 border-t-[#704229] rounded-full animate-spin" aria-hidden="true"></span>
-    <span>טוען...</span>
+
+  <!-- Skeleton rows in the shape of the course rows below. -->
+  <div id="loading" role="status" aria-live="polite" class="app-wrap app-course-list">
+    <span class="app-sr-only">טוען...</span>
+    <div class="app-card app-course" aria-hidden="true">
+      <span class="app-skeleton app-course-cover"></span>
+      <span class="app-course-body">
+        <span class="app-skeleton app-skeleton--text" style="inline-size: 55%; block-size: 20px"></span>
+        <span class="app-skeleton app-skeleton--text" style="inline-size: 90%; margin-block-start: 8px"></span>
+        <span class="app-skeleton app-skeleton--text" style="inline-size: 70%"></span>
+      </span>
+      <span></span>
+    </div>
+    <div class="app-card app-course" aria-hidden="true">
+      <span class="app-skeleton app-course-cover"></span>
+      <span class="app-course-body">
+        <span class="app-skeleton app-skeleton--text" style="inline-size: 45%; block-size: 20px"></span>
+        <span class="app-skeleton app-skeleton--text" style="inline-size: 85%; margin-block-start: 8px"></span>
+        <span class="app-skeleton app-skeleton--text" style="inline-size: 60%"></span>
+      </span>
+      <span></span>
+    </div>
   </div>
-  <main id="list" class="max-w-3xl mx-auto grid gap-4 sm:grid-cols-2"></main>
-  <div id="empty" class="max-w-3xl mx-auto text-center app-mid app-card p-6 hidden">
-    <p class="font-medium">עדיין אין לך קורסים כאן.</p>
-    <p class="text-sm mt-2">רכשת קורס והוא לא מופיע? כתבי לנו ונסדר את זה.</p>
-    <a href="https://wa.me/972542366243" target="_blank" rel="noopener"
-       class="mt-4 app-btn px-5 py-3">כתבי לנו בוואטסאפ</a>
+
+  <main id="list" class="app-wrap app-course-list"></main>
+
+  <div id="empty" class="app-wrap app-card app-state hidden">
+    <p class="app-state-title">עדיין אין לך קורסים כאן.</p>
+    <p class="app-mid">רכשת קורס והוא לא מופיע? כתבי לנו ונסדר את זה.</p>
+    <a href="https://wa.me/972542366243" target="_blank" rel="noopener" class="app-btn">
+      <svg class="app-icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-whatsapp"/></svg>
+      כתבי לנו בוואטסאפ
+    </a>
   </div>
-  <div id="error" class="max-w-3xl mx-auto text-center text-red-600 hidden">
-    <p>לא הצלחנו לטעון את הקורסים. נסי לרענן את הדף.</p>
-    <p class="text-sm mt-2 app-mid">זה חוזר?
+  <div id="error" role="alert" class="app-wrap app-card app-state hidden">
+    <p class="app-state-title app-msg--error">לא הצלחנו לטעון את הקורסים. נסי לרענן את הדף.</p>
+    <p class="app-mid">זה חוזר?
       <a href="https://wa.me/972542366243" target="_blank" rel="noopener" class="app-link">כתבי לנו בוואטסאפ</a>
     </p>
   </div>
@@ -41,6 +65,9 @@
     import { requireAuth, db, signOut, collection, getDocs, doc, getDoc } from "/app/firebase-client.js";
     import { visibleCourses } from "/app/course-list.js";
     import { mountAppHeader } from "/app/app-shell.js";
+
+    const SPRITE = "/assets/icons/sprite.svg";
+    const SVG = "http://www.w3.org/2000/svg";
 
     const shell = mountAppHeader();
     const user = await requireAuth();
@@ -56,8 +83,18 @@
       console.error(err);
       document.getElementById("error").classList.remove("hidden");
     } finally {
-      // Keep the spinner while we move to the only course.
+      // Keep the skeleton while we move to the only course.
       if (!redirecting) loading.classList.add("hidden");
+    }
+
+    function icon(id, className) {
+      const svg = document.createElementNS(SVG, "svg");
+      svg.setAttribute("class", className);
+      svg.setAttribute("aria-hidden", "true");
+      const use = document.createElementNS(SVG, "use");
+      use.setAttribute("href", `${SPRITE}#${id}`);
+      svg.appendChild(use);
+      return svg;
     }
 
     async function render() {
@@ -80,30 +117,38 @@
         return true;
       }
 
+      // Swap the skeleton for the real rows in one step, so nothing jumps.
+      loading.classList.add("hidden");
       if (!courses.length) { document.getElementById("empty").classList.remove("hidden"); }
 
       for (const c of courses) {
+        // Build with DOM APIs (textContent/setAttribute), never innerHTML with Firestore data.
         const a = document.createElement("a");
         a.href = `/app/course/${encodeURIComponent(c.slug)}`;
-        a.className = "block app-card overflow-hidden";
-        // Build with DOM APIs (textContent/setAttribute) — never innerHTML with Firestore data.
+        a.className = c.coverImage ? "app-card app-course" : "app-card app-course app-course--nocover";
         if (c.coverImage) {
           const img = document.createElement("img");
           img.setAttribute("src", c.coverImage);
           img.setAttribute("alt", "");
-          img.className = "w-full h-40 object-cover";
+          img.setAttribute("width", "112");
+          img.setAttribute("height", "140");
+          img.setAttribute("decoding", "async");
+          img.className = "app-course-cover";
           a.appendChild(img);
         }
         const body = document.createElement("div");
-        body.className = "p-4";
+        body.className = "app-course-body";
         const h2 = document.createElement("h2");
-        h2.className = "font-bold text-lg";
+        h2.className = "app-course-title";
         h2.textContent = c.title ?? "";
-        const p = document.createElement("p");
-        p.className = "text-sm app-mid mt-1";
-        p.textContent = c.description ?? "";
-        body.append(h2, p);
-        a.appendChild(body);
+        body.appendChild(h2);
+        if (c.description) {
+          const p = document.createElement("p");
+          p.className = "app-course-desc";
+          p.textContent = c.description;
+          body.appendChild(p);
+        }
+        a.append(body, icon("i-chevron-forward", "app-icon app-course-go icon--dir"));
         list.appendChild(a);
       }
       return false;

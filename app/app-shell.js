@@ -1,5 +1,6 @@
-// app/app-shell.js — the shared course app header (logo, site name, and on
-// signed-in pages the student's email and a sign-out button).
+// app/app-shell.js: the shared course app header (logo, site name, and on
+// signed-in pages the student's email and a sign-out button), plus two small
+// form helpers used by the login and password pages.
 //
 // No Firebase import here: pages pass their own sign-out function, so this
 // file stays easy to test. Styles live in app/app.css (.app-header...).
@@ -69,4 +70,34 @@ export function mountAppHeader({ doc = document } = {}) {
   }
 
   return { header, showUser };
+}
+
+// Show or hide button for a password field (U23). The button says what it
+// will do next ("הצגה" / "הסתרה") and aria-pressed says if the text is shown.
+export function wirePasswordToggle(input, button) {
+  button.setAttribute("aria-controls", input.id);
+  const set = (show) => {
+    input.type = show ? "text" : "password";
+    button.textContent = show ? "הסתרה" : "הצגה";
+    button.setAttribute("aria-pressed", String(show));
+  };
+  set(false);
+  button.addEventListener("click", () => {
+    set(input.type === "password");
+    input.focus();
+  });
+}
+
+// Busy state for a submit button: disables it and shows busyText, and gives
+// back a function that restores the old label. Only textContent is used.
+export function setBusy(button, busyText) {
+  const label = button.textContent;
+  button.disabled = true;
+  button.setAttribute("aria-busy", "true");
+  button.textContent = busyText;
+  return () => {
+    button.disabled = false;
+    button.removeAttribute("aria-busy");
+    button.textContent = label;
+  };
 }

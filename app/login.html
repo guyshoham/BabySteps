@@ -4,42 +4,52 @@
   <meta charset="UTF-8" />
   <meta name="robots" content="noindex, nofollow" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>כניסה — מתחילים בקטן</title>
+  <meta name="color-scheme" content="light" />
+  <title>כניסה לקורסים | מתחילים בקטן</title>
   <link rel="icon" type="image/png" href="/assets/logos/logo-peach.png" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/app/app.css" />
   <link rel="manifest" href="/app/manifest.webmanifest" />
   <meta name="theme-color" content="#704229" />
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-title" content="מתחילים בקטן" />
 </head>
-<body class="min-h-screen flex flex-col items-center p-4">
-  <main class="w-full max-w-sm app-card p-6 my-auto">
-    <h1 class="text-xl font-bold text-center">כניסה לקורסים</h1>
-    <p class="text-sm app-mid text-center mt-1 mb-5">שמחה שאת כאן. הזיני את האימייל והסיסמה שלך.</p>
-    <form id="login-form" class="space-y-3">
-      <div>
-        <label for="email" class="block text-sm font-bold text-[#704229] mb-1">אימייל</label>
+<body class="app-page">
+  <main class="app-card app-auth">
+    <div class="app-auth-head">
+      <img class="app-auth-portrait" src="/assets/yarden-portrait.jpg" alt="ירדן שוהם"
+           width="64" height="64" decoding="async" />
+      <h1 class="app-h1">כניסה לקורסים</h1>
+      <p class="app-lead">שמחה שאת כאן. הזיני את האימייל והסיסמה שלך.</p>
+    </div>
+
+    <form id="login-form" class="app-form" aria-describedby="msg">
+      <div class="app-field">
+        <label for="email" class="app-label">אימייל</label>
         <input id="email" type="email" required dir="ltr" placeholder="name@example.com"
-               class="w-full app-input px-3 py-2" autocomplete="email" />
+               class="app-input" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" />
       </div>
-      <div>
-        <label for="password" class="block text-sm font-bold text-[#704229] mb-1">סיסמה</label>
-        <input id="password" type="password" required dir="ltr"
-               class="w-full app-input px-3 py-2" autocomplete="current-password" />
+      <div class="app-field">
+        <label for="password" class="app-label">סיסמה</label>
+        <div class="app-password">
+          <input id="password" type="password" required dir="ltr"
+                 class="app-input" autocomplete="current-password" />
+          <button type="button" id="toggle" class="app-password-toggle" aria-pressed="false">הצגה</button>
+        </div>
       </div>
-      <button type="submit" class="w-full app-btn py-3">
-        כניסה
-      </button>
+      <p id="msg" role="status" aria-live="polite" class="app-msg app-msg--error"></p>
+      <button type="submit" id="submit" class="app-btn">כניסה</button>
     </form>
-    <button id="reset" class="w-full text-sm app-link mt-3">שכחתי סיסמה</button>
-    <p id="msg" role="status" aria-live="polite" class="text-sm text-red-600 mt-3 text-center"></p>
-    <div class="mt-5 pt-4 border-t border-[#704229]/10 text-sm app-muted text-center space-y-2">
-      <p>פעם ראשונה? בחרי סיסמה דרך הקישור שקיבלת במייל. הקישור בתוקף לשעה. אם עבר יותר זמן, לחצי "שכחתי סיסמה" ותקבלי קישור חדש.</p>
+
+    <button type="button" id="reset" class="app-link app-auth-alt">שכחתי סיסמה</button>
+
+    <div class="app-note">
+      <p><strong>פעם ראשונה?</strong> בחרי סיסמה דרך הקישור שקיבלת במייל. הקישור בתוקף לשעה. אם עבר יותר זמן, לחצי "שכחתי סיסמה" ותקבלי קישור חדש.</p>
       <p>צריכה עזרה?
         <a href="https://wa.me/972542366243" target="_blank" rel="noopener"
-           class="app-link font-medium">כתבי לנו בוואטסאפ</a>
+           class="app-link">כתבי לנו בוואטסאפ</a>
       </p>
     </div>
   </main>
@@ -48,39 +58,52 @@
     import { signIn, resetPassword, auth, onAuthStateChanged } from "/app/firebase-client.js";
     import { safeNext } from "/app/safe-next.js";
     import { messageFor } from "/app/auth-errors.js";
-    import { mountAppHeader } from "/app/app-shell.js";
+    import { mountAppHeader, wirePasswordToggle, setBusy } from "/app/app-shell.js";
 
     mountAppHeader();
 
+    const $ = (id) => document.getElementById(id);
     const params = new URLSearchParams(location.search);
     const next = safeNext(params.get("next"));
-    const msg = document.getElementById("msg");
+    const msg = $("msg");
+    const submit = $("submit");
+    const resetBtn = $("reset");
+
+    wirePasswordToggle($("password"), $("toggle"));
+
+    function say(text, kind = "error") {
+      msg.className = `app-msg app-msg--${kind}`;
+      msg.textContent = text;
+    }
 
     onAuthStateChanged(auth, (user) => { if (user) location.replace(next); });
 
-    document.getElementById("login-form").addEventListener("submit", async (e) => {
+    $("login-form").addEventListener("submit", async (e) => {
       e.preventDefault();
-      msg.className = "text-sm text-red-600 mt-3 text-center";
-      msg.textContent = "";
+      if (submit.disabled) return;
+      say("");
+      const done = setBusy(submit, "מתחברת...");
       try {
-        await signIn(document.getElementById("email").value.trim(),
-                     document.getElementById("password").value);
-        location.replace(next);
-      } catch (e) {
-        msg.textContent = messageFor(e?.code);
+        await signIn($("email").value.trim(), $("password").value);
+        location.replace(next); // keep the busy state while the next page loads
+      } catch (err) {
+        done();
+        say(messageFor(err?.code));
       }
     });
 
-    document.getElementById("reset").addEventListener("click", async () => {
-      msg.className = "text-sm text-red-600 mt-3 text-center";
-      const email = document.getElementById("email").value.trim();
-      if (!email) { msg.textContent = messageFor("auth/missing-email", "reset"); return; }
+    resetBtn.addEventListener("click", async () => {
+      const email = $("email").value.trim();
+      if (!email) { say(messageFor("auth/missing-email", "reset")); $("email").focus(); return; }
+      say("");
+      resetBtn.disabled = true;
       try {
         await resetPassword(email);
-        msg.className = "text-sm text-green-700 mt-3 text-center";
-        msg.textContent = "שלחנו לך מייל לבחירת סיסמה. הקישור בתוקף לשעה. בדקי גם בספאם.";
-      } catch (e) {
-        msg.textContent = messageFor(e?.code, "reset");
+        say("שלחנו לך מייל לבחירת סיסמה. הקישור בתוקף לשעה. בדקי גם בספאם.", "ok");
+      } catch (err) {
+        say(messageFor(err?.code, "reset"));
+      } finally {
+        resetBtn.disabled = false;
       }
     });
   </script>
