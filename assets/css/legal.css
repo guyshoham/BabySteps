@@ -1,0 +1,204 @@
+/* ═══════════════════════════════════════════
+   Legal pages: /terms, /privacy, /accessibility
+   A calm reading layout on the "On the mat" tokens
+   (docs/design/2026-09-26-art-direction.md). Loaded after /styles.css.
+   Reads only tokens from assets/css/tokens.css. Logical properties only (RTL).
+
+   Shape: title and date above the text column. A small table of contents:
+   a white card on phones, a quiet sticky list at the start side from 1024px.
+   Paragraphs keep --measure. The one peach area is the contact box.
+   ═══════════════════════════════════════════ */
+
+.legal {
+    padding-block: var(--s-6) var(--section-y);
+}
+.legal__grid {
+    display: grid;
+    gap: var(--s-6);
+}
+
+/* ─── Head ─── */
+.legal__head { display: grid; gap: var(--s-3); }
+.legal__head .t-lead { font-weight: 400; }
+.legal__date { font-variant-numeric: tabular-nums; }
+
+/* ─── Table of contents ─── */
+.legal__toc {
+    background: var(--c-paper);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-1);
+    padding: var(--s-4) var(--s-5);
+}
+.legal__toc-title {
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--c-ink-muted);
+    margin-block-end: var(--s-1);
+}
+.legal__toc ol {
+    list-style: decimal;
+    padding-inline-start: 1.4em;
+}
+.legal__toc li {
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--c-ink-muted);
+    font-variant-numeric: tabular-nums;
+}
+.legal__toc a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    color: var(--c-brown);
+    font-weight: 500;
+    text-decoration: none;
+}
+.legal__toc a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* ─── Body text ─── */
+.legal__body {
+    display: grid;
+    gap: var(--s-7);
+    min-inline-size: 0;
+}
+.legal__section {
+    display: grid;
+    gap: var(--s-3);
+    max-inline-size: var(--measure);
+}
+.legal__section h2 {
+    font-size: var(--fs-h3);
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--c-ink);
+    max-inline-size: none;
+}
+.legal__n {
+    color: var(--c-brown);
+    font-variant-numeric: tabular-nums;
+    margin-inline-end: 0.35em;
+}
+.legal__section h3 {
+    font-size: var(--fs-body);
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--c-ink);
+    margin-block-start: var(--s-2);
+}
+.legal__section p,
+.legal__section li {
+    font-size: var(--fs-body);
+    line-height: 1.7;
+    color: var(--c-ink-soft);
+}
+.legal__section strong { color: var(--c-ink); font-weight: 500; }
+.legal__section ul {
+    list-style: disc;
+    padding-inline-start: 1.25em;
+    display: grid;
+    gap: var(--s-2);
+}
+.legal__section ul li::marker { color: var(--c-brown); }
+.legal__section a,
+.legal__contact a {
+    color: var(--c-brown);
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+}
+.legal__section a:hover,
+.legal__contact a:hover { text-decoration-thickness: 2px; }
+
+/* The one key sentence of a section (e.g. the refund rule). */
+.legal__key {
+    padding: var(--s-4) var(--s-5);
+    border-radius: var(--r-md);
+    background: var(--c-paper);
+    box-shadow: var(--shadow-1);
+}
+.legal__section .legal__key { color: var(--c-ink); }
+
+/* ─── Contact box: the one peach area ─── */
+.legal__contact {
+    max-inline-size: var(--measure);
+    padding: var(--s-5);
+    border-radius: var(--r-lg);
+    background: var(--c-peach);
+    display: grid;
+    gap: var(--s-3);
+}
+.legal__contact h2 {
+    font-size: var(--fs-h3);
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--c-ink);
+}
+.legal__contact p {
+    font-size: var(--fs-body);
+    line-height: 1.6;
+    color: var(--c-ink-soft);
+}
+.legal__contact ul { display: grid; gap: var(--s-1); }
+.legal__contact li a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    min-height: 44px;
+}
+.legal__contact .icon { color: var(--c-brown); }
+
+@media (min-width: 768px) {
+    .legal { padding-block-start: var(--s-8); }
+    .legal__contact { padding: var(--s-6); }
+}
+
+/* From 1024px: the list sits at the start side (right), the text next to it. */
+@media (min-width: 1024px) {
+    .legal__grid {
+        grid-template-columns: 15rem minmax(0, 40rem);
+        column-gap: var(--s-8);
+        row-gap: var(--s-7);
+        justify-content: start;
+    }
+    .legal__head { grid-column: 2; }
+    .legal__toc {
+        grid-column: 1;
+        grid-row: 2;
+        align-self: start;
+        position: sticky;
+        top: calc(var(--nav-h) + var(--s-5));
+        background: none;
+        box-shadow: none;
+        padding: 0;
+    }
+    .legal__toc li { font-size: var(--fs-small); }
+    .legal__toc a { min-height: 36px; }
+    .legal__body { grid-column: 2; grid-row: 2; }
+}
+
+/* ─── Print: the text only, black on white ─── */
+@media print {
+    .site-nav,
+    .site-footer,
+    .skip-link,
+    .legal__toc { display: none !important; }
+    body { background: #fff; color: #000; }
+    .legal { padding: 0; }
+    .legal__grid { display: block; }
+    .legal__head { margin-block-end: 18pt; }
+    .legal__body { display: block; }
+    .legal__section { max-inline-size: none; margin-block-end: 14pt; break-inside: auto; }
+    .legal__section h2 { break-after: avoid; font-size: 13pt; }
+    .legal__section p,
+    .legal__section li,
+    .legal__contact p { font-size: 11pt; line-height: 1.5; color: #000; }
+    .t-display { font-size: 20pt; }
+    .legal__key,
+    .legal__contact { background: none; box-shadow: none; border: 1px solid #999; }
+    .legal__section a,
+    .legal__contact a { color: #000; }
+}
