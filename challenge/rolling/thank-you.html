@@ -3,257 +3,272 @@
 <head>
     <script>document.documentElement.classList.add('js')</script>
     <script defer src="/_vercel/insights/script.js"></script>
-    <link rel="icon" type="image/png" href="../../assets/logos/logo-peach.png">
-    <link rel="apple-touch-icon" href="../../assets/logos/logo-peach.png">
+    <link rel="icon" type="image/png" href="/assets/logos/logo-peach.png">
+    <link rel="apple-touch-icon" href="/assets/logos/logo-peach.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light">
     <meta name="robots" content="noindex, nofollow">
-    <title>תודה על הרכישה! | מתחילים בקטן</title>
+    <title>תודה על הרכישה | מתחילים בקטן</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap"></noscript>
-    <link rel="stylesheet" href="../../styles.css">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap"></noscript>
+    <link rel="stylesheet" href="/styles.css">
     <style>
-        /* ─── Checkmark animation ────────────── */
-        @keyframes checkPop {
-            0%   { transform: scale(0); opacity: 0; }
-            60%  { transform: scale(1.15); opacity: 1; }
-            100% { transform: scale(1); opacity: 1; }
+        /* Metric-matched fallback while Rubik loads, so text does not reflow
+           when the font swaps in (CLS). Arial scaled to Rubik's width.
+           Page-local for now; WP8 can move it to styles.css. */
+        @font-face {
+            font-family: "Rubik Fallback";
+            src: local("Arial"), local("ArialMT");
+            size-adjust: 102.9%;
         }
-        .check-icon {
-            animation: checkPop 0.6s cubic-bezier(0.22,1,0.36,1) forwards;
+        body { font-family: 'Rubik', 'Rubik Fallback', system-ui, sans-serif; }
+        /* ─── Moment 4: payment received ───────────────
+           The circle draws, then the check inside it, then the arc under it.
+           The drawn state is the default. The animation runs only when JS is on
+           and the person has not asked for less motion, so under reduced
+           motion (or with no JS) the mark is simply there. */
+        .ty-hero { padding-block: var(--s-7) var(--s-8); text-align: center; }
+        .ty-hero .container { display: flex; flex-direction: column; align-items: center; }
+        .ty-hero .t-display,
+        .ty-hero .t-lead { margin-inline: auto; }
+        .ty-hero .t-lead { margin-top: var(--s-3); }
+        /* On phones the title is two lines on purpose. A width near the edge
+           would flip between one and two lines when Rubik swaps in (CLS). */
+        @media (max-width: 479px) {
+            .ty-hero .t-display { max-inline-size: 9em; }
         }
+
+        .ty-mark {
+            inline-size: 280px;
+            max-inline-size: 100%;
+            block-size: auto;
+            aspect-ratio: 280 / 108;
+            margin-bottom: var(--s-5);
+            color: var(--c-brown);
+            overflow: visible;
+        }
+        .ty-mark * {
+            fill: none;
+            stroke: currentColor;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .ty-mark__ring { stroke-width: 2; }
+        .ty-mark__tick { stroke-width: 2.5; }
+        .ty-mark__arc  { stroke-width: 1.5; stroke-dasharray: 1; opacity: 0.55; }
+        .ty-mark__ring,
+        .ty-mark__tick { stroke-dasharray: 1; }
+
+        @keyframes ty-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+        @media (prefers-reduced-motion: no-preference) {
+            .js .ty-mark__ring { animation: ty-draw var(--dur-draw) var(--ease-out) both; }
+            .js .ty-mark__tick { animation: ty-draw var(--dur-enter) var(--ease-out) 420ms both; }
+            .js .ty-mark__arc  { animation: ty-draw var(--dur-draw) var(--ease-in-out) 720ms both; }
+        }
+
+        /* ─── Steps: the main message ─────────────── */
+        .ty-steps-card { max-inline-size: 40rem; margin-inline: auto; }
+        .ty-steps-card > .t-body { margin-top: var(--s-3); }
+        .ty-steps {
+            counter-reset: step;
+            display: grid;
+            gap: var(--s-5);
+            margin-top: var(--s-6);
+        }
+        .ty-step {
+            counter-increment: step;
+            display: grid;
+            grid-template-columns: 36px 1fr;
+            column-gap: var(--s-4);
+            align-items: start;
+        }
+        .ty-step::before {
+            content: counter(step);
+            display: grid;
+            place-items: center;
+            inline-size: 36px;
+            block-size: 36px;
+            border-radius: 50%;
+            border: 1.5px solid var(--c-brown);
+            color: var(--c-brown);
+            font-weight: 500;
+            font-size: 16px;
+            font-variant-numeric: tabular-nums;
+        }
+        .ty-step h3 { padding-top: 5px; }
+        .ty-step p { margin-top: var(--s-1); }
+        .ty-login {
+            margin-top: var(--s-6);
+            padding-top: var(--s-5);
+            border-top: 1px solid var(--c-line);
+        }
+        .ty-login .btn { inline-size: 100%; }
+        @media (min-width: 560px) {
+            .ty-login .btn { inline-size: auto; }
+        }
+
+        /* ─── Her note, on the one peach band ─────── */
+        .ty-note { text-align: center; }
+        .ty-note .container { display: flex; flex-direction: column; align-items: center; }
+        .ty-note__photo {
+            inline-size: 72px;
+            block-size: 72px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .ty-note blockquote {
+            margin-top: var(--s-4);
+            max-inline-size: 30rem;
+            font-size: var(--fs-lead);
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--c-ink);
+        }
+        .ty-note__name {
+            margin-top: var(--s-3);
+            font-weight: 700;
+            color: var(--c-brown);
+        }
+        .ty-help {
+            margin-top: var(--s-7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--s-3);
+        }
+        .ty-help .t-body { color: var(--c-ink-soft); }
+        /* On peach the quiet button's own hover (peach) would not show. */
+        .section--peach .btn--quiet:hover { background: var(--c-paper); }
     </style>
 </head>
 <body>
 
-<!-- ░░ NAV ░░ -->
-<nav class="site-nav">
-    <div class="nav-inner" style="max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;">
-        <a href="/app/login" class="site-brand">
-            <img src="../../assets/logos/logo-peach.png" alt="מתחילים בקטן - ירדן שוהם" class="site-brand-logo" width="52" height="52" decoding="async">
-            <div>
-                <div class="site-brand-name">ירדן שוהם</div>
-                <div class="site-brand-tag">מתחילים בקטן</div>
-            </div>
+<a class="skip-link" href="#main">דלגי לתוכן</a>
+
+<nav class="site-nav" aria-label="ראשי">
+    <div class="site-nav__inner container">
+        <a class="site-brand" href="/">
+            <img class="site-brand-logo" src="/assets/logos/logo-peach.png" alt="" width="44" height="44" decoding="async">
+            <span>
+                <span class="site-brand-name">ירדן שוהם</span>
+                <span class="site-brand-tag">מתחילים בקטן</span>
+            </span>
         </a>
-        <a href="/app/login" class="nav-login">כניסה לקורס</a>
+        <div class="nav-actions">
+            <a class="nav-login" href="/app/login">כניסה לקורס</a>
+        </div>
     </div>
 </nav>
 
-<!-- ░░ HERO — PAYMENT CONFIRMATION ░░ -->
-<header class="hero-pad" style="background:var(--brand-peach); overflow:hidden; position:relative;">
+<main id="main">
 
-    <!-- Subtle background accent -->
-    <div style="position:absolute; top:-80px; left:-80px; width:400px; height:400px; border-radius:50%; background:rgba(252,210,170,0.4); pointer-events:none;"></div>
-    <div style="position:absolute; bottom:-60px; right:-40px; width:280px; height:280px; border-radius:50%; background:rgba(232,243,239,0.6); pointer-events:none;"></div>
-    <!-- Confetti container -->
-    <div id="confettiContainer" style="position:absolute; top:0; left:0; right:0; height:100%; overflow:hidden; pointer-events:none; z-index:1;"></div>
-
-    <div style="max-width:760px; margin:0 auto; text-align:center; position:relative; z-index:2;">
-
-        <!-- Checkmark icon -->
-        <div class="check-icon" style="width:80px; height:80px; border-radius:50%; background:var(--brand-brown); display:flex; align-items:center; justify-content:center; margin:0 auto 28px;">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
+    <!-- Payment received: one centered moment -->
+    <header class="ty-hero">
+        <div class="container">
+            <svg class="ty-mark" viewBox="0 0 280 108" aria-hidden="true">
+                <!-- mirrored so the ring draws from the top toward the start side (right) -->
+                <circle class="ty-mark__ring" cx="140" cy="40" r="36" pathLength="1" transform="rotate(-90 140 40) scale(1 -1) translate(0 -80)"/>
+                <path class="ty-mark__tick" d="M124 41 l11 11 l21 -22" pathLength="1"/>
+                <!-- the arc: the path a baby's body draws when it rolls over, here a low
+                     cradle under the check. Drawn from the start side (right). -->
+                <path class="ty-mark__arc" d="M272 84 C 200 106, 80 106, 8 84" pathLength="1"/>
             </svg>
+            <h1 class="t-display enter">התשלום התקבל בהצלחה</h1>
+            <p class="t-lead enter" style="--i:1">תודה שהצטרפת לקורס מתהפכים!</p>
         </div>
+    </header>
 
-        <h1 class="hero-title" style="font-weight:800; color:var(--text-dark); margin-bottom:20px;">
-            התשלום התקבל בהצלחה!
-        </h1>
-
-        <p class="hero-subtitle" style="line-height:1.8; color:var(--text-mid); max-width:580px; margin:0 auto; font-weight:400;">
-            תודה שהצטרפת לקורס מתהפכים!
-        </p>
-
-    </div>
-</header>
-
-<!-- ░░ EMAIL INSTRUCTIONS CARD ░░ -->
-<section class="section-pad" style="background:#fff;">
-    <div style="max-width:700px; margin:0 auto;">
-
-        <div class="content-box reveal" style="background:#fff; border-radius:16px; box-shadow:0 4px 32px rgba(112,66,41,0.08);">
-
-            <div style="text-align:center; margin-bottom:28px;">
-                <p style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brand-brown); font-weight:700; margin-bottom:12px;">מה עכשיו?</p>
-                <h2 class="section-heading" style="font-weight:800; color:var(--text-dark); margin-bottom:8px;">מייל עם פרטי הגישה בדרך אלייך</h2>
-                <div class="section-divider"></div>
-            </div>
-
-            <p style="font-size:1rem; line-height:1.9; color:var(--text-mid); margin:0 0 24px; text-align:center;">
-                שלחנו לך מייל עם קישור לבחירת סיסמה. המייל אמור להגיע תוך מספר דקות, לכתובת של חשבון ה-PayPal ששילם.
-            </p>
-
-            <!-- Highlight box — check spam -->
-            <div class="highlight-box" style="background:var(--brand-mint); border-radius:12px; border-right:4px solid var(--brand-mint-dark); margin-bottom:24px;">
-                <p style="font-size:1rem; line-height:1.8; color:var(--text-mid); margin:0;">
-                    <strong style="color:var(--text-dark);">לא מוצאת את המייל?</strong> בדקי גם בתיקיית הספאם (Spam) או בתיקיית הקידומים (Promotions) בג'ימייל.
+    <!-- The main message: open the email and choose a password -->
+    <section class="section" style="padding-top:0" aria-labelledby="steps-title">
+        <div class="container">
+            <div class="card ty-steps-card reveal">
+                <h2 class="t-h2" id="steps-title">פתחי את המייל ובחרי סיסמה</h2>
+                <p class="t-body">
+                    שלחנו לך מייל עם קישור לבחירת סיסמה. המייל אמור להגיע תוך מספר דקות, לכתובת של חשבון ה-<bdi>PayPal</bdi> ששילם.
                 </p>
-            </div>
 
-            <p style="font-size:0.9rem; line-height:1.8; color:var(--text-mid); margin:0; text-align:center;">
-                המייל מגיע מ-"<strong style="color:var(--text-mid);">ירדן - מתחילים בקטן</strong>"<br>ועוסק באיפוס סיסמה. זה המייל הנכון, כך בוחרים סיסמה בפעם הראשונה.
-            </p>
+                <ol class="ty-steps">
+                    <li class="ty-step">
+                        <div>
+                            <h3 class="t-h3">בדקי את תיבת המייל</h3>
+                            <p class="t-body">המייל מגיע מ"<strong>ירדן - מתחילים בקטן</strong>" ועוסק באיפוס סיסמה. זה המייל הנכון, כך בוחרים סיסמה בפעם הראשונה.</p>
+                            <p class="t-body">לא מוצאת אותו? בדקי גם בתיקיית הספאם (<bdi>Spam</bdi>) או בתיקיית הקידומים (<bdi>Promotions</bdi>) בג'ימייל.</p>
+                        </div>
+                    </li>
+                    <li class="ty-step">
+                        <div>
+                            <h3 class="t-h3">בחרי סיסמה דרך הקישור</h3>
+                            <p class="t-body">הקישור במייל פותח דף (באנגלית) שבו בוחרים סיסמה. הקישור בתוקף לשעה.</p>
+                        </div>
+                    </li>
+                    <li class="ty-step">
+                        <div>
+                            <h3 class="t-h3">עברה יותר משעה? אין בעיה</h3>
+                            <p class="t-body">לחצי על "שכחתי סיסמה" בדף הכניסה ותקבלי למייל קישור חדש לבחירת סיסמה.</p>
+                        </div>
+                    </li>
+                    <li class="ty-step">
+                        <div>
+                            <h3 class="t-h3">התחילי לצפות בסרטונים</h3>
+                            <p class="t-body">נכנסים לקורס עם האימייל והסיסמה החדשה. צפי בסרטונים בקצב שלך, מתי שנוח לך.</p>
+                        </div>
+                    </li>
+                </ol>
 
-            <p style="font-size:0.9rem; line-height:1.8; color:var(--text-mid); margin:12px 0 0; text-align:center;">
-                הקישור במייל בתוקף לשעה. אם עבר יותר זמן, לחצי "שכחתי סיסמה" בדף הכניסה ותקבלי קישור חדש.
-            </p>
-
-            <div style="text-align:center; margin-top:28px;">
-                <a href="/app/login" class="btn-primary">כניסה לקורס ←</a>
-            </div>
-
-        </div>
-
-    </div>
-</section>
-
-<!-- ░░ NEXT STEPS ░░ -->
-<section class="section-pad" style="background:var(--brand-peach);">
-    <div style="max-width:700px; margin:0 auto;">
-
-        <div style="text-align:center; margin-bottom:56px;">
-            <p style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brand-brown); font-weight:700; margin-bottom:12px;">צעדים הבאים</p>
-            <h2 class="section-heading" style="font-weight:800; color:var(--text-dark); margin-bottom:0;">איך מתחילים?</h2>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="content-box reveal" style="background:#fff; border-radius:16px; box-shadow:0 4px 32px rgba(112,66,41,0.08);">
-
-            <div class="feature-row">
-                <div class="step-num-large">1</div>
-                <div>
-                    <h3 style="font-size:1.05rem; font-weight:700; margin:0 0 6px;">בדקי את תיבת המייל</h3>
-                    <p style="font-size:0.9rem; color:#7a5a48; margin:0; line-height:1.7;">כולל תיקיית ספאם (Spam) ותיקיית קידומים (Promotions).</p>
+                <div class="ty-login">
+                    <a href="/app/login" class="btn btn--primary">
+                        בחרתי סיסמה, לכניסה לקורס
+                        <svg class="icon icon--dir" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-forward"/></svg>
+                    </a>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <div class="feature-row">
-                <div class="step-num-large">2</div>
-                <div>
-                    <h3 style="font-size:1.05rem; font-weight:700; margin:0 0 6px;">בחרי סיסמה דרך הקישור</h3>
-                    <p style="font-size:0.9rem; color:#7a5a48; margin:0; line-height:1.7;">הקישור במייל פותח דף (באנגלית) שבו בוחרים סיסמה. אחר כך נכנסים לקורס עם האימייל והסיסמה החדשה.</p>
-                </div>
+    <!-- Her note and the help line: the one peach band -->
+    <section class="section section--peach ty-note" aria-label="הודעה מירדן">
+        <div class="container">
+            <img class="ty-note__photo" src="/assets/yarden-portrait.jpg" alt="ירדן שוהם" width="72" height="72" loading="lazy" decoding="async">
+            <blockquote>
+                <p>"שמחה מאוד שהצטרפת! הקורס הזה בנוי עם כל הלב, ואני בטוחה שתרגישי את ההבדל מהר מאוד. כל שאלה שיש לך, אני כאן."</p>
+            </blockquote>
+            <p class="ty-note__name">ירדן</p>
+
+            <div class="ty-help">
+                <p class="t-body">נתקלת בבעיה או שהמייל לא הגיע?</p>
+                <a href="https://wa.me/972542366243" target="_blank" rel="noopener" class="btn btn--quiet">
+                    <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-whatsapp"/></svg>
+                    <span>דברי איתי ב<bdi>WhatsApp</bdi></span>
+                </a>
             </div>
+        </div>
+    </section>
 
-            <div class="feature-row">
-                <div class="step-num-large">3</div>
-                <div>
-                    <h3 style="font-size:1.05rem; font-weight:700; margin:0 0 6px;">שכחת סיסמה? אין בעיה</h3>
-                    <p style="font-size:0.9rem; color:#7a5a48; margin:0; line-height:1.7;">לחצי על "שכחתי סיסמה" בדף ההתחברות ותקבלי למייל קישור לבחירת סיסמה חדשה.</p>
-                </div>
+</main>
+
+<footer class="site-footer">
+    <div class="site-footer__inner container">
+        <div class="site-footer__brand">
+            <img class="site-footer__logo" src="/assets/logos/logo-peach.png" alt="" width="44" height="44" loading="lazy" decoding="async">
+            <div>
+                <p class="site-footer__name">ירדן שוהם, מתחילים בקטן</p>
+                <p class="site-footer__tag">מלווה התפתחותית. קורס דיגיטלי להתהפכות.</p>
             </div>
-
-            <div class="feature-row">
-                <div class="step-num-large">4</div>
-                <div>
-                    <h3 style="font-size:1.05rem; font-weight:700; margin:0 0 6px;">התחילי לצפות בסרטונים</h3>
-                    <p style="font-size:0.9rem; color:#7a5a48; margin:0; line-height:1.7;">הקורס מחכה לך. צפי בסרטונים בקצב שלך, מתי שנוח לך.</p>
-                </div>
-            </div>
-
         </div>
-
-    </div>
-</section>
-
-<!-- ░░ PERSONAL MESSAGE ░░ -->
-<section class="section-pad" style="background:var(--brand-peach);">
-    <div style="max-width:680px; margin:0 auto; text-align:center;">
-        <div class="reveal" style="background:#fff; border-radius:16px; padding:36px 32px; box-shadow:0 4px 32px rgba(112,66,41,0.08);">
-            <img src="../../assets/logos/logo-peach.png" alt="ירדן שוהם" width="72" height="72" loading="lazy" decoding="async" style="width:72px; height:72px; border-radius:50%; object-fit:cover; margin:0 auto 16px; display:block; box-shadow:0 2px 12px rgba(112,66,41,0.14);">
-            <p style="font-size:1.05rem; line-height:1.9; color:var(--text-mid); margin:0 0 8px;">
-                "שמחה מאוד שהצטרפת! הקורס הזה בנוי עם כל הלב, ואני בטוחה שתרגישי את ההבדל מהר מאוד.
-                <br>כל שאלה שיש לך — אני כאן."
-            </p>
-            <div style="font-weight:800; font-size:0.95rem; color:var(--brand-brown); margin-top:16px;">♡ ירדן</div>
-        </div>
-    </div>
-</section>
-
-<!-- ░░ WHATSAPP SUPPORT CTA ░░ -->
-<section class="section-pad" style="background:#fff;">
-    <div style="max-width:700px; margin:0 auto; text-align:center;">
-
-        <div class="reveal">
-            <p style="font-size:1rem; line-height:1.8; color:var(--text-mid); margin:0 0 24px;">
-                נתקלת בבעיה או שהמייל לא הגיע? אני כאן בשבילך.
-            </p>
-            <a href="https://wa.me/972542366243" target="_blank" rel="noopener" class="btn-whatsapp">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                יש בעיה? דברי איתי ישירות ←
-            </a>
-        </div>
-
-    </div>
-</section>
-
-<!-- ░░ FOOTER ░░ -->
-<footer class="footer-inner site-footer">
-    <div class="footer-body">
-        <img src="../../assets/logos/logo-peach.png" alt="מתחילים בקטן" class="footer-logo" width="80" height="80" loading="lazy" decoding="async">
-        <div class="footer-title">ירדן שוהם — מתחילים בקטן</div>
-        <p class="footer-tagline">מלווה התפתחותית · קורס דיגיטלי להתהפכות</p>
-
-        <div class="footer-links">
-            <a href="https://wa.me/972542366243"
-               target="_blank" rel="noopener"
-               class="footer-link">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                WhatsApp
-            </a>
-            <a href="https://www.instagram.com/yarden_shoham7/"
-               target="_blank" rel="noopener"
-               class="footer-link">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-                Instagram
-            </a>
-            <a href="https://linktr.ee/yarden_shoham"
-               target="_blank" rel="noopener"
-               class="footer-link">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m13.73635 5.85251 4.00467 -4.11665 2.3248 2.3808 -4.20064 4.00466h5.9085v3.30473h-5.9365l4.22865 4.10766 -2.3248 2.3338L12.0005 12.099l-5.74052 5.76852 -2.3248 -2.3248 4.22864 -4.10766h-5.9375V8.12132h5.9085L3.93417 4.11666l2.3248 -2.3808 4.00468 4.11665V0h3.4727zm-3.4727 10.30614h3.4727V24h-3.4727z"/></svg>
-                Linktree
-            </a>
-            <a href="/app/login"
-               class="footer-link">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-                כניסה לקורס
-            </a>
-        </div>
-
-        <div class="footer-meta">
-            © 2026 ירדן שוהם · כל הזכויות שמורות
-        </div>
+        <ul class="site-footer__links">
+            <li><a href="https://wa.me/972542366243" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-whatsapp"/></svg><bdi>WhatsApp</bdi></a></li>
+            <li><a href="https://www.instagram.com/yarden_shoham7/" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-instagram"/></svg><bdi>Instagram</bdi></a></li>
+            <li><a href="/app/login"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-lock"/></svg>כניסה לקורס</a></li>
+        </ul>
+        <p class="site-footer__meta">© 2026 ירדן שוהם. כל הזכויות שמורות.</p>
     </div>
 </footer>
 
 <script src="/site.js" defer></script>
-<script>
-    /* ── Confetti burst (skipped under reduced motion) ───────────── */
-    (function spawnConfetti() {
-        const container = document.getElementById('confettiContainer');
-        if (!container) return;
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        const colors = ['#704229','#FCE7D6','#f5a623','#E8F3EF','#c8e3da','#f5c9a7','#fff'];
-        for (let i = 0; i < 40; i++) {
-            const piece = document.createElement('div');
-            piece.className = 'confetti-piece';
-            piece.style.cssText = [
-                'left:' + (Math.random() * 100) + '%',
-                'top:' + (Math.random() * -60) + 'px',
-                'background:' + colors[Math.floor(Math.random() * colors.length)],
-                'animation-delay:' + (Math.random() * 1.2) + 's',
-                'animation-duration:' + (1.4 + Math.random() * 0.8) + 's',
-                'transform:rotate(' + (Math.random() * 360) + 'deg)'
-            ].join(';');
-            container.appendChild(piece);
-        }
-    })();
-</script>
 
 </body>
 </html>
