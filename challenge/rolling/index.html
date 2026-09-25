@@ -344,12 +344,31 @@
             border-radius: var(--r-md);
             background: var(--c-cream);
         }
-        .pay__number span:last-child {
+        .pay__number .t-num {
             font-size: 22px;
             font-weight: 700;
             color: var(--c-ink);
-            align-self: flex-start;
         }
+        .pay__number-row { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); }
+        .pay__copy {
+            min-block-size: 44px;
+            padding-inline: var(--s-4);
+            border: 1px solid var(--c-brown);
+            border-radius: var(--r-sm);
+            background: transparent;
+            color: var(--c-brown);
+            font: inherit;
+            font-size: var(--fs-small);
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color var(--dur-state) var(--ease-out);
+        }
+        .pay__copy:hover { background: var(--c-paper); }
+        .pay__copied { color: var(--c-ink-soft); min-block-size: 1.4em; }
+        .hero__facts { display: flex; flex-wrap: wrap; column-gap: var(--s-2); row-gap: 2px; font-size: var(--fs-small); color: var(--c-ink-soft); margin-block-start: var(--s-2); }
+        .hero__facts span { white-space: nowrap; }
+        .hero__facts span + span::before { content: "·"; margin-inline-end: var(--s-2); color: var(--c-ink-muted); }
+        .faq__note { max-inline-size: 760px; margin-block-start: var(--s-5); font-size: var(--fs-small); color: var(--c-ink-muted); }
         .pay .btn { inline-size: 100%; margin-block-start: auto; }
         .offer__after {
             display: grid;
@@ -485,7 +504,8 @@
             <div class="hero__text stack">
                 <h1 class="t-display hero__title enter">לעזור לבייבי שלך להתהפך, בצורה רגועה ומקצועית</h1>
                 <p class="t-lead enter" style="--i:1">היי אהובה, כאן ירדן. בניתי את קורס מתהפכים כדי לתת לך את כל הכלים לעזור לתינוק שלך לעבור את שלב ההתהפכות בביטחון.</p>
-                <div class="hero__actions enter" style="--i:2">
+                <p class="hero__facts enter" style="--i:2"><span>לגיל 3 עד 7 חודשים</span><span>12 סרטונים</span><span>6 טיפי זהב</span></p>
+                <div class="hero__actions enter" style="--i:3">
                     <a class="btn btn--primary" href="#register">לרכישת הקורס</a>
                     <a class="text-link" href="#syllabus">מה יש בקורס</a>
                 </div>
@@ -657,7 +677,7 @@
                     </p>
                     <div class="pay__text stack stack--sm">
                         <p class="t-body">העברה ידנית. שולחות לי הודעה בווטסאפ, מעבירות את הסכום בביט או בפייבוקס, וכותבות לי לאיזה מייל לשלוח את הגישה.</p>
-                        <p class="pay__number"><span class="t-small">מספר להעברה</span><span class="t-num" dir="ltr">054-236-6243</span></p>
+                        <p class="pay__number"><span class="t-small">מספר להעברה</span><span class="pay__number-row"><span class="t-num" dir="ltr">054-236-6243</span><button type="button" class="pay__copy" data-copy="0542366243" hidden>העתקה</button></span><span class="pay__copied t-small" role="status" aria-live="polite"></span></p>
                     </div>
                     <a class="btn btn--quiet" href="https://wa.me/972542366243?text=%D7%94%D7%99%D7%99%20%D7%99%D7%A8%D7%93%D7%9F%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9C%D7%9D%20%D7%91%D7%91%D7%99%D7%98%20%2F%20%D7%A4%D7%99%D7%99%D7%91%D7%95%D7%A7%D7%A1%20%D7%A2%D7%9C%20%D7%A7%D7%95%D7%A8%D7%A1%20%D7%9E%D7%AA%D7%94%D7%A4%D7%9B%D7%99%D7%9D" target="_blank" rel="noopener">
                         <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-whatsapp"/></svg>
@@ -707,6 +727,7 @@
                     <p>כן. אפשר לשלם בכרטיס אשראי, גם בלי חשבון <bdi>PayPal</bdi>. ואפשר גם לשלם בביט או בפייבוקס.</p>
                 </details>
             </div>
+            <p class="faq__note">התכנים אינם תחליף לייעוץ רפואי או לפיזיותרפיה. בכל חשש, התייעצי עם רופא/ת הילדים.</p>
         </div>
     </section>
 
@@ -828,6 +849,27 @@
                     anim.onfinish = () => { anim = null; };
                 }
             });
+        });
+    })();
+
+    /* ── Copy the Bit/Paybox number ────────────────────────────────
+       The button shows only when the clipboard API exists. */
+    (function () {
+        const btn = document.querySelector('.pay__copy');
+        const msg = document.querySelector('.pay__copied');
+        if (!btn || !navigator.clipboard) return;
+        btn.hidden = false;
+        let t;
+        btn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(btn.dataset.copy);
+                btn.textContent = 'הועתק';
+                msg.textContent = 'המספר הועתק';
+            } catch (e) {
+                msg.textContent = 'לא הצלחתי להעתיק. אפשר לסמן את המספר ולהעתיק.';
+            }
+            clearTimeout(t);
+            t = setTimeout(() => { btn.textContent = 'העתקה'; msg.textContent = ''; }, 2000);
         });
     })();
 </script>
