@@ -3,10 +3,9 @@
    Direction: "On the mat", docs/design/2026-09-26-art-direction.md
    Tokens live in assets/css/tokens.css (imported below).
 
-   Order: tokens, legacy aliases, reset, base, type, layout, buttons,
-   cards, icons, nav, footer, motion, reduced motion, deprecated rules.
-   Rules marked "deprecated, WP8 removes" keep today's pages working
-   until their page package moves to the new classes.
+   Order: tokens, legacy aliases, fallback font, reset, base, type,
+   layout, buttons, cards, icons, nav, footer, motion, reduced motion,
+   the FAQ tap target.
    ═══════════════════════════════════════════ */
 
 @import url("assets/css/tokens.css");
@@ -18,12 +17,36 @@
     --brand-peach: var(--c-peach);
     --text-dark: var(--c-ink);
     --text-mid: var(--c-ink-soft);
-    /* deprecated, WP8 removes: colors that leave the palette */
-    --brand-peach-dark: #f5c9a7;
-    --brand-mint: #E8F3EF;
-    --brand-mint-dark: #c8e3da;
-    --brand-pink: #FDF2F8;
-    --brand-blue: #E3F2FD;
+}
+
+/* Fallback font while Rubik loads. Arial, sized so each Rubik weight
+   takes about the same width, so lines do not re-wrap when Rubik
+   arrives (no layout shift). One face per weight: Rubik is wider than
+   Arial by a different amount at each weight, and a fake bold Arial is
+   narrower than real Arial Bold. */
+@font-face {
+    font-family: "Rubik Fallback";
+    src: local("Arial"), local("ArialMT");
+    font-weight: 100 349;
+    size-adjust: 100.9%;
+}
+@font-face {
+    font-family: "Rubik Fallback";
+    src: local("Arial"), local("ArialMT");
+    font-weight: 350 449;
+    size-adjust: 103.1%;
+}
+@font-face {
+    font-family: "Rubik Fallback";
+    src: local("Arial"), local("ArialMT");
+    font-weight: 450 599;
+    size-adjust: 105.7%;
+}
+@font-face {
+    font-family: "Rubik Fallback";
+    src: local("Arial Bold"), local("Arial-BoldMT");
+    font-weight: 600 900;
+    size-adjust: 103.1%;
 }
 
 /* Reset. These pages used to load the Tailwind CDN only for its reset
@@ -46,18 +69,15 @@ input::placeholder, textarea::placeholder { opacity: 1; color: #8a7060; }
 
 /* ─── Base ────────────────────────────── */
 html { color-scheme: light; }
-/* Smooth scrolling only when the person has not asked for less motion.
-   The :not(:has(#navProgress)) part skips the rolling page for now: its own
-   JS smooth scroll calls scrollTo() every frame, and CSS smooth scroll on top
-   makes that slow. WP3 removes that JS; then drop this condition (WP8). */
+/* Smooth scrolling only when the person has not asked for less motion. */
 @media (prefers-reduced-motion: no-preference) {
-    html:not(:has(#navProgress)) { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; }
 }
 /* In-page anchors land under the sticky nav, not behind it. */
 [id] { scroll-margin-top: calc(var(--nav-h) + var(--s-3)); }
 
 body {
-    font-family: var(--font-sans);
+    font-family: 'Rubik', 'Rubik Fallback', system-ui, sans-serif;
     color: var(--c-ink);
     background: var(--c-cream);
     -webkit-font-smoothing: antialiased;
@@ -79,10 +99,7 @@ video:focus-visible,
 }
 /* Light ring on dark (brown) areas: white on #704229 is about 9:1. */
 .site-footer a:focus-visible,
-.site-footer button:focus-visible,
-.sticky-cta a:focus-visible,
-.sticky-cta button:focus-visible,
-.proof-bar a:focus-visible {
+.site-footer button:focus-visible {
     outline-color: #fff;
 }
 
@@ -115,14 +132,14 @@ video:focus-visible,
     font-weight: 700;
     line-height: 1.15;
     color: var(--c-ink);
-    max-inline-size: 20ch;
+    max-inline-size: 10em; /* was 20ch; em does not change when Rubik swaps in */
 }
 .t-h2 {
     font-size: var(--fs-h2);
     font-weight: 700;
     line-height: 1.2;
     color: var(--c-ink);
-    max-inline-size: 20ch;
+    max-inline-size: 10em; /* was 20ch; em does not change when Rubik swaps in */
 }
 .t-h3 {
     font-size: var(--fs-h3);
@@ -318,13 +335,6 @@ a.card:hover { box-shadow: var(--shadow-2); }
     min-height: 44px;
 }
 .nav-login:hover { text-decoration: underline; text-underline-offset: 3px; }
-/* Small buttons in the nav (tummy-time "back home", rolling "buy") */
-.site-nav .btn-primary,
-.site-nav .btn-outline {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-}
 
 /* Brand block (logo + name) at the start of the nav */
 .site-brand {
@@ -358,25 +368,6 @@ a.card:hover { box-shadow: var(--shadow-2); }
     align-items: center;
     gap: var(--s-3);
 }
-/* Outlined WhatsApp "contact" link in the home page nav. deprecated, WP8 removes */
-.nav-contact {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    color: var(--c-brown);
-    font-size: 14px;
-    font-weight: 500;
-    text-decoration: none;
-    padding: var(--s-2) 14px;
-    min-height: 44px;
-    border-radius: var(--r-md);
-    border: 1.5px solid rgba(112, 66, 41, 0.4);
-    background: transparent;
-    transition: background var(--dur-state) var(--ease-out);
-}
-.nav-contact:hover,
-.nav-contact:focus-visible { background: var(--c-peach); }
-
 /* ─── Footer ──────────────────────────── */
 /* Compact, start aligned, brown. Every text color here is at least 4.5:1
    on brown (U18). No Linktree (it only links back to her).
@@ -397,6 +388,11 @@ a.card:hover { box-shadow: var(--shadow-2); }
          <li><a href="/app/login"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-lock"/></svg>כניסה לקורס</a></li>
        </ul>
        <p class="site-footer__meta">© 2026 ירדן שוהם. כל הזכויות שמורות.</p>
+       <ul class="site-footer__legal">
+         <li><a href="/terms">תנאי שימוש</a></li>
+         <li><a href="/privacy">מדיניות פרטיות</a></li>
+         <li><a href="/accessibility">הצהרת נגישות</a></li>
+       </ul>
      </div>
    </footer>
 */
@@ -461,6 +457,31 @@ a.card:hover { box-shadow: var(--shadow-2); }
     .site-footer__meta { grid-column: 1 / -1; }
 }
 
+/* Legal links (terms, privacy, accessibility), a small row under the
+   copyright line. #f3dfd0 on brown is about 6.5:1. */
+.site-footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--s-5);
+    margin-block-start: calc(-1 * var(--s-4));
+}
+.site-footer__legal a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: var(--fs-small);
+    color: #f3dfd0;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+}
+.site-footer__legal a:hover,
+.site-footer__legal a[aria-current="page"] { color: #fff; }
+.site-footer__legal a:focus-visible { outline-color: #fff; }
+@media (min-width: 768px) {
+    .site-footer__legal { grid-column: 1 / -1; }
+}
+
 /* ─── Motion ──────────────────────────── */
 /* Only transform and opacity move. No scroll listeners: site.js uses an
    IntersectionObserver. Reveal the first element of a section only. */
@@ -501,14 +522,6 @@ a.card:hover { box-shadow: var(--shadow-2); }
         transform: none;
         transition: none;
     }
-    .btn-pulse,
-    html .check-icon, /* beats the thank-you page's own <style> */
-    .confetti-piece,
-    .ripple-circle {
-        animation: none;
-    }
-    .confetti-piece,
-    .ripple-circle { display: none; }
     .btn:active { transform: none; }
     *, *::before, *::after {
         animation-duration: 1ms !important;
@@ -520,315 +533,9 @@ a.card:hover { box-shadow: var(--shadow-2); }
     }
 }
 
-/* ═══════════════════════════════════════════
-   Legacy rules. Pages still use these until their package (WP2 to WP4)
-   moves to the classes above. Restyled to the tokens so today's pages
-   already look closer to the direction.
-   ═══════════════════════════════════════════ */
-
-/* ─── Utility classes ─────────────────── */
-.text-brown   { color: var(--c-brown); }
-.bg-peach     { background-color: var(--c-peach); }
-.bg-mint      { background-color: var(--brand-mint); }  /* deprecated, WP8 removes */
-.bg-pink      { background-color: var(--brand-pink); }  /* deprecated, WP8 removes */
-.bg-blue-soft { background-color: var(--brand-blue); }  /* deprecated, WP8 removes */
-
-/* ─── Old footer (centered). deprecated, WP8 removes ─── */
-.footer-body { max-width: 600px; margin: 0 auto; text-align: center; }
-.footer-logo {
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin: 0 auto 16px;
-    display: block;
-}
-.footer-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 6px;
-}
-.footer-tagline { font-size: 0.875rem; color: #f3dfd0; margin-bottom: 28px; }
-.footer-links {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 32px;
-    flex-wrap: wrap;
-}
-.footer-link {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    color: #fff;
-    padding: 10px 20px;
-    min-height: 44px;
-    border-radius: var(--r-md);
-    font-size: 14px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: background var(--dur-state) var(--ease-out);
-}
-.footer-link:hover,
-.footer-link:focus-visible { background: rgba(255,255,255,0.2); }
-.footer-meta {
-    border-top: 1px solid rgba(255,255,255,0.18);
-    padding-top: 24px;
-    font-size: 13px;
-    color: #f3dfd0;
-}
-
-/* ─── Old buttons. deprecated, WP8 removes ─── */
-/* .btn-primary = .btn.btn--primary, .btn-outline = .btn.btn--quiet */
-.btn-primary {
-    display: inline-block;
-    background-color: var(--c-brown);
-    color: #fff;
-    font-weight: 500;
-    padding: 14px 28px;
-    border-radius: var(--r-md);
-    border: 2px solid var(--c-brown);
-    cursor: pointer;
-    text-decoration: none;
-    transition: background-color var(--dur-state) var(--ease-out),
-                border-color var(--dur-state) var(--ease-out),
-                transform var(--dur-press) var(--ease-out);
-}
-.btn-primary:hover {
-    background-color: var(--c-brown-hover);
-    border-color: var(--c-brown-hover);
-}
-.btn-outline {
-    display: inline-block;
-    background: transparent;
-    color: var(--c-brown);
-    font-weight: 500;
-    padding: 12px 24px;
-    border-radius: var(--r-md);
-    border: 2px solid var(--c-brown);
-    cursor: pointer;
-    text-decoration: none;
-    transition: background var(--dur-state) var(--ease-out),
-                transform var(--dur-press) var(--ease-out);
-}
-.btn-outline:hover { background: var(--c-peach); }
-.btn-primary:active,
-.btn-outline:active,
-.btn-whatsapp:active { transform: scale(0.98); }
-
-/* WhatsApp button: now a brand button with the glyph inside (no second
-   accent green). deprecated, WP8 removes: use .btn.btn--primary + i-brand-whatsapp */
-.btn-whatsapp {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--c-brown);
-    color: #fff;
-    font-weight: 500;
-    padding: 14px 32px;
-    border-radius: var(--r-md);
-    border: 2px solid var(--c-brown);
-    cursor: pointer;
-    text-decoration: none;
-    font-family: var(--font-sans);
-    font-size: 1rem;
-    transition: background-color var(--dur-state) var(--ease-out),
-                border-color var(--dur-state) var(--ease-out),
-                transform var(--dur-press) var(--ease-out);
-}
-.btn-whatsapp:hover {
-    background: var(--c-brown-hover);
-    border-color: var(--c-brown-hover);
-}
-
-/* Pulsing CTA and click ripple are gone. deprecated, WP8 removes */
-.btn-pulse { animation: none; }
-.ripple-circle { display: none; }
-
-/* ─── Tap targets (44px, WCAG 2.5.5) ──── */
-/* Button in the rolling page's sticky bar (its padding is inline) */
-.sticky-cta a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-}
-/* FAQ questions: the whole row is the target */
+/* ─── FAQ tap target (44px, WCAG 2.5.5) ──── */
+/* The whole question row is the target. */
 summary {
     min-height: 44px;
     cursor: pointer;
 }
-
-/* ─── Divider under headings: hidden. deprecated, WP8 removes ─── */
-.section-divider { display: none; }
-
-/* ─── Feature list. deprecated, WP8 removes (WP3 moves to the syllabus) ─── */
-.feature-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 18px;
-    padding: 24px 0;
-    border-bottom: 1px solid var(--c-line);
-}
-.feature-row:last-child { border-bottom: none; }
-.feature-num {
-    flex-shrink: 0;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--c-peach);
-    color: var(--c-brown);
-    font-weight: 700;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 2px;
-}
-
-/* ─── Old layout helpers, mobile first. deprecated, WP8 removes ─── */
-/* New pages use .section, .container and the .t-* classes. */
-.hero-title { font-size: 1.75rem; line-height: 1.25; }
-.section-heading { font-size: 1.5rem; }
-.section-wrap { max-width: 900px; margin: 0 auto; padding: 0 16px; }
-.section-pad { padding: 48px 16px; }
-.hero-pad { padding: 48px 16px 56px; }
-.content-box { padding: 24px 20px; }
-.nav-inner { padding: 0 16px; height: 56px; }
-.hero-subtitle { font-size: 1rem; }
-.footer-inner { padding: 40px 16px 32px; }
-.highlight-box { padding: 20px 24px; }
-
-@media (min-width: 768px) {
-    .hero-title { font-size: 2.5rem; line-height: 1.2; }
-    .section-heading { font-size: 1.85rem; }
-    .section-wrap { padding: 0 24px; }
-    .section-pad { padding: 80px 24px; }
-    .hero-pad { padding: 64px 24px 72px; }
-    .content-box { padding: 36px 40px; }
-    .nav-inner { padding: 0 24px; height: 64px; }
-    .hero-subtitle { font-size: 1.1rem; }
-    .footer-inner { padding: 56px 24px 40px; }
-    .highlight-box { padding: 28px 32px; }
-    .btn-primary { padding: 16px 36px; }
-    .btn-outline { padding: 14px 34px; }
-    .btn-whatsapp { padding: 16px 40px; }
-}
-
-@media (min-width: 1024px) {
-    .hero-title { font-size: 3rem; }
-    .section-heading { font-size: 2rem; }
-    .content-box { padding: 40px 44px; }
-    .hero-pad { padding: 72px 24px 80px; }
-}
-
-/* Reveal stagger: now 60ms steps. deprecated, WP8 removes (reveal the first
-   element of a section only). */
-.reveal-delay-1 { transition-delay: 60ms; }
-.reveal-delay-2 { transition-delay: 120ms; }
-.reveal-delay-3 { transition-delay: 180ms; }
-.reveal-delay-4 { transition-delay: 240ms; }
-
-/* ─── Video play overlay (rolling teaser). WP3 replaces with the teaser frame ─── */
-.video-wrap { position: relative; cursor: pointer; }
-.video-play-btn {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 72px;
-    height: 72px;
-    background: rgba(255,255,255,0.94);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-    box-shadow: var(--shadow-2);
-    transition: transform var(--dur-state) var(--ease-out),
-                opacity var(--dur-state) var(--ease-out);
-}
-.video-wrap:hover .video-play-btn { transform: translate(-50%, -50%) scale(1.04); }
-.video-play-btn.hidden { opacity: 0; }
-
-/* ─── Testimonial cards. deprecated, WP8 removes (WP3 moves to messages) ─── */
-.testimonial-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-}
-@media (min-width: 768px) {
-    .testimonial-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
-}
-.testimonial-card {
-    background: var(--c-paper);
-    border-radius: var(--r-lg);
-    padding: 24px 28px;
-    border: 1px solid var(--c-line);
-}
-/* Gold star rows. deprecated, WP8 removes */
-.star-row {
-    color: #f5a623;
-    font-size: 17px;
-    letter-spacing: 2px; /* stars, not Hebrew text */
-    margin-bottom: 12px;
-}
-
-/* ─── Larger step numbers (thank-you): real steps, so they stay ─── */
-.step-num-large {
-    flex-shrink: 0;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: var(--c-brown);
-    color: #fff;
-    font-weight: 700;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 2px;
-}
-
-/* ─── CSS confetti. deprecated, WP8 removes (WP4 replaces it with the check draw) ─── */
-@keyframes confettiFall {
-    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(180px) rotate(540deg); opacity: 0; }
-}
-.confetti-piece {
-    position: absolute;
-    width: 9px;
-    height: 9px;
-    border-radius: 2px;
-    animation: confettiFall 1.8s ease-in forwards;
-    pointer-events: none;
-}
-
-/* ─── Footer legal links (U20) ────────── */
-/* Added by the legal pages PR. Small row under the copyright line:
-   <ul class="site-footer__legal"><li><a href="/terms">…</a></li>…</ul>
-   #f3dfd0 on brown is about 6.5:1. WP8 may move this next to the footer rules. */
-.site-footer__legal {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 var(--s-5);
-    margin-block-start: calc(-1 * var(--s-4));
-}
-.site-footer__legal a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    font-size: var(--fs-small);
-    color: #f3dfd0;
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 3px;
-}
-.site-footer__legal a:hover,
-.site-footer__legal a[aria-current="page"] { color: #fff; }
-.site-footer__legal a:focus-visible { outline-color: #fff; }
-@media (min-width: 768px) {
-    .site-footer__legal { grid-column: 1 / -1; }
-}
-/* ─── end footer legal links ─── */

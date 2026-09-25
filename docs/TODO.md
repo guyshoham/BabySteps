@@ -30,53 +30,43 @@ what is still open.
 
 ## Conversion
 
-- [ ] **[C2] P1 — Remove claims and discounts that are not true.** `challenge/rolling/index.html:192`.
-  The top bar says "כבר למעלה מ-200 אמהות עזרו לתינוק שלהן להתהפך עם הקורס הזה", and five stars
-  with "200+ אמהות מרוצות" repeat at `:240-241`, `index.html:198` and `index.html:229-230`. The
-  course has no buyers yet. The ₪205 crossed-out price (`:470`, `:496`) was never a real price.
-  Both are misleading under Israeli consumer law and hurt trust if a follower asks. **Fix:** ask
-  Yarden what is true and say only that, for example "מעל 200 משפחות כבר ליוויתי בסדנאות ובמפגשים".
-  Remove the star ratings until real course reviews exist (B1). Remove the strikethrough, or run a
-  real launch price with an end date ("מחיר השקה עד 31.10") and raise the price on that date.
-- [ ] **[C3] P2 — Add a FAQ before the price.** `challenge/rolling/index.html:450`. The page has no
-  FAQ, so the main doubts stay open: which age, premature babies, how long access lasts, can I watch
-  on the phone, what if it does not help, how the WhatsApp feedback works, which email gets the
-  login. **Fix:** add 6 to 8 questions right above `#register`, written with Yarden (for example
-  "מאיזה גיל מתאים הקורס?", "לכמה זמן יש לי גישה?", "מה אם זה לא עוזר?"). Use a plain `<details>`
-  list now and the `Faq` component in the React rebuild.
-- [ ] **[C4] P2 — Say who it is for in the hero.** `challenge/rolling/index.html:223-229`. The hero
+- [ ] **[C2] P1 — Remove the crossed-out price.** The fake "200+" numbers and the star ratings are
+  gone (2026-09-26). What is left: both offer cards on `challenge/rolling/index.html` still show
+  ₪205 crossed out, and ₪205 was never a real price. That is misleading under Israeli consumer law.
+  **Fix:** remove the strikethrough, or run a real launch price with an end date ("מחיר השקה עד
+  31.10") and raise the price on that date.
+- [ ] **[C3] P3 — One more FAQ question.** The FAQ on the rolling page (#73) answers age, access,
+  phone, refund, WhatsApp, the login email and paying without PayPal. **Fix:** ask Yarden about
+  premature babies ("מתאים גם לפגים?") and add the answer.
+- [ ] **[C4] P2 — Say who it is for in the hero.** `challenge/rolling/index.html:487`. The hero
   talks about calm and confidence but never says the baby's age, the length of the course, or that
   it works on a phone. Mothers from Instagram decide in seconds. **Fix:** add one line under the
   title, for example "לתינוקות בגילאי 3 עד 7 חודשים · 10 סרטונים קצרים · צופים מהנייד" (confirm the
   age range and lengths with Yarden).
-- [ ] **[C5] P2 — Put limits on the WhatsApp feedback promise.** `challenge/rolling/index.html:403-406`,
-  `:484`. "ליווי אישי בווטסאפ" is sold as the best part, with no time limit, no number of videos
-  and no response time. An open promise can bury a solo owner once sales grow, and vague terms cause
-  disputes. **Fix:** decide the terms with Yarden and show them on the page, the FAQ and the terms
-  page (T1), for example "ליווי בווטסאפ 30 יום מהרכישה, מענה תוך 48 שעות בימי חול".
-- [ ] **[C6] P2 — One clear way to pay.** `challenge/rolling/index.html:456-514`. Two equal cards
-  ("בחרי את הדרך הנוחה לך") split the choice, and the Bit/Paybox path needs Yarden to enroll the
+- [ ] **[C5] P3 — A response time for the WhatsApp feedback.** The page and the FAQ now say the
+  feedback has no time limit, but they give no response time. An open promise can bury a solo owner
+  once sales grow. **Fix:** if the load grows, agree a response time with Yarden (for example
+  "מענה תוך 48 שעות בימי חול") and show it in the FAQ and on `/terms`.
+- [ ] **[C6] P2 — One clear way to pay.** `challenge/rolling/index.html:635-668` (`.pay__grid`). Two equal cards
+  (PayPal and Bit/Paybox) split the choice, and the Bit/Paybox path needs Yarden to enroll the
   buyer by hand (`docs/go-live-checklist.md:160`). Many Israeli mothers do not have PayPal and may
   not know they can pay by card. **Fix:** show one price card with the PayPal button and the line
   "אפשר לשלם בכרטיס אשראי, גם בלי חשבון PayPal" (check that guest checkout is on for the payment
   link). Move Bit/Paybox to a small text link under it. Use one `PriceCard` in the rebuild, and have it read the price from
   `lib/prices.js`.
-- [ ] **[C7] P2 — Testimonials that show results.** `challenge/rolling/index.html:427-443`. The three
-  quotes praise Yarden in general ("את מדהימה", "חברה"), not the rolling course, and give no baby
-  age or outcome. **Fix:** replace them with 3 short quotes from beta buyers (B1) that name the
-  problem and the result, with the baby's age and, with consent, a WhatsApp screenshot or photo.
-  Use `TestimonialCard` with the `detail` prop in the rebuild. While rebuilding, also move the
-  problem block (`:322-361`) above the bio (`:284-320`), so the reader feels understood first.
-- [ ] **[C8] P2 — Give the home page a first action.** `index.html:190-219`. The home hero has a
-  photo, a bio and three chips, but no button. On a 390px phone the first link to the course (the
-  "לקורס ולרכישה" button) is about 1,100px down. Visitors from the Instagram bio often land here
-  first. **Fix:** add one primary button under the subtitle, "לקורס ההתהפכות ←", linking to
-  `challenge/rolling/`. Keep the chips below it. Screenshot:
-  `docs/ux-audit/2026-09-25/home-hero-no-cta-390.jpg`.
-- [ ] **[C9] P3 — Let buyers copy the Bit/Paybox number.** `challenge/rolling/index.html:511`. The
+- [ ] **[C7] P2 — Testimonials that show results.** The section "מה אמהות כתבו לי" on
+  `challenge/rolling/index.html` now shows the three quotes as message bubbles (#73). They still
+  praise Yarden in general ("את מדהימה", "חברה"), not the rolling course, and give no baby age or
+  outcome. **Fix:** replace them with 3 short quotes from beta buyers (B1) that name the problem and
+  the result, with the baby's age and, with consent, a WhatsApp screenshot or photo.
+- [ ] **[C9] P3 — Let buyers copy the Bit/Paybox number.** `challenge/rolling/index.html:660`. The
   number is plain text. On a phone the buyer must remember it, switch to Bit, pay, and come back to
   send the WhatsApp. **Fix:** make the number a button that copies it (`navigator.clipboard.writeText`)
   and shows "הועתק ✓" for 2 seconds. Keep this even if C6 moves Bit/Paybox to a small link.
+- [ ] **[C10] P2 — Better marketing copy.** The owner asked to improve the marketing texts later.
+  The fake numbers were removed on 2026-09-26, and the redesign kept Yarden's sentences as they
+  were. **Fix:** rework the copy on the home page and the rolling sales page with Yarden: the hero
+  line, the "is this you" list and the offer. Keep every `data-price` tag.
 
 ## Buy and onboarding flow
 
@@ -87,8 +77,7 @@ what is still open.
 - [ ] **[F3] P2 — Get told when an enrollment fails.** When the welcome email fails,
   `/api/enroll` returns 502 and Make marks the run failed, but nobody is told. **Fix:** turn on
   Make's error email for the scenario (Scenario settings, "Notify on error") to Guy and Yarden.
-  Add the FAQ line "הגישה נשלחת למייל של חשבון ה-PayPal ששילם" when C3 lands. The manual enroll
-  script and the playbook ("Paid but no access" in `docs/go-live-checklist.md`) are done.
+  The FAQ line about the login email, the manual enroll script and the playbook ("Paid but no access" in `docs/go-live-checklist.md`) are done.
 - [ ] **[F4] P2 — Tell existing students about a new course.** The welcome email goes only to users
   who never signed in, so a returning student who buys tummy time gets no email. **Fix:** build it on
   the G4 sender (see the research doc); send once when `ensureEnrollment` creates a new enrollment for
@@ -96,40 +85,15 @@ what is still open.
 
 ## Learning experience
 
-- [ ] **[L2] P2 — Take the student straight to her next lesson.** `app/course.html:49-64`,
-  `app/login.html:33`. Every buyer first lands on "הקורסים שלי" with a single card. The course page
-  shows done checks but no current lesson and no overall progress. **Fix:** if the user has exactly
-  one enrollment, skip the list and open the course. On the course page add a "המשיכי מאיפה שעצרת"
-  button that opens the first lesson not done, a progress line ("6 מתוך 18"), and highlight the
-  current lesson. Use `ProgressBar` and `LessonListItem` with `state="current"` in the rebuild.
-- [ ] **[L3] P2 — WhatsApp feedback on the course page.** The lesson page has the card (#40).
-  **Fix:** add the same card to `app/course.html`, and show the WhatsApp terms once C5 is decided.
 - [ ] **[L4] P2 — Real titles, descriptions and lengths.** `scripts/course-data.js:52-57`. The tips
   are named "טיפ זהב 1" to "טיפ זהב 6", the appendix is just "נספח" (`:68`), every `description` is
   empty and `durationSec` is 0 (`:12` says no page reads it). A parent cannot find a tip again or
   plan a session. **Fix:** get real titles and one-line descriptions from Yarden, fill durations,
   reseed, and show the description and length on `app/lesson.html` and `app/course.html`.
-- [ ] **[L8] P2 — Group the lesson list.** `app/course.html:139-156`. Under the new progress box,
-  the course page is still one flat list of 18 equal rows, two full screens on a phone. Videos,
-  image tips and bonuses look the same, so a mother cannot see the shape of the course or find the
-  tips again. **Fix:** add a `section`
-  field per lesson in `scripts/course-data.js` ("סרטוני הדרכה", "טיפי זהב", "בונוסים"), reseed, and
-  render a small heading per group with an icon per row (▶ for a video, a picture icon for a tip).
-  Use `LessonListItem` in the rebuild. Screenshot: `docs/ux-audit/2026-09-25/course-flat-list-390.jpg`.
-- [ ] **[L9] P2 — The next lesson is below the fold.** `app/lesson.html:44-47`, `:18-21`. The
-  videos are portrait (1080x1920), so the player fills the screen. Under it come the done button and
-  the WhatsApp card, and the prev/next buttons started at about 995px on a 390x844 phone (older
-  deploy). The new app header (#61) pushes them lower still. The page also
-  never says where she is in the course. **Fix:** move `#nav` right under the done button, above
-  `#feedback`, and add a line under the title such as "שיעור 3 מתוך 18" (the index is already known
-  from `findNeighbors`). Screenshot: `docs/ux-audit/2026-09-25/lesson-video-first-screen-390.jpg`.
-- [ ] **[L10] P2 — The last lesson is a dead end.** `app/lesson.html:108-112`. On "נספח" the next
-  slot says "→ חזרה לקורס" with the same arrow as "→ הקודם", so both buttons seem to go back. If
-  lessons are still open, nothing on the lesson page says what is left; the finish card shows only
-  at 100%. The course page has a continue button now (#54), but the lesson page does not use it.
-  **Fix:** when lessons are still open, show "נשארו לך עוד X שיעורים" with a button to the first
-  lesson not done (reuse `courseProgress` and `continueLabel` from `app/course-progress.js`). Label
-  the slot "לכל השיעורים" with no arrow. Screenshot: `docs/ux-audit/2026-09-25/lesson-last-bottom-390.jpg`.
+- [ ] **[L11] P3 — Dashes in lesson titles.** `scripts/course-data.js:41-45`. Four titles use an em
+  dash ("חימום — חלק א"), and the course and lesson pages show them as is. The site style has no em
+  dashes, and the sales page already writes "חימום, חלק א". **Fix:** change them to a comma, check
+  `tests/sales-syllabus.test.js`, and reseed.
 
 ## Trust and legal
 
@@ -154,69 +118,21 @@ what is still open.
 
 ## UI/UX
 
-- [ ] **[U6] P2 — Brand the course app.** `app/course.html:54-58`, `app/my-courses.html:13-16`. The
-  app uses default Tailwind grays and a `bg-green-500` done badge, with no logo and no link to the
-  site. It feels like a different product from the warm sales page. **Fix:** design the four app
-  screens in Claude Design with `@babysteps/ui` (`AppHeader`, `CourseProgressCard`,
-  `LessonListItem`, `TextField`), get Yarden's feedback, then rebuild them in React. Fold L1 to L7
-  into those designs.
+- [ ] **[U6] P3 — App look in the React rebuild.** The app now has the brand look: the shared
+  header with the logo, tokens, no Tailwind grays, grouped lessons and progress (WP5 to WP7). What is
+  left: get Yarden's feedback on the four app screens, then rebuild them in React with
+  `@babysteps/ui` (`AppHeader`, `CourseProgressCard`, `LessonListItem`, `TextField`) as part of A10.
 - [ ] **[U7] P2 — Pick one set of colors.** Decision sheet: `docs/design/2026-09-25-color-decision.md`
   and `color-decision.html` (#41). **Fix:** Yarden answers the 5 questions there, then align
-  `styles.css` and `tokens.css`. Also fix now: the green "done" badge in `app/course.html` fails
-  contrast (2.28:1); use `#2f9e6b`.
-- [ ] **[U18] P2 — Contrast failures found by axe.** On the marketing pages: the footer tagline
-  (3.7:1) and the `opacity:0.4` copyright line (2.49:1) on every page, `.btn-whatsapp` on the
-  thank-you and tummy-time pages (1.98:1), and `.badge-coming-soon` on home (3.54:1). In
-  `@babysteps/ui`: `.bs-lesson__state`, the CourseCard "coming soon" badge and title, and the
-  TextField error text. **Fix:** darken to at least 4.5:1 (3:1 for large text) and rerun axe.
+  `styles.css` and `tokens.css`. The done color is already `#2f9e6b` (`--c-done`).
+- [ ] **[U18] P2 — Contrast failures in the design system.** The site and app pages pass axe
+  color-contrast (checked 2026-09-26, WP8). Left in `@babysteps/ui`: `.bs-lesson__state`, the
+  CourseCard "coming soon" badge and title, and the TextField error text. **Fix:** darken to at
+  least 4.5:1 (3:1 for large text) and rerun axe in Storybook.
 - [ ] **[U19] P3 — Invalid list and heading order in the design system.** axe flags
   `ol.bs-lesson-list` in the LessonListItem FullList story (children are not list items) and a
   heading-order warning in the AppScreens example. **Fix:** wrap items in `<li>` and fix heading
   levels. Then consider `@storybook/addon-vitest` so a11y violations fail CI.
-- [ ] **[U21] P2 — Nav text overlaps on the tummy time page.** `challenge/tummy-time/index.html:76-78`.
-  The nav holds the brand, "כניסה לקורס" and a bordered "→ חזרה לדף הבית" button. At 360px and 320px
-  "כניסה לקורס" is drawn on top of "ירדן שוהם / מתחילים בקטן", and at 390px the boxes touch. The
-  logo already links home. **Fix:** remove the "חזרה לדף הבית" button (or add `hide-mobile`), like
-  the other pages. Check again at 320px. Screenshot:
-  `docs/ux-audit/2026-09-25/tummy-nav-overlap-360.jpg`.
-- [ ] **[U22] P2 — Body text under 16px on phones.** Many body paragraphs are 14.4px (`0.9rem`): the
-  problem cards and course contents (`challenge/rolling/index.html:342-409`), the price cards
-  (`:480`, `:506`) and `.course-card-desc` (`index.html:103-104`). The trust lines are 13px
-  (`challenge/rolling/index.html:246-258`), "מספר להעברה" is 11px (`:510`) and "יש שאלה לפני
-  הרכישה?" is 13.6px (`:524`). In light brown `#7a5a48` this is hard to read for a tired mother with
-  a baby on one arm. **Fix:** set body copy to at least 1rem on mobile and labels to at least 13px.
-  Replace the inline font sizes with classes in `styles.css`.
-- [ ] **[U23] P2 — Login gives no feedback while it works.** `app/login.html:32-34`, `:61-72`,
-  `:29-30`. After a tap on "כניסה" the button does not change until Firebase answers, so on a slow
-  network she taps again or leaves. She also cannot see the password she typed, which matters on a
-  phone keyboard. **Fix:** disable the button and show "נכנסת..." while signing in, then restore it
-  on error. Add a show/hide eye button to the password field.
-- [ ] **[U24] P2 — The thank-you page sends the buyer to login too early.**
-  `challenge/rolling/thank-you.html:103`, `:90`, `:126`, `:31`. The first big button is "כניסה
-  לקורס", but at that moment she has no password yet, so the login fails. The spam tip appears twice
-  (the box and step 1), and the page is 3.5 screens long. The logo links to `/app/login`, not home.
-  **Fix:** make "פתחי את המייל ובחרי סיסמה" the main message, move the login button after the steps
-  with the label "בחרתי סיסמה, לכניסה ←", keep the spam tip once, and link the logo to `/`. Screenshot:
-  `docs/ux-audit/2026-09-25/thank-you-top-390.jpg`.
-- [ ] **[U25] P3 — The hero title breaks badly on small phones.** `challenge/rolling/index.html:228-231`.
-  At 360px the dash after "להתהפך" wraps onto its own line and the title takes 5 lines. This pushes
-  the stars and trust lines below the fold. **Fix:** remove the `—` (the `<br>` already splits the
-  two parts), then test at 320, 360 and 390px. Screenshot:
-  `docs/ux-audit/2026-09-25/rolling-hero-360.jpg`.
-- [ ] **[U26] P3 — Info chips look like buttons.** `index.html:149-165`, `:214-216`,
-  `challenge/rolling/index.html:317-319`. The credential chips have a border, round corners and bold
-  brown text, close to `.btn-outline`. On a phone they look tappable, but nothing happens. **Fix:**
-  show them as plain text with a small ✓, or a soft fill with no border, so only real buttons have
-  outlines.
-- [ ] **[U27] P3 — The home course photo cuts Yarden's head.** `index.html:75-82`. The card photo
-  uses `object-position: center 60%`, so at 390px the top of her head is cut and her eyes sit near
-  the top edge. The tummy time card cuts the baby's head at the side. **Fix:** give the rolling card
-  `object-position: center 25%` (a per-card class), or crop `assets/card-rolling.jpg` again with room
-  above the head. Check the tummy time crop too.
-- [ ] **[U28] P3 — The teaser video is taller than a laptop screen.** `challenge/rolling/index.html:275-276`.
-  The portrait teaser is 480px wide, so on desktop it is about 850px tall and never fits on a
-  1280x800 screen. The play controls sit below the fold. **Fix:** on screens wider than 768px give
-  the video `max-height: 80vh; width: auto; margin: 0 auto`, like `app/lesson.html` does.
 
 ## Architecture
 
@@ -248,13 +164,12 @@ what is still open.
   links with their own product IDs in `COURSE_MAP`: a bundle price that enrolls both courses, and a
   friend price that Yarden sends to buyers who finish. Show the bundle on the finish screen (L7) and
   in "הקורסים שלי".
-- [ ] **[B4] P3 — Hebrew SEO articles.** The problem cards (`challenge/rolling/index.html:336-349`)
-  match real searches, but there is no content to rank. **Fix:** 3 to 5 short articles, for
-  example "מתי תינוק מתחיל להתהפך?", "תינוק מתהפך רק לצד אחד", "תינוק לא אוהב לשכב על הבטן", each
-  with a link to the matching course.
 
 ## Housekeeping
 
 - [ ] **[H1] P3 — Delete `staging/`.** 696 MB of the web-ready videos (the same 18 files as in R2,
   checked 2026-09-25). **Fix:** Guy uploads `staging/` to Google Drive as a backup first, then
   `rm -rf staging/`.
+- [ ] **[H12] P3 — Stale line in CLAUDE.md.** It says the `app/` pages still use the Tailwind CDN.
+  They do not since WP5 to WP7: they load `app/app.css` and the page CSS files. **Fix:** update the
+  "Course platform" line.
