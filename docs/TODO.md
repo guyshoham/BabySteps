@@ -34,27 +34,11 @@ what is still open.
   crossed-out price for now (see `docs/decisions/2026-09-26-owner-decisions.md`). **Fix (only if the
   owner asks):** turn it into a real launch price with an end date ("מחיר השקה עד 31.10") and raise
   the price to ₪205 on that date.
-- [ ] **[C4] P2 — Say who it is for in the hero.** `challenge/rolling/index.html:487`. The hero
-  talks about calm and confidence but never says the baby's age, the length of the course, or that
-  it works on a phone. Mothers from Instagram decide in seconds. **Fix:** add one line under the
-  title, for example "לתינוקות בגילאי 3 עד 7 חודשים · 10 סרטונים קצרים · צופים מהנייד" (confirm the
-  age range and lengths with Yarden).
-- [ ] **[C6] P2 — One clear way to pay.** `challenge/rolling/index.html:635-668` (`.pay__grid`). Two equal cards
-  (PayPal and Bit/Paybox) split the choice, and the Bit/Paybox path needs Yarden to enroll the
-  buyer by hand (`docs/go-live-checklist.md:160`). Many Israeli mothers do not have PayPal and may
-  not know they can pay by card. **Fix:** show one price card with the PayPal button and the line
-  "אפשר לשלם בכרטיס אשראי, גם בלי חשבון PayPal" (check that guest checkout is on for the payment
-  link). Move Bit/Paybox to a small text link under it. Use one `PriceCard` in the rebuild, and have it read the price from
-  `lib/prices.js`.
 - [ ] **[C7] P2 — Testimonials that show results.** The section "מה אמהות כתבו לי" on
   `challenge/rolling/index.html` now shows the three quotes as message bubbles (#73). They still
   praise Yarden in general ("את מדהימה", "חברה"), not the rolling course, and give no baby age or
   outcome. **Fix:** replace them with 3 short quotes from beta buyers (B1) that name the problem and
   the result, with the baby's age and, with consent, a WhatsApp screenshot or photo.
-- [ ] **[C9] P3 — Let buyers copy the Bit/Paybox number.** `challenge/rolling/index.html:660`. The
-  number is plain text. On a phone the buyer must remember it, switch to Bit, pay, and come back to
-  send the WhatsApp. **Fix:** make the number a button that copies it (`navigator.clipboard.writeText`)
-  and shows "הועתק ✓" for 2 seconds. Keep this even if C6 moves Bit/Paybox to a small link.
 - [ ] **[C10] P2 — Better marketing copy.** The owner asked to improve the marketing texts later.
   The fake numbers were removed on 2026-09-26, and the redesign kept Yarden's sentences as they
   were. **Fix:** rework the copy on the home page and the rolling sales page with Yarden: the hero
@@ -85,11 +69,6 @@ what is still open.
 
 ## Trust and legal
 
-- [ ] **[T1] P1 — Health line on the sales and course pages.** `/terms` is live (refund rule,
-  health disclaimer, personal use). What is left: add one line on the sales page and on the course
-  page: "התכנים אינם תחליף לייעוץ רפואי או לפיזיותרפיה. בכל חשש, התייעצי עם רופא/ת הילדים". A lawyer
-  may review the terms later. For a refund: refund in PayPal, delete the enrollment doc in
-  Firestore, issue a credit note (F2).
 - [ ] **[T3] P2 — Accessibility: what the statement lists as not done.** `/accessibility` is live
   and lists the gaps: no captions on the course videos and the teaser (planned), golden tips are
   images with only the title as alt text, no skip link in the app. Fix these, then update the
@@ -98,11 +77,10 @@ what is still open.
 
 ## SEO, speed and analytics
 
-- [ ] **[S1] P2 — Measure the funnel.** No page loads any analytics, so after launch there is no way
-  to tell how many people visited, played the teaser or clicked PayPal. **Fix:** add a free
-  cookieless tool (Cloudflare Web Analytics, GoatCounter or Vercel Web Analytics) so no cookie
-  banner is needed. Count clicks on the PayPal button and the WhatsApp links, and use UTM tags on
-  new links you share (the Instagram bio and Linktree links stay as they are, by owner decision). Compare PayPal clicks with Make runs each week.
+- [ ] **[S1] P3 — Count clicks, not only visits.** Vercel Web Analytics is live (page views on the
+  marketing pages, enabled 2026-09-26). Custom events (PayPal and WhatsApp clicks) need Vercel Pro.
+  **Fix:** on Pro, add `va('event', { name: 'paypal_click' })` and `whatsapp_click` in `site.js`;
+  until then, compare visits to `/challenge/rolling` with `/challenge/rolling/thank-you` and Make runs.
 
 ## UI/UX
 
@@ -110,17 +88,10 @@ what is still open.
   header with the logo, tokens, no Tailwind grays, grouped lessons and progress (WP5 to WP7). What is
   left: get Yarden's feedback on the four app screens, then rebuild them in React with
   `@babysteps/ui` (`AppHeader`, `CourseProgressCard`, `LessonListItem`, `TextField`) as part of A10.
-- [ ] **[U7] P2 — Pick one set of colors.** Decision sheet: `docs/design/2026-09-25-color-decision.md`
-  and `color-decision.html` (#41). **Fix:** Yarden answers the 5 questions there, then align
-  `styles.css` and `tokens.css`. The done color is already `#2f9e6b` (`--c-done`).
-- [ ] **[U18] P2 — Contrast failures in the design system.** The site and app pages pass axe
-  color-contrast (checked 2026-09-26, WP8). Left in `@babysteps/ui`: `.bs-lesson__state`, the
-  CourseCard "coming soon" badge and title, and the TextField error text. **Fix:** darken to at
-  least 4.5:1 (3:1 for large text) and rerun axe in Storybook.
-- [ ] **[U19] P3 — Invalid list and heading order in the design system.** axe flags
-  `ol.bs-lesson-list` in the LessonListItem FullList story (children are not list items) and a
-  heading-order warning in the AppScreens example. **Fix:** wrap items in `<li>` and fix heading
-  levels. Then consider `@storybook/addon-vitest` so a11y violations fail CI.
+- [ ] **[U7] P3 — Align the design system tokens with the site.** The site and app now share
+  `assets/css/tokens.css` (art direction, 2026-09-26). `packages/ui/src/tokens.css` still has its own
+  values (e.g. `--color-ink`, `--surface-peach`, radii, Varela Round). **Fix:** make the package
+  tokens match `assets/css/tokens.css` before the React rebuild (A10), rebuild Storybook, re-sync.
 
 ## Architecture
 
