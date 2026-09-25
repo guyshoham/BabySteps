@@ -168,21 +168,23 @@
   visibility: visible;
   transition: opacity var(--dur-state) var(--ease-out);
 }
-/* The small arrow, pointing at the step (--arrow is set with the position). */
+/* The small arrow, pointing up at the step (--arrow is set with the
+   position). The tip opens below the bar, so it never covers the title; it
+   flips above (arrow down) only when there is no room below. */
 .step-tip::after {
   content: "";
   position: absolute;
   left: calc(var(--arrow, 50%) - 6px);
-  top: 100%;
+  bottom: 100%;
   inline-size: 12px;
   block-size: 6px;
   background: var(--c-paper);
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-}
-.step-tip[data-side="bottom"]::after {
-  top: auto;
-  bottom: 100%;
   clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+.step-tip[data-side="top"]::after {
+  bottom: auto;
+  top: 100%;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
 }
 .step-tip-text { overflow: hidden; text-overflow: ellipsis; min-inline-size: 0; }
 .step-tip-done { flex-shrink: 0; inline-size: 18px; block-size: 18px; color: var(--c-done); stroke-width: 2; }

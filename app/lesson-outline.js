@@ -66,9 +66,10 @@ export function outlineGroups(lessons, completedIds, currentId) {
   });
 }
 
-// Where the tooltip goes, in viewport pixels. It sits above the anchor,
-// centered on it, and flips below when there is no room above (for example
-// under the sticky header). It never leaves the viewport: near an edge it
+// Where the tooltip goes, in viewport pixels. It sits below the anchor,
+// centered on it, so it never covers the lesson title above the bar. It
+// flips above only when there is no room below (and room above, under the
+// sticky header: `topInset`). It never leaves the viewport: near an edge it
 // slides in and the arrow keeps pointing at the anchor.
 // anchor: { left, right, top, bottom }; tip: { width, height };
 // view: { width, height }. Returns { left, top, side, arrow } where `arrow` is
@@ -77,9 +78,11 @@ export function placeTip(anchor, tip, view, { gap = 8, margin = 8, topInset = 0 
   const center = (anchor.left + anchor.right) / 2;
   const maxLeft = Math.max(margin, view.width - margin - tip.width);
   const left = Math.min(Math.max(center - tip.width / 2, margin), maxLeft);
+  const below = anchor.bottom + gap;
   const above = anchor.top - gap - tip.height;
-  const side = above >= topInset + margin ? "top" : "bottom";
-  const top = side === "top" ? above : anchor.bottom + gap;
+  const fitsBelow = below + tip.height <= view.height - margin;
+  const side = !fitsBelow && above >= topInset + margin ? "top" : "bottom";
+  const top = side === "top" ? above : below;
   const arrowPad = 10;
   const arrow = Math.min(Math.max(center - left, arrowPad), Math.max(arrowPad, tip.width - arrowPad));
   return { left, top, side, arrow };

@@ -67,9 +67,9 @@ describe("outlineGroups", () => {
 describe("placeTip", () => {
   const view = { width: 1280, height: 800 };
   const tip = { width: 200, height: 30 };
-  it("centers the tip above the anchor", () => {
+  it("centers the tip below the anchor, so the title above stays visible", () => {
     const p = placeTip({ left: 600, right: 620, top: 300, bottom: 324 }, tip, view);
-    expect(p).toEqual({ left: 510, top: 262, side: "top", arrow: 100 });
+    expect(p).toEqual({ left: 510, top: 332, side: "bottom", arrow: 100 });
   });
   it("slides in at the left edge and keeps the arrow on the anchor", () => {
     const p = placeTip({ left: 10, right: 30, top: 300, bottom: 324 }, tip, view);
@@ -81,10 +81,15 @@ describe("placeTip", () => {
     expect(p.left).toBe(1280 - 8 - 200);
     expect(p.arrow).toBe(190);
   });
-  it("flips below when the header leaves no room above", () => {
+  it("stays below right under the header", () => {
     const p = placeTip({ left: 600, right: 620, top: 90, bottom: 114 }, tip, view, { topInset: 64 });
     expect(p.side).toBe("bottom");
     expect(p.top).toBe(122);
+  });
+  it("flips above only when there is no room below", () => {
+    const p = placeTip({ left: 600, right: 620, top: 760, bottom: 784 }, tip, view, { topInset: 64 });
+    expect(p.side).toBe("top");
+    expect(p.top).toBe(722);
   });
   it("never starts left of the margin, even when wider than the screen", () => {
     const p = placeTip({ left: 100, right: 120, top: 300, bottom: 324 }, { width: 400, height: 30 }, { width: 300, height: 600 });
