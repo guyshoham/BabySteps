@@ -17,13 +17,11 @@
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-title" content="מתחילים בקטן" />
 </head>
-<body class="course-page">
-  <!-- Holds the header's place until app-shell.js mounts it, so the page does not jump. -->
-  <div id="shell-slot" class="cp-shell-slot" aria-hidden="true"></div>
+<body class="app-page course-page">
   <div class="cp-wrap">
     <!-- ?all=1 shows the list even with one course. -->
     <a href="/app/my-courses?all=1" class="cp-back">
-      <svg class="cp-icon cp-icon--dir" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-back"/></svg>
+      <svg class="app-icon icon--dir" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-back"/></svg>
       הקורסים שלי
     </a>
 
@@ -49,14 +47,14 @@
                aria-label="התקדמות בקורס"></div>
           <a id="continue" href="#" class="app-btn cp-continue" aria-disabled="true" tabindex="-1">
             <span id="continue-label"></span>
-            <svg class="cp-icon cp-icon--dir" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-forward"/></svg>
+            <svg class="app-icon icon--dir" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-forward"/></svg>
           </a>
         </section>
       </aside>
 
       <div class="cp-main">
         <div id="loading" role="status" aria-live="polite" class="cp-loading">
-          <span class="cp-sr">טוען את השיעורים...</span>
+          <span class="app-sr-only">טוען את השיעורים...</span>
           <div class="cp-group" aria-hidden="true">
             <span class="app-skeleton cp-sk-heading"></span>
             <div class="cp-list">
@@ -78,7 +76,7 @@
             <p class="cp-feedback-sub">סרטון קצר מהבית מספיק. אני אחזור אלייך עם טיפים שמתאימים לתינוק שלך.</p>
           </div>
           <a id="feedback-link" href="#" target="_blank" rel="noopener" class="app-btn-outline cp-feedback-btn">
-            <svg class="cp-icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-whatsapp"/></svg>
+            <svg class="app-icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-whatsapp"/></svg>
             שלחי לי בוואטסאפ
           </a>
         </section>
@@ -91,7 +89,7 @@
       <div class="cp-problem-actions">
         <a href="/app/my-courses" class="app-btn cp-btn">לקורסים שלי</a>
         <a href="https://wa.me/972542366243" target="_blank" rel="noopener" class="app-btn-outline cp-btn">
-          <svg class="cp-icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-whatsapp"/></svg>
+          <svg class="app-icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-whatsapp"/></svg>
           כתבי לנו בוואטסאפ
         </a>
       </div>
@@ -113,7 +111,6 @@
     const $ = (id) => document.getElementById(id);
 
     const slug = decodeURIComponent(location.pathname.split("/").pop());
-    $("shell-slot").remove();
     const shell = mountAppHeader();
     const user = await requireAuth();
     shell.showUser(user.email, async () => {
@@ -143,11 +140,11 @@
       $("loading").hidden = true;
     }
 
-    // A sprite icon: <svg class="cp-icon"><use href="...#id"/></svg>.
+    // A sprite icon: <svg class="app-icon"><use href="...#id"/></svg>.
     function icon(id, extra = "") {
       const NS = "http://www.w3.org/2000/svg";
       const svg = document.createElementNS(NS, "svg");
-      svg.setAttribute("class", `cp-icon ${extra}`.trim());
+      svg.setAttribute("class", `app-icon ${extra}`.trim());
       svg.setAttribute("aria-hidden", "true");
       const use = document.createElementNS(NS, "use");
       use.setAttribute("href", `${SPRITE}#${id}`);
@@ -273,7 +270,7 @@
           } else if (done) {
             if (!tile) a.appendChild(icon("i-check", "cp-row-done"));
             const sr = document.createElement("span");
-            sr.className = "cp-sr";
+            sr.className = "app-sr-only";
             sr.textContent = "בוצע";
             a.appendChild(sr);
           }

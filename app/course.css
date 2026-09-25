@@ -1,38 +1,13 @@
 /* Course overview page (app/course.html). WP6 of
    docs/design/2026-09-26-art-direction.md. Tokens only (assets/css/tokens.css),
-   logical properties only (RTL). This page does not load Tailwind. */
+   logical properties only (RTL). This page does not load Tailwind: the base,
+   padding, header space, icons (.app-icon) and .app-skeleton come from app.css
+   (.app-page). */
 
-.course-page {
-  margin: 0;
-  /* app.css .app-header bleeds over this 1rem padding. */
-  padding: var(--s-4);
-  font-family: var(--font-sans);
-  font-size: var(--fs-body);
-  line-height: 1.6;
-  color: var(--c-ink-soft);
-  background: var(--c-cream);
-}
-.course-page [hidden] { display: none !important; }
-.course-page *, .course-page *::before, .course-page *::after { box-sizing: border-box; }
-.course-page p, .course-page h1, .course-page h2, .course-page ol { margin: 0; }
-.course-page ol { padding: 0; list-style: none; }
+.course-page { color: var(--c-ink-soft); line-height: 1.5; }
+.course-page ol { margin: 0; padding: 0; list-style: none; }
 
-.cp-sr {
-  position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden;
-  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
-}
-
-/* Sprite icons (app pages do not load styles.css, so the .icon rules live here). */
-.cp-icon {
-  inline-size: 1.25em; block-size: 1.25em; flex-shrink: 0;
-  fill: none; stroke: currentColor; vertical-align: -0.2em;
-}
-[dir="rtl"] .cp-icon--dir { transform: scaleX(-1); }
-
-.cp-wrap { max-inline-size: 60rem; margin-inline: auto; }
-
-/* Same box as app.css .app-header (56px row + 1px line, bleeding over the body padding). */
-.cp-shell-slot { block-size: 57px; margin: calc(-1 * var(--s-4)) calc(-1 * var(--s-4)) var(--s-4); }
+.cp-wrap { inline-size: 100%; max-inline-size: 60rem; margin-inline: auto; }
 
 .cp-back {
   display: inline-flex; align-items: center; gap: var(--s-1);
@@ -186,11 +161,7 @@
   display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-3); margin-block-start: var(--s-5);
 }
 
-/* ─── Skeleton (loading). A local fallback until WP5 adds .app-skeleton to app.css.
-   Still blocks, no shimmer: nothing on the page loops. ─── */
-.course-page .app-skeleton {
-  display: block; border-radius: var(--r-sm); background: rgba(112, 66, 41, 0.09);
-}
+/* ─── Skeleton sizes (the look is .app-skeleton in app.css) ─── */
 .cp-loading { display: grid; }
 .cp-sk-title { inline-size: 9ch; block-size: 1em; margin-block: 0.1em; }
 .cp-sk-line { block-size: 0.9em; margin-block: 0.3em; }
@@ -208,7 +179,7 @@
 @media (min-width: 900px) {
   .cp-layout { grid-template-columns: 21rem 1fr; gap: var(--s-7); align-items: start; margin-block-start: var(--s-3); }
   .cp-progress { grid-template-columns: 1fr; }
-  .cp-aside { position: sticky; inset-block-start: calc(56px + var(--s-5)); gap: var(--s-5); }
+  .cp-aside { position: sticky; inset-block-start: calc(var(--nav-h) + var(--s-5)); gap: var(--s-5); }
   .cp-head { grid-template-columns: 1fr; gap: var(--s-4); }
   .cp-cover { border-radius: var(--r-lg); }
   .cp-title { font-size: var(--fs-display); line-height: 1.15; }
