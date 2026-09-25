@@ -1,18 +1,29 @@
 /* ═══════════════════════════════════════════
-   Shared styles — מתחילים בקטן
+   Shared styles, מתחילים בקטן
+   Direction: "On the mat", docs/design/2026-09-26-art-direction.md
+   Tokens live in assets/css/tokens.css (imported below).
+
+   Order: tokens, legacy aliases, reset, base, type, layout, buttons,
+   cards, icons, nav, footer, motion, reduced motion, deprecated rules.
+   Rules marked "deprecated, WP8 removes" keep today's pages working
+   until their page package moves to the new classes.
    ═══════════════════════════════════════════ */
 
+@import url("assets/css/tokens.css");
+
+/* Old variable names, now aliases of the tokens. */
 :root {
-    --brand-brown: #704229;
-    --brand-brown-light: #8a5438;
-    --brand-peach: #FCE7D6;
+    --brand-brown: var(--c-brown);
+    --brand-brown-light: var(--c-brown-hover);
+    --brand-peach: var(--c-peach);
+    --text-dark: var(--c-ink);
+    --text-mid: var(--c-ink-soft);
+    /* deprecated, WP8 removes: colors that leave the palette */
     --brand-peach-dark: #f5c9a7;
     --brand-mint: #E8F3EF;
     --brand-mint-dark: #c8e3da;
     --brand-pink: #FDF2F8;
     --brand-blue: #E3F2FD;
-    --text-dark: #2d1a0e;
-    --text-mid: #5a3820;
 }
 
 /* Reset. These pages used to load the Tailwind CDN only for its reset
@@ -30,16 +41,29 @@ img, video { max-width: 100%; height: auto; }
 button, input, optgroup, select, textarea { font-family: inherit; font-size: 100%; font-weight: inherit; line-height: inherit; color: inherit; margin: 0; padding: 0; }
 button, [type='button'], [type='reset'], [type='submit'] { -webkit-appearance: button; background-color: transparent; background-image: none; }
 button, [role="button"] { cursor: pointer; }
-input::placeholder, textarea::placeholder { opacity: 1; color: #9ca3af; }
+input::placeholder, textarea::placeholder { opacity: 1; color: #8a7060; }
 [hidden] { display: none; }
 
+/* ─── Base ────────────────────────────── */
+html { color-scheme: light; }
+/* Smooth scrolling only when the person has not asked for less motion.
+   The :not(:has(#navProgress)) part skips the rolling page for now: its own
+   JS smooth scroll calls scrollTo() every frame, and CSS smooth scroll on top
+   makes that slow. WP3 removes that JS; then drop this condition (WP8). */
+@media (prefers-reduced-motion: no-preference) {
+    html:not(:has(#navProgress)) { scroll-behavior: smooth; }
+}
+/* In-page anchors land under the sticky nav, not behind it. */
+[id] { scroll-margin-top: calc(var(--nav-h) + var(--s-3)); }
+
 body {
-    font-family: 'Rubik', sans-serif;
-    scroll-behavior: smooth;
-    color: var(--text-dark);
-    background: #fff;
+    font-family: var(--font-sans);
+    color: var(--c-ink);
+    background: var(--c-cream);
     -webkit-font-smoothing: antialiased;
 }
+h1, h2, h3 { text-wrap: balance; }
+p, li { text-wrap: pretty; }
 
 /* ─── Keyboard focus ──────────────────── */
 /* One visible ring for keyboard users only (:focus-visible, so no ring on
@@ -50,7 +74,7 @@ button:focus-visible,
 summary:focus-visible,
 video:focus-visible,
 [tabindex]:focus-visible {
-    outline: 3px solid var(--brand-brown);
+    outline: 3px solid var(--c-brown);
     outline-offset: 3px;
 }
 /* Light ring on dark (brown) areas: white on #704229 is about 9:1. */
@@ -65,17 +89,17 @@ video:focus-visible,
 /* Skip link: hidden until it gets keyboard focus. */
 .skip-link {
     position: fixed;
-    top: 8px;
-    inset-inline-start: 16px;
+    top: var(--s-2);
+    inset-inline-start: var(--s-4);
     z-index: 200;
     display: inline-flex;
     align-items: center;
     min-height: 44px;
     padding: 10px 20px;
-    border-radius: 6px;
-    background: var(--brand-brown);
+    border-radius: var(--r-md);
+    background: var(--c-brown);
     color: #fff;
-    font-weight: 700;
+    font-weight: 500;
     font-size: 15px;
     text-decoration: none;
     transform: translateY(-200%);
@@ -83,36 +107,217 @@ video:focus-visible,
 .skip-link:focus,
 .skip-link:focus-visible { transform: none; }
 
-/* ─── Utility Classes ─────────────────── */
-.text-brown   { color: var(--brand-brown); }
-.bg-peach     { background-color: var(--brand-peach); }
-.bg-mint      { background-color: var(--brand-mint); }
-.bg-pink      { background-color: var(--brand-pink); }
-.bg-blue-soft { background-color: var(--brand-blue); }
+/* ─── Type ────────────────────────────── */
+/* No letter-spacing and no uppercase on Hebrew, anywhere. Weight 800 is for
+   the price number only. Numbers that change use .t-num (tabular). */
+.t-display {
+    font-size: var(--fs-display);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--c-ink);
+    max-inline-size: 20ch;
+}
+.t-h2 {
+    font-size: var(--fs-h2);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--c-ink);
+    max-inline-size: 20ch;
+}
+.t-h3 {
+    font-size: var(--fs-h3);
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--c-ink);
+}
+.t-lead {
+    font-size: var(--fs-lead);
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--c-ink-soft);
+    max-inline-size: var(--measure);
+}
+.t-body {
+    font-size: var(--fs-body);
+    font-weight: 400;
+    line-height: 1.7;
+    color: var(--c-ink-soft);
+    max-inline-size: var(--measure);
+}
+.t-small {
+    font-size: var(--fs-small);
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--c-ink-muted);
+}
+.t-label {
+    font-size: var(--fs-label);
+    font-weight: 500;
+    line-height: 1.4;
+}
+.t-num { font-variant-numeric: tabular-nums; }
+
+/* ─── Layout ──────────────────────────── */
+/* One column under 768px, always. .container is the 1120px frame with the
+   16px (phone) / 24px (768px+) side gutter. */
+.container {
+    inline-size: 100%;
+    max-inline-size: calc(var(--container) + 2 * var(--gutter));
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+}
+.section { padding-block: var(--section-y); }
+/* The one warm band per page. */
+.section--peach { background: var(--c-peach); }
+
+/* Vertical rhythm: children spaced by --stack-gap (default 16px). */
+.stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--stack-gap, var(--s-4));
+}
+.stack > * { margin: 0; }
+.stack--sm { --stack-gap: var(--s-2); }
+.stack--lg { --stack-gap: var(--s-6); }
+
+/* ─── Buttons ─────────────────────────── */
+/* .btn--primary is the only filled button. .btn--quiet is the one
+   secondary. Press feedback is scale(0.98). No lift, no glow, no ripple. */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-2);
+    min-height: 48px;
+    padding: var(--s-3) var(--s-5);
+    border: 1.5px solid transparent;
+    border-radius: var(--r-md);
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.25;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color var(--dur-state) var(--ease-out),
+                border-color var(--dur-state) var(--ease-out),
+                color var(--dur-state) var(--ease-out),
+                transform var(--dur-press) var(--ease-out);
+}
+.btn:active { transform: scale(0.98); }
+.btn .icon { inline-size: 1.25em; block-size: 1.25em; }
+.btn--primary {
+    background: var(--c-brown);
+    border-color: var(--c-brown);
+    color: #fff;
+}
+.btn--primary:hover {
+    background: var(--c-brown-hover);
+    border-color: var(--c-brown-hover);
+}
+.btn--quiet {
+    background: transparent;
+    border-color: rgba(112, 66, 41, 0.4);
+    color: var(--c-brown);
+}
+.btn--quiet:hover { background: var(--c-peach); }
+/* Small size for the nav. Still a 44px target. */
+.btn--sm {
+    min-height: 44px;
+    padding: var(--s-2) var(--s-4);
+    font-size: 15px;
+}
+
+/* ─── Cards ───────────────────────────── */
+/* A card has a shadow or a hairline, never both.
+   On cream: .card (shadow). On white or peach: .card--line (hairline).
+   .card--raised is for the one raised thing (the offer card). */
+.card {
+    background: var(--c-paper);
+    border-radius: var(--r-lg);
+    padding: var(--s-5);
+    box-shadow: var(--shadow-1);
+}
+.card--line {
+    box-shadow: none;
+    border: 1px solid var(--c-line);
+}
+.card--raised { box-shadow: var(--shadow-2); }
+/* Hover only on cards you can click. */
+a.card { display: block; transition: box-shadow var(--dur-state) var(--ease-out); }
+a.card:hover { box-shadow: var(--shadow-2); }
+@media (min-width: 768px) {
+    .card { padding: var(--s-6); }
+}
+
+/* ─── Icons ───────────────────────────── */
+/* <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-play"/></svg>
+   Tabler outline, stroke 1.5, currentColor. 1.25em inline; .icon--20 and
+   .icon--24 on their own. .icon--dir mirrors chevrons on RTL pages. */
+.icon {
+    display: inline-block;
+    inline-size: 1.25em;
+    block-size: 1.25em;
+    flex-shrink: 0;
+    vertical-align: -0.25em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.icon--20 { inline-size: 20px; block-size: 20px; }
+.icon--24 { inline-size: 24px; block-size: 24px; }
+[dir="rtl"] .icon--dir { transform: scaleX(-1); }
 
 /* ─── Nav ─────────────────────────────── */
+/* Solid cream with a hairline. No blur (it costs frames on cheap phones).
+   Canonical markup (WP2 to WP4 use this):
+
+   <nav class="site-nav" aria-label="ראשי">
+     <div class="site-nav__inner container">
+       <a class="site-brand" href="/">
+         <img class="site-brand-logo" src="/assets/logos/logo-peach.png" alt="" width="44" height="44" decoding="async">
+         <span>
+           <span class="site-brand-name">ירדן שוהם</span>
+           <span class="site-brand-tag">מתחילים בקטן</span>
+         </span>
+       </a>
+       <div class="nav-actions">
+         <a class="nav-login" href="/app/login">כניסה לקורס</a>
+         <a class="btn btn--primary btn--sm" href="#offer">לרכישה</a>   (optional, one per page)
+       </div>
+     </div>
+   </nav>
+*/
 .site-nav {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(255,255,255,0.92);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(112,66,41,0.08);
+    background: var(--c-cream);
+    border-bottom: 1px solid var(--c-line);
+}
+.site-nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    min-height: var(--nav-h);
 }
 /* Quiet "course login" text link in the nav */
 .nav-login {
-    color: var(--brand-brown);
-    font-size: 13px;
-    font-weight: 600;
+    color: var(--c-brown);
+    font-size: 14px;
+    font-weight: 500;
     white-space: nowrap;
     text-decoration: none;
-    padding: 8px 4px;
+    padding: var(--s-2) var(--s-1);
     /* 44px tall tap target (WCAG 2.5.5) without changing the text size */
     display: inline-flex;
     align-items: center;
     min-height: 44px;
 }
+.nav-login:hover { text-decoration: underline; text-underline-offset: 3px; }
 /* Small buttons in the nav (tummy-time "back home", rolling "buy") */
 .site-nav .btn-primary,
 .site-nav .btn-outline {
@@ -120,7 +325,6 @@ video:focus-visible,
     align-items: center;
     min-height: 44px;
 }
-.nav-login:hover { text-decoration: underline; }
 
 /* Brand block (logo + name) at the start of the nav */
 .site-brand {
@@ -130,270 +334,166 @@ video:focus-visible,
     text-decoration: none;
 }
 .site-brand-logo {
-    width: 52px;
-    height: 52px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     object-fit: cover;
 }
 .site-brand-name {
-    font-weight: 800;
+    display: block;
+    font-weight: 700;
     font-size: 15px;
-    color: var(--text-dark);
-    line-height: 1;
+    color: var(--c-ink);
+    line-height: 1.1;
 }
 .site-brand-tag {
-    font-size: 11px;
-    color: var(--brand-brown);
-    letter-spacing: 0.08em;
-    font-weight: 600;
+    display: block;
+    font-size: 12px;
+    color: var(--c-brown);
+    font-weight: 500;
+    line-height: 1.4;
 }
 .nav-actions {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--s-3);
 }
-/* Outlined WhatsApp "contact" link in the home page nav */
+/* Outlined WhatsApp "contact" link in the home page nav. deprecated, WP8 removes */
 .nav-contact {
     display: flex;
     align-items: center;
     gap: 7px;
-    color: var(--brand-brown);
-    font-size: 13px;
-    font-weight: 600;
+    color: var(--c-brown);
+    font-size: 14px;
+    font-weight: 500;
     text-decoration: none;
-    padding: 8px 14px;
+    padding: var(--s-2) 14px;
     min-height: 44px;
-    border-radius: 6px;
-    border: 1.5px solid rgba(112,66,41,0.2);
+    border-radius: var(--r-md);
+    border: 1.5px solid rgba(112, 66, 41, 0.4);
     background: transparent;
-    transition: background 0.2s;
+    transition: background var(--dur-state) var(--ease-out);
 }
 .nav-contact:hover,
-.nav-contact:focus-visible { background: var(--brand-peach); }
+.nav-contact:focus-visible { background: var(--c-peach); }
 
 /* ─── Footer ──────────────────────────── */
+/* Compact, start aligned, brown. Every text color here is at least 4.5:1
+   on brown (U18). No Linktree (it only links back to her).
+   Canonical markup (WP2 to WP4 use this):
+
+   <footer class="site-footer">
+     <div class="site-footer__inner container">
+       <div class="site-footer__brand">
+         <img class="site-footer__logo" src="/assets/logos/logo-peach.png" alt="" width="44" height="44" loading="lazy" decoding="async">
+         <div>
+           <p class="site-footer__name">ירדן שוהם, מתחילים בקטן</p>
+           <p class="site-footer__tag">מלווה התפתחותית. קורסים דיגיטליים לתינוקות.</p>
+         </div>
+       </div>
+       <ul class="site-footer__links">
+         <li><a href="https://wa.me/972542366243" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-whatsapp"/></svg><bdi>WhatsApp</bdi></a></li>
+         <li><a href="https://www.instagram.com/yarden_shoham7/" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-instagram"/></svg><bdi>Instagram</bdi></a></li>
+         <li><a href="/app/login"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-lock"/></svg>כניסה לקורס</a></li>
+       </ul>
+       <p class="site-footer__meta">© 2026 ירדן שוהם. כל הזכויות שמורות.</p>
+     </div>
+   </footer>
+*/
 .site-footer {
-    background: var(--brand-brown);
-    color: rgba(255,255,255,0.9);
-    text-align: center;
+    background: var(--c-brown);
+    color: #fff;
 }
-.footer-body { max-width: 600px; margin: 0 auto; }
-.footer-logo {
-    width: 80px;
-    height: 80px;
+.site-footer__inner {
+    display: grid;
+    gap: var(--s-5);
+    padding-block: var(--s-7) var(--s-6);
+}
+.site-footer__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+}
+.site-footer__logo {
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     object-fit: cover;
-    margin: 0 auto 16px;
-    display: block;
-    opacity: 0.9;
+    flex-shrink: 0;
 }
-.footer-title {
-    font-size: 1.1rem;
-    font-weight: 800;
-    letter-spacing: 0.05em;
-    margin-bottom: 6px;
+.site-footer__name {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.3;
 }
-.footer-tagline { font-size: 0.85rem; opacity: 0.8; margin-bottom: 32px; }
-.footer-links {
+.site-footer__tag {
+    font-size: var(--fs-small);
+    line-height: 1.5;
+    color: #f3dfd0;
+}
+.site-footer__links {
     display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 36px;
     flex-wrap: wrap;
+    gap: var(--s-1) var(--s-5);
 }
-.footer-link {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    color: #fff;
-    padding: 10px 20px;
-    min-height: 44px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: background 0.2s;
-}
-.footer-link:hover,
-.footer-link:focus-visible { background: rgba(255,255,255,0.2); }
-.footer-meta {
-    border-top: 1px solid rgba(255,255,255,0.1);
-    padding-top: 24px;
-    font-size: 12px;
-    opacity: 0.8;
-}
-
-/* ─── Buttons ─────────────────────────── */
-.btn-primary {
-    display: inline-block;
-    background-color: var(--brand-brown);
-    color: #fff;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    padding: 14px 28px;
-    border-radius: 6px;
-    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-    border: 2px solid var(--brand-brown);
-    cursor: pointer;
-    text-decoration: none;
-}
-.btn-primary:hover {
-    background-color: var(--brand-brown-light);
-    transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(112,66,41,0.22);
-}
-.btn-outline {
-    display: inline-block;
-    background: transparent;
-    color: var(--brand-brown);
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    padding: 12px 24px;
-    border-radius: 6px;
-    border: 2px solid var(--brand-brown);
-    transition: background 0.2s, transform 0.2s;
-    cursor: pointer;
-    text-decoration: none;
-}
-.btn-outline:hover {
-    background: var(--brand-peach);
-    transform: translateY(-1px);
-}
-
-/* ─── Tap targets (44px, WCAG 2.5.5) ──── */
-/* Button in the rolling page's sticky bar (its padding is inline) */
-.sticky-cta a {
+.site-footer__links a {
     display: inline-flex;
     align-items: center;
+    gap: var(--s-2);
     min-height: 44px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+    text-decoration: none;
 }
-/* FAQ questions: the whole row is the target */
-summary {
-    min-height: 44px;
-    cursor: pointer;
+.site-footer__links a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.site-footer__meta {
+    padding-top: var(--s-4);
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    font-size: var(--fs-small);
+    color: #f3dfd0;
 }
-
-/* ─── Divider ─────────────────────────── */
-.section-divider {
-    width: 48px;
-    height: 3px;
-    background: var(--brand-peach-dark);
-    border-radius: 2px;
-    margin: 16px auto 0;
-}
-
-/* ─── Feature List ────────────────────── */
-.feature-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 18px;
-    padding: 24px 0;
-    border-bottom: 1px solid rgba(112,66,41,0.07);
-}
-.feature-row:last-child { border-bottom: none; }
-.feature-num {
-    flex-shrink: 0;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--brand-peach);
-    color: var(--brand-brown);
-    font-weight: 800;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 2px;
-}
-
-/* ─── Mobile-first: defaults are mobile ───── */
-.hero-title { font-size: 1.75rem; line-height: 1.25; }
-.section-heading { font-size: 1.5rem; }
-.section-wrap { max-width: 900px; margin: 0 auto; padding: 0 16px; }
-.section-pad { padding: 48px 16px; }
-.hero-pad { padding: 48px 16px 56px; }
-.content-box { padding: 24px 20px; }
-.nav-inner { padding: 0 16px; height: 56px; }
-.hero-subtitle { font-size: 1rem; }
-.footer-inner { padding: 40px 16px 32px; }
-.highlight-box { padding: 20px 24px; }
-
-/* ─── Tablet and up (min-width: 768px) ───── */
 @media (min-width: 768px) {
-    .hero-title { font-size: 2.5rem; line-height: 1.2; }
-    .section-heading { font-size: 1.85rem; }
-    .section-wrap { padding: 0 24px; }
-    .section-pad { padding: 80px 24px; }
-    .hero-pad { padding: 64px 24px 72px; }
-    .content-box { padding: 36px 40px; }
-    .nav-inner { padding: 0 24px; height: 64px; }
-    .hero-subtitle { font-size: 1.1rem; }
-    .footer-inner { padding: 56px 24px 40px; }
-    .highlight-box { padding: 28px 32px; }
-    .btn-primary { padding: 16px 36px; }
-    .btn-outline { padding: 14px 34px; }
+    .site-footer__inner {
+        grid-template-columns: 1fr auto;
+        align-items: center;
+    }
+    .site-footer__meta { grid-column: 1 / -1; }
 }
 
-/* ─── Desktop (min-width: 1024px) ───────── */
-@media (min-width: 1024px) {
-    .hero-title { font-size: 3rem; }
-    .section-heading { font-size: 2rem; }
-    .content-box { padding: 40px 44px; }
-    .nav-inner { padding: 0 24px; height: 68px; }
-    .hero-pad { padding: 72px 24px 80px; }
-}
+/* ─── Motion ──────────────────────────── */
+/* Only transform and opacity move. No scroll listeners: site.js uses an
+   IntersectionObserver. Reveal the first element of a section only. */
 
-/* ─── Scroll animations ───────────────── */
-@keyframes ripple {
-    0%   { transform: scale(0); opacity: 0.5; }
-    100% { transform: scale(4); opacity: 0; }
-}
-.btn-primary, .btn-outline {
-    position: relative;
-    overflow: hidden;
-}
-.ripple-circle {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.35);
-    width: 60px;
-    height: 60px;
-    margin-top: -30px;
-    margin-right: -30px;
-    animation: ripple 0.55s linear;
-    pointer-events: none;
-}
-.btn-outline .ripple-circle {
-    background: rgba(112,66,41,0.15);
-}
-
-/* ─── Fade-in on scroll ───────────────── */
-/* Hidden only when JS runs (site.js and an inline <head> script add .js to <html>). */
+/* Fade-in on scroll. Hidden only when JS runs (site.js and an inline <head>
+   script add .js to <html>), so content stays visible without JS. */
 .js .reveal {
     opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 0.6s cubic-bezier(0.22,1,0.36,1),
-                transform 0.6s cubic-bezier(0.22,1,0.36,1);
+    transform: translateY(var(--rise));
+    transition: opacity var(--dur-enter) var(--ease-out),
+                transform var(--dur-enter) var(--ease-out);
 }
 .js .reveal.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
 }
-.reveal-delay-1 { transition-delay: 0.08s; }
-.reveal-delay-2 { transition-delay: 0.16s; }
-.reveal-delay-3 { transition-delay: 0.24s; }
-.reveal-delay-4 { transition-delay: 0.32s; }
 
-/* ─── Pulse animation on CTA ─────────── */
-@keyframes ctaPulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(112,66,41,0.45); }
-    60%       { box-shadow: 0 0 0 12px rgba(112,66,41,0); }
+/* Hero text, once on load: up to 3 items, 60ms apart.
+   <h1 class="t-display enter">, <p class="t-lead enter" style="--i:1">, <a class="btn btn--primary enter" style="--i:2"> */
+@keyframes enter-rise {
+    from { opacity: 0; transform: translateY(var(--rise)); }
 }
-.btn-pulse { animation: ctaPulse 2.2s ease-in-out infinite; }
+@media (prefers-reduced-motion: no-preference) {
+    .enter {
+        animation: enter-rise var(--dur-enter) var(--ease-out) both;
+        animation-delay: calc(var(--i, 0) * 60ms);
+    }
+}
 
 /* ─── Reduced motion ──────────────────── */
+/* Every moment jumps to its final state. The catch-all at the end also stops
+   motion that page <style> blocks add (loops, pops), so
+   document.getAnimations() is empty after load. */
 @media (prefers-reduced-motion: reduce) {
     .js .reveal,
     .js .reveal.visible {
@@ -409,30 +509,250 @@ summary {
     }
     .confetti-piece,
     .ripple-circle { display: none; }
+    .btn:active { transform: none; }
+    *, *::before, *::after {
+        animation-duration: 1ms !important;
+        animation-delay: 0s !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 1ms !important;
+        transition-delay: 0s !important;
+        scroll-behavior: auto !important;
+    }
 }
 
-/* ─── Video play overlay ──────────────── */
+/* ═══════════════════════════════════════════
+   Legacy rules. Pages still use these until their package (WP2 to WP4)
+   moves to the classes above. Restyled to the tokens so today's pages
+   already look closer to the direction.
+   ═══════════════════════════════════════════ */
+
+/* ─── Utility classes ─────────────────── */
+.text-brown   { color: var(--c-brown); }
+.bg-peach     { background-color: var(--c-peach); }
+.bg-mint      { background-color: var(--brand-mint); }  /* deprecated, WP8 removes */
+.bg-pink      { background-color: var(--brand-pink); }  /* deprecated, WP8 removes */
+.bg-blue-soft { background-color: var(--brand-blue); }  /* deprecated, WP8 removes */
+
+/* ─── Old footer (centered). deprecated, WP8 removes ─── */
+.footer-body { max-width: 600px; margin: 0 auto; text-align: center; }
+.footer-logo {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 16px;
+    display: block;
+}
+.footer-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+.footer-tagline { font-size: 0.875rem; color: #f3dfd0; margin-bottom: 28px; }
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+.footer-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 10px 20px;
+    min-height: 44px;
+    border-radius: var(--r-md);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background var(--dur-state) var(--ease-out);
+}
+.footer-link:hover,
+.footer-link:focus-visible { background: rgba(255,255,255,0.2); }
+.footer-meta {
+    border-top: 1px solid rgba(255,255,255,0.18);
+    padding-top: 24px;
+    font-size: 13px;
+    color: #f3dfd0;
+}
+
+/* ─── Old buttons. deprecated, WP8 removes ─── */
+/* .btn-primary = .btn.btn--primary, .btn-outline = .btn.btn--quiet */
+.btn-primary {
+    display: inline-block;
+    background-color: var(--c-brown);
+    color: #fff;
+    font-weight: 500;
+    padding: 14px 28px;
+    border-radius: var(--r-md);
+    border: 2px solid var(--c-brown);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color var(--dur-state) var(--ease-out),
+                border-color var(--dur-state) var(--ease-out),
+                transform var(--dur-press) var(--ease-out);
+}
+.btn-primary:hover {
+    background-color: var(--c-brown-hover);
+    border-color: var(--c-brown-hover);
+}
+.btn-outline {
+    display: inline-block;
+    background: transparent;
+    color: var(--c-brown);
+    font-weight: 500;
+    padding: 12px 24px;
+    border-radius: var(--r-md);
+    border: 2px solid var(--c-brown);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background var(--dur-state) var(--ease-out),
+                transform var(--dur-press) var(--ease-out);
+}
+.btn-outline:hover { background: var(--c-peach); }
+.btn-primary:active,
+.btn-outline:active,
+.btn-whatsapp:active { transform: scale(0.98); }
+
+/* WhatsApp button: now a brand button with the glyph inside (no second
+   accent green). deprecated, WP8 removes: use .btn.btn--primary + i-brand-whatsapp */
+.btn-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--c-brown);
+    color: #fff;
+    font-weight: 500;
+    padding: 14px 32px;
+    border-radius: var(--r-md);
+    border: 2px solid var(--c-brown);
+    cursor: pointer;
+    text-decoration: none;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    transition: background-color var(--dur-state) var(--ease-out),
+                border-color var(--dur-state) var(--ease-out),
+                transform var(--dur-press) var(--ease-out);
+}
+.btn-whatsapp:hover {
+    background: var(--c-brown-hover);
+    border-color: var(--c-brown-hover);
+}
+
+/* Pulsing CTA and click ripple are gone. deprecated, WP8 removes */
+.btn-pulse { animation: none; }
+.ripple-circle { display: none; }
+
+/* ─── Tap targets (44px, WCAG 2.5.5) ──── */
+/* Button in the rolling page's sticky bar (its padding is inline) */
+.sticky-cta a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+}
+/* FAQ questions: the whole row is the target */
+summary {
+    min-height: 44px;
+    cursor: pointer;
+}
+
+/* ─── Divider under headings: hidden. deprecated, WP8 removes ─── */
+.section-divider { display: none; }
+
+/* ─── Feature list. deprecated, WP8 removes (WP3 moves to the syllabus) ─── */
+.feature-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--c-line);
+}
+.feature-row:last-child { border-bottom: none; }
+.feature-num {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--c-peach);
+    color: var(--c-brown);
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+}
+
+/* ─── Old layout helpers, mobile first. deprecated, WP8 removes ─── */
+/* New pages use .section, .container and the .t-* classes. */
+.hero-title { font-size: 1.75rem; line-height: 1.25; }
+.section-heading { font-size: 1.5rem; }
+.section-wrap { max-width: 900px; margin: 0 auto; padding: 0 16px; }
+.section-pad { padding: 48px 16px; }
+.hero-pad { padding: 48px 16px 56px; }
+.content-box { padding: 24px 20px; }
+.nav-inner { padding: 0 16px; height: 56px; }
+.hero-subtitle { font-size: 1rem; }
+.footer-inner { padding: 40px 16px 32px; }
+.highlight-box { padding: 20px 24px; }
+
+@media (min-width: 768px) {
+    .hero-title { font-size: 2.5rem; line-height: 1.2; }
+    .section-heading { font-size: 1.85rem; }
+    .section-wrap { padding: 0 24px; }
+    .section-pad { padding: 80px 24px; }
+    .hero-pad { padding: 64px 24px 72px; }
+    .content-box { padding: 36px 40px; }
+    .nav-inner { padding: 0 24px; height: 64px; }
+    .hero-subtitle { font-size: 1.1rem; }
+    .footer-inner { padding: 56px 24px 40px; }
+    .highlight-box { padding: 28px 32px; }
+    .btn-primary { padding: 16px 36px; }
+    .btn-outline { padding: 14px 34px; }
+    .btn-whatsapp { padding: 16px 40px; }
+}
+
+@media (min-width: 1024px) {
+    .hero-title { font-size: 3rem; }
+    .section-heading { font-size: 2rem; }
+    .content-box { padding: 40px 44px; }
+    .hero-pad { padding: 72px 24px 80px; }
+}
+
+/* Reveal stagger: now 60ms steps. deprecated, WP8 removes (reveal the first
+   element of a section only). */
+.reveal-delay-1 { transition-delay: 60ms; }
+.reveal-delay-2 { transition-delay: 120ms; }
+.reveal-delay-3 { transition-delay: 180ms; }
+.reveal-delay-4 { transition-delay: 240ms; }
+
+/* ─── Video play overlay (rolling teaser). WP3 replaces with the teaser frame ─── */
 .video-wrap { position: relative; cursor: pointer; }
 .video-play-btn {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 68px;
-    height: 68px;
-    background: rgba(255,255,255,0.93);
+    width: 72px;
+    height: 72px;
+    background: rgba(255,255,255,0.94);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     pointer-events: none;
-    box-shadow: 0 4px 28px rgba(0,0,0,0.2);
-    transition: transform 0.2s, background 0.2s, opacity 0.2s;
+    box-shadow: var(--shadow-2);
+    transition: transform var(--dur-state) var(--ease-out),
+                opacity var(--dur-state) var(--ease-out);
 }
-.video-wrap:hover .video-play-btn { transform: translate(-50%, -50%) scale(1.1); background: #fff; }
+.video-wrap:hover .video-play-btn { transform: translate(-50%, -50%) scale(1.04); }
 .video-play-btn.hidden { opacity: 0; }
 
-/* ─── Testimonial cards ───────────────── */
+/* ─── Testimonial cards. deprecated, WP8 removes (WP3 moves to messages) ─── */
 .testimonial-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -442,71 +762,36 @@ summary {
     .testimonial-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
 }
 .testimonial-card {
-    background: #fff;
-    border-radius: 14px;
+    background: var(--c-paper);
+    border-radius: var(--r-lg);
     padding: 24px 28px;
-    border: 1.5px solid rgba(112,66,41,0.1);
-    transition: box-shadow 0.2s, transform 0.2s;
+    border: 1px solid var(--c-line);
 }
-.testimonial-card:hover {
-    box-shadow: 0 6px 24px rgba(112,66,41,0.1);
-    transform: translateY(-2px);
-}
+/* Gold star rows. deprecated, WP8 removes */
 .star-row {
     color: #f5a623;
     font-size: 17px;
-    letter-spacing: 2px;
+    letter-spacing: 2px; /* stars, not Hebrew text */
     margin-bottom: 12px;
 }
 
-/* ─── WhatsApp green button ───────────── */
-.btn-whatsapp {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: #0f7a3d;
-    color: #fff;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    padding: 14px 32px;
-    border-radius: 6px;
-    border: 2px solid #0f7a3d;
-    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-    cursor: pointer;
-    text-decoration: none;
-    position: relative;
-    overflow: hidden;
-    font-family: 'Rubik', sans-serif;
-    font-size: 1rem;
-}
-.btn-whatsapp:hover {
-    background: #0c6a34;
-    border-color: #0c6a34;
-    transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(15,122,61,0.32);
-}
-@media (min-width: 768px) {
-    .btn-whatsapp { padding: 16px 40px; }
-}
-
-/* ─── Larger step numbers (thank-you) ─── */
+/* ─── Larger step numbers (thank-you): real steps, so they stay ─── */
 .step-num-large {
     flex-shrink: 0;
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: var(--brand-brown);
+    background: var(--c-brown);
     color: #fff;
-    font-weight: 800;
+    font-weight: 700;
     font-size: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-top: 2px;
-    box-shadow: 0 4px 14px rgba(112,66,41,0.22);
 }
 
-/* ─── CSS Confetti ────────────────────── */
+/* ─── CSS confetti. deprecated, WP8 removes (WP4 replaces it with the check draw) ─── */
 @keyframes confettiFall {
     0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
     100% { transform: translateY(180px) rotate(540deg); opacity: 0; }

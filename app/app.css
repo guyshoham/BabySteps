@@ -1,22 +1,22 @@
-/* Course app brand styles. Same colors and feel as the sales page (styles.css).
-   Colors follow docs/design/2026-09-25-color-decision.md.
-   Tailwind still does the layout; this file holds the brand parts. */
-
+/* Course app brand styles. Same tokens as the marketing site: see
+   assets/css/tokens.css and docs/design/2026-09-26-art-direction.md.
+   Tailwind does the layout. New rules use the tokens; --app-* are aliases. */
+@import url("../assets/css/tokens.css");
 :root {
-  --app-brown: #704229;
-  --app-brown-light: #8a5438;
-  --app-peach: #FCE7D6;
-  --app-cream: #fdf6f0;
-  --app-text: #2d1a0e;
-  --app-text-mid: #5a3820;
-  --app-text-muted: #7a5a48;
-  --app-done: #2f9e6b;
-  --app-line: #9a7864; /* input borders, 4.0:1 on white */
-  --app-shadow: 0 8px 24px rgba(112, 66, 41, 0.10);
-  --app-shadow-hover: 0 16px 48px rgba(112, 66, 41, 0.14);
-  --app-radius-sm: 8px;
-  --app-radius-md: 14px;
-  --app-radius-lg: 22px;
+  --app-brown: var(--c-brown);
+  --app-brown-light: var(--c-brown-hover);
+  --app-peach: var(--c-peach);
+  --app-cream: var(--c-cream);
+  --app-text: var(--c-ink);
+  --app-text-mid: var(--c-ink-soft);
+  --app-text-muted: var(--c-ink-muted);
+  --app-done: var(--c-done);
+  --app-line: #9a7864; /* input borders, 4.0:1 on white (stronger than the --c-line hairline) */
+  --app-shadow: var(--shadow-1);
+  --app-shadow-hover: var(--shadow-2);
+  --app-radius-sm: var(--r-sm);
+  --app-radius-md: var(--r-md);
+  --app-radius-lg: var(--r-lg);
 }
 
 body {
