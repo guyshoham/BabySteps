@@ -57,6 +57,7 @@
 }
 
 .lesson-where {
+  position: relative; /* the step tooltip is placed inside this box */
   display: flex;
   align-items: center;
   gap: var(--s-3);
@@ -73,36 +74,144 @@
   white-space: nowrap;
 }
 
-/* Step bar: one small equal step per lesson ("small steps"). Done steps are
-   brown, the current one stands a little taller. */
+/* Step bar: one small equal step per lesson ("small steps"). Not done steps
+   are a hairline color, done steps green, and the current one is brown and
+   half again as tall. Each step draws its bar in ::before (the track) and
+   ::after (the done fill), inset 1.5px on each side: the steps look apart,
+   but the links touch, so the mouse never falls into a gap. */
 .steps {
   flex: 1;
   display: flex;
-  align-items: center;
-  gap: 3px;
+  align-items: stretch;
   max-inline-size: 22rem;
   block-size: 10px;
 }
 .step {
   position: relative;
   flex: 1;
-  block-size: 6px;
-  border-radius: 2px; /* same as the course page step bar */
-  background: var(--c-line);
-  overflow: hidden;
+  min-inline-size: 0;
 }
-.step.is-current { block-size: 10px; }
+.step::before,
 .step::after {
   content: "";
   position: absolute;
-  inset: 0;
-  background: var(--c-brown);
+  inset-inline: 1.5px;
+  inset-block-start: calc(50% - 3px);
+  block-size: 6px;
+  border-radius: 2px; /* same as the course page step bar */
+}
+.step::before {
+  background: var(--c-line);
+  transition: background-color var(--dur-state) var(--ease-out);
+}
+.step::after {
+  background: var(--c-done);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform var(--dur-enter) var(--ease-out) 160ms;
 }
 [dir="rtl"] .step::after { transform-origin: right; } /* fills from the start side */
 .step.is-done::after { transform: scaleX(1); }
+.step.is-current::before {
+  inset-block-start: calc(50% - 4.5px);
+  block-size: 9px;
+  background: var(--c-brown);
+}
+/* The current lesson once done: green inside a thin brown edge, so it still
+   reads as "you are here". */
+.step.is-current::after {
+  inset-block-start: calc(50% - 2.5px);
+  block-size: 5px;
+  border-radius: 1px;
+}
+
+/* Desktop: the steps are links. The row keeps its height (negative margin);
+   only the hit area grows to 24px. */
+.steps.is-links {
+  block-size: 24px;
+  margin-block: -7px;
+}
+.steps.is-links .step { cursor: pointer; border-radius: 4px; }
+.steps.is-links .step:hover::before { background: rgba(112, 66, 41, 0.32); } /* --c-line, darker */
+.steps.is-links .step.is-current:hover::before { background: var(--c-brown-hover); }
+.steps.is-links .step:focus-visible { outline-offset: 0; }
+
+/* Tooltip over a step link. Placed by app/lesson.html with placeTip(): it
+   sets left and top in px, so this box uses physical left/top on purpose. */
+.step-tip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-inline-size: min(20rem, calc(100vw - 16px));
+  padding: 6px var(--s-3);
+  border-radius: var(--r-sm);
+  background: var(--c-paper);
+  box-shadow: var(--shadow-1);
+  color: var(--c-ink);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--dur-state) var(--ease-out),
+    visibility 0s linear var(--dur-state);
+}
+.step-tip.is-shown {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--dur-state) var(--ease-out);
+}
+/* The small arrow, pointing at the step (--arrow is set with the position). */
+.step-tip::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--arrow, 50%) - 6px);
+  top: 100%;
+  inline-size: 12px;
+  block-size: 6px;
+  background: var(--c-paper);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+.step-tip[data-side="bottom"]::after {
+  top: auto;
+  bottom: 100%;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+.step-tip-text { overflow: hidden; text-overflow: ellipsis; min-inline-size: 0; }
+.step-tip-done { flex-shrink: 0; inline-size: 18px; block-size: 18px; color: var(--c-done); stroke-width: 2; }
+
+/* Phones and touch screens: a quiet button next to the steps opens the
+   lesson list in a sheet. The ::before grows the tap area to 44px. */
+.all-lessons {
+  position: relative;
+  flex-shrink: 0;
+  margin-inline-start: auto;
+  padding: 3px var(--s-2);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-sm);
+  background: var(--c-paper);
+  color: var(--c-brown);
+  font: 500 var(--fs-small) / 1.4 var(--font-sans);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-state) var(--ease-out),
+    transform var(--dur-press) var(--ease-out);
+}
+.all-lessons::before { content: ""; position: absolute; inset: -9px -4px; }
+@media (max-width: 767px) {
+  .lesson-where { gap: var(--s-2); }
+  .step::before, .step::after { inset-inline: 1px; }
+}
+.all-lessons:hover { background: var(--c-peach); }
+.all-lessons:active { transform: scale(0.98); }
 
 /* ─── Media ────────────────────────────── */
 /* The videos are portrait (9:16). The frame has a fixed size from the first
@@ -314,6 +423,122 @@
 .feedback-title { font-size: var(--fs-h3); font-weight: 500; line-height: 1.3; color: var(--c-ink); text-wrap: balance; }
 .feedback-text { margin-block: var(--s-2) var(--s-4); font-size: var(--fs-body); color: var(--c-ink-soft); }
 
+/* ─── Course outline: side card and sheet ─── */
+/* The same grouped list as the course page, in a compact form. One white
+   card; rows are rounded inside it, the current one peach. */
+.outline { display: none; } /* desktop only, see the media query below */
+.outline-heading { font-size: var(--fs-body); font-weight: 700; line-height: 1.3; color: var(--c-ink); }
+.outline-scroll {
+  position: relative; /* centerCurrent() measures rows against this box */
+  min-block-size: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-block-end: var(--s-2);
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-line) transparent;
+}
+.outline-scroll ol { margin: 0; padding: 0; list-style: none; }
+/* Group headings stay at the top while their rows scroll under them. */
+.outline-group-head {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 1;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-4) var(--s-1);
+  background: var(--c-paper);
+}
+.outline-group:first-child .outline-group-head { padding-block-start: var(--s-2); }
+.outline-group-title { font-size: var(--fs-small); font-weight: 500; line-height: 1.4; color: var(--c-ink-muted); }
+.outline-group-meta { font-size: var(--fs-label); line-height: 1.4; color: var(--c-ink-muted); font-variant-numeric: tabular-nums; }
+.outline-scroll .outline-list { display: grid; padding-inline: var(--s-2); }
+.outline-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-block-size: 36px;
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--r-md);
+  color: var(--c-ink);
+  font-size: var(--fs-small);
+  line-height: 1.35;
+  transition: background-color var(--dur-state) var(--ease-out);
+}
+.outline-row:hover { background: var(--c-cream); }
+.outline-row:focus-visible { outline-offset: -2px; }
+.outline-icon { flex-shrink: 0; inline-size: 18px; block-size: 18px; color: var(--c-brown); }
+.outline-title { flex: 1 1 auto; min-inline-size: 0; }
+.outline-row.is-done .outline-title { color: var(--c-ink-soft); }
+.outline-done { flex-shrink: 0; inline-size: 18px; block-size: 18px; color: var(--c-done); stroke-width: 2; }
+.outline-row.is-current,
+.outline-row.is-current:hover { background: var(--c-peach); font-weight: 500; }
+/* Tips are short ("טיפ זהב 1"): three to a row, as on the course page. */
+.outline-scroll .outline-group--tips .outline-list { grid-template-columns: repeat(3, 1fr); }
+.outline-group--tips .outline-title { white-space: nowrap; }
+
+/* The sheet (phones): a native modal <dialog> at the bottom edge. It has no
+   padding, so a click on the dialog itself is a click on the backdrop. */
+.sheet {
+  position: fixed;
+  inset: auto 0 0;
+  inline-size: 100%;
+  max-inline-size: 36rem;
+  max-block-size: min(85svh, 48rem);
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+  border-start-start-radius: var(--r-lg);
+  border-start-end-radius: var(--r-lg);
+  background: var(--c-paper);
+  box-shadow: var(--shadow-2);
+  color: var(--c-ink-soft);
+  overflow: hidden;
+}
+.sheet[open] { display: flex; flex-direction: column; }
+.sheet::backdrop { background: rgba(45, 26, 14, 0.38); } /* --c-ink, dimmed */
+.sheet-inner {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-block-size: 0;
+  padding-block-end: env(safe-area-inset-bottom, 0px);
+}
+.sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding-block: var(--s-2);
+  padding-inline: var(--s-4) var(--s-2);
+  border-block-end: 1px solid var(--c-line);
+}
+.sheet-head .outline-heading { font-size: var(--fs-h3); font-weight: 700; }
+.sheet-close {
+  min-block-size: 44px;
+  padding-inline: var(--s-3);
+  border: 0;
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--c-brown);
+  font: 500 var(--fs-body) / 1 var(--font-sans);
+  cursor: pointer;
+  transition: background-color var(--dur-state) var(--ease-out);
+}
+.sheet-close:hover { background: var(--c-cream); }
+.sheet-list { flex: 1 1 auto; padding-block-end: var(--s-4); }
+.sheet .outline-row { min-block-size: 44px; font-size: var(--fs-body); }
+.sheet .outline-icon, .sheet .outline-done { inline-size: 20px; block-size: 20px; }
+/* The page behind does not scroll while the sheet is open. */
+html.has-sheet, html:has(.sheet[open]) { overflow: hidden; }
+@media (prefers-reduced-motion: no-preference) {
+  .sheet[open] { animation: sheet-up var(--dur-enter) var(--ease-out); }
+  .sheet[open]::backdrop { animation: sheet-fade var(--dur-enter) var(--ease-out); }
+}
+@keyframes sheet-up { from { transform: translateY(100%); } }
+@keyframes sheet-fade { from { opacity: 0; } }
+
 /* ─── Up next bar ──────────────────────── */
 /* Slides up from the bottom edge (360ms). When closed it waits for the
    slide to end, then hides. */
@@ -404,10 +629,32 @@
   }
 }
 
+/* ─── Desktop with a mouse: step links and the side list ── */
+@media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
+  .all-lessons { display: none; }
+  /* The side column fits the screen under the sticky header; the list is
+     the part that gives way and scrolls. */
+  .lesson-side { max-block-size: calc(100svh - var(--nav-h) - 2 * var(--s-5)); }
+  .lesson-side > * { flex-shrink: 0; }
+  .outline:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;
+    min-block-size: 12rem;
+    margin-block-start: var(--s-3);
+    border-radius: var(--r-lg);
+    background: var(--c-paper);
+    box-shadow: var(--shadow-1);
+    overflow: hidden;
+  }
+  .outline > .outline-heading { padding: var(--s-4) var(--s-4) 0; }
+}
+
 /* ─── Motion off ───────────────────────── */
 /* First renders (a lesson done before) and reduced motion: states jump. */
-.is-instant, .is-instant *, .is-instant *::after { transition: none !important; }
+.is-instant, .is-instant *, .is-instant *::before, .is-instant *::after { transition: none !important; }
 @media (prefers-reduced-motion: reduce) {
   .lesson-page *,
+  .lesson-page *::before,
   .lesson-page *::after { transition: none !important; }
 }
