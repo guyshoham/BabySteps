@@ -12,6 +12,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/app/app.css" />
   <link rel="stylesheet" href="/app/lesson.css" />
+  <!-- Every module of the page, so the browser fetches them in one wave. -->
+  <link rel="modulepreload" href="/app/firebase-client.js" />
+  <link rel="modulepreload" href="/app/firebase-config.js" />
+  <link rel="modulepreload" href="/app/video-url-cache.js" />
+  <link rel="modulepreload" href="/app/app-shell.js" />
+  <link rel="modulepreload" href="/app/lesson-nav.js" />
+  <link rel="modulepreload" href="/app/lesson-progress.js" />
+  <link rel="modulepreload" href="/app/lesson-extras.js" />
+  <link rel="modulepreload" href="/app/lesson-moment.js" />
+  <link rel="modulepreload" href="/app/lesson-outline.js" />
+  <link rel="modulepreload" href="/app/course-sections.js" />
+  <link rel="modulepreload" href="/app/lesson-switch.js" />
   <link rel="manifest" href="/app/manifest.webmanifest" />
   <meta name="theme-color" content="#704229" />
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
@@ -23,7 +35,7 @@
       <a id="back" href="/app/my-courses" class="lesson-back">
         <svg class="app-icon icon--dir" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-back"/></svg>חזרה לקורס
       </a>
-      <h1 id="title" class="lesson-title"><span class="app-skeleton skel-title" aria-hidden="true"></span></h1>
+      <h1 id="title" class="lesson-title" tabindex="-1"><span class="app-skeleton skel-title" aria-hidden="true"></span></h1>
       <!-- "שיעור 3 מתוך 18" and one small step per lesson. Filled once the course loads.
            Desktop: each step is a link with a tooltip. Phones: a picture, plus
            the "all lessons" button that opens the sheet. -->
@@ -142,11 +154,10 @@
   <script type="module">
     import {
       requireAuth, db, signOut, collection, query, where, orderBy, getDocs, doc, getDoc, setDoc,
+      getDocFromCache, getDocsFromCache,
     } from "/app/firebase-client.js";
     import { mountAppHeader } from "/app/app-shell.js";
-    import {
-      findNeighbors, lessonPosition, positionLabel, doneCountLabel, remainingLabel, upNext,
-    } from "/app/lesson-nav.js";
+    import { doneCountLabel, remainingLabel, upNext } from "/app/lesson-nav.js";
     import { shouldComplete } from "/app/lesson-progress.js";
     import { whatsAppFeedbackUrl, whatsAppTestimonialUrl, allDone } from "/app/lesson-extras.js";
     import {
@@ -155,15 +166,29 @@
     } from "/app/lesson-moment.js";
     import {
       DESKTOP_NAV_QUERY, stepItems, outlineGroups, placeTip, renderStepBar, relabelSteps,
-      fillTip, renderOutline, centerCurrent,
+      fillTip, renderOutline, centerCurrent, lessonHref,
     } from "/app/lesson-outline.js";
+    import { getVideoUrl, prefetchVideoUrls } from "/app/video-url-cache.js";
+    import {
+      lessonIdFromPath, neighborIds, lessonState, switchTarget, switchAnnouncement,
+      lessonDocTitle, shouldFlushPosition, resumeAt,
+    } from "/app/lesson-switch.js";
 
-    const lessonId = decodeURIComponent(location.pathname.split("/").pop());
+    // One page, many lessons: a click on another lesson of this course swaps
+    // the lesson in place (showLesson) instead of loading a new page. The
+    // course, its lesson list and the progress load once (loadCourse).
+    const firstId = lessonIdFromPath(location.pathname) ?? "";
     const shell = mountAppHeader();
     const user = await requireAuth();
     shell.showUser(user.email, async () => {
       await signOut(); location.replace("/app/login");
     });
+    const idToken = () => user.getIdToken();
+    // The signed URL needs only the lesson id, so it starts now, next to the
+    // Firestore reads below.
+    const firstUrl = getVideoUrl(firstId, idToken);
+    firstUrl.catch(() => {}); // handled in showLesson
+
     const $ = (id) => document.getElementById(id);
     const msg = $("msg");
     const video = $("video");
@@ -174,48 +199,67 @@
     const doneBtn = $("done");
     const live = $("live");
     const upnextBar = $("upnext");
+    const next = $("next");
+    const prev = $("prev");
+    const lessonBody = $("lesson-body");
+    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+
     // Error text under an empty frame reads as broken, so the frame goes.
-    // Resolves once the media request is answered (loaded or failed), when
-    // the side column has its final shape.
+    // Resolves once the first media request is answered (loaded or failed),
+    // when the side column has its final shape.
     let mediaSettled;
     const mediaReady = new Promise((r) => { mediaSettled = r; });
+    const setLoading = (on) => {
+      frame.classList.toggle("is-loading", on);
+      if (on) frame.setAttribute("aria-busy", "true"); else frame.removeAttribute("aria-busy");
+    };
     const showError = (text) => {
       msg.textContent = text;
       frame.hidden = true;
       doneBtn.hidden = true;
+      setLoading(false);
       mediaSettled();
     };
 
-    const lessonSnap = await getDoc(doc(db, "lessons", lessonId));
-    if (!lessonSnap.exists()) {
+    // Cache first: a lesson doc rarely changes, and the cache answers with no
+    // network. The course load below refreshes it from the server.
+    const readLesson = async (id) => {
+      try {
+        const snap = await getDocFromCache(doc(db, "lessons", id));
+        if (snap.exists()) return snap.data();
+      } catch { /* not in the cache */ }
+      const snap = await getDoc(doc(db, "lessons", id));
+      return snap.exists() ? snap.data() : null;
+    };
+    const progressRef = (id) => doc(db, "users", user.uid, "progress", id);
+
+    const [firstLesson, firstProg] = await Promise.all([
+      firstId ? readLesson(firstId) : null,
+      firstId ? getDoc(progressRef(firstId)).catch((e) => { console.error("loading progress failed", e); return null; }) : null,
+    ]);
+    if (!firstLesson) {
       title.textContent = "";
-      $("lesson-body").classList.remove("is-pending");
+      lessonBody.classList.remove("is-pending");
       showError("השיעור לא נמצא");
       throw new Error("no lesson");
     }
-    const lesson = lessonSnap.data();
-    title.textContent = lesson.title;
-    document.title = `${lesson.title} | מתחילים בקטן`;
-    $("whatsapp").setAttribute("href", whatsAppFeedbackUrl(lesson.title));
     $("testimonial").setAttribute("href", whatsAppTestimonialUrl());
-    // Lessons are videos unless marked otherwise; older docs have no `kind`.
-    const isImage = lesson.kind === "image";
-    frame.classList.toggle("is-image", isImage);
-    $("lesson-body").classList.remove("is-pending");
 
-    // Done state of this lesson, as shown on the page. Set from the saved
-    // progress doc below; declared here because the nav code reads it.
-    let isDone = false;
-
-    // Back link and prev/next buttons. Runs alongside the video load, so a slow
-    // query never delays playback.
-    const next = $("next");
-    // Finish card state: this course's lesson ids and the ones already done.
+    // ─── Course state (loaded once) ───
     let courseLessonIds = null;
     const courseLessons = new Map();
     let courseUrl = "/app/my-courses";
+    // Done lessons of the course, from Firestore and from saves that worked.
     const completedIds = new Set();
-    const lessonHref = (id) => `/app/lesson/${encodeURIComponent(id)}`;
+    // Resume positions: loaded from Firestore, and the ones saved on this page.
+    const loadedPositions = new Map();
+    const savedPositions = new Map();
+
+    // ─── The lesson on screen ───
+    // One object per shown lesson. Its listeners share one AbortController,
+    // so an old lesson can never save progress under the new lesson's id.
+    let cur = null;
+
     const checkFinished = () => {
       if (!courseLessonIds) return;
       setFinish($("finish"), allDone(courseLessonIds, completedIds));
@@ -223,7 +267,7 @@
     // Done ids with this lesson's live state, for the step bar and up next.
     const doneNow = () => {
       const s = new Set(completedIds);
-      if (isDone) s.add(lessonId); else s.delete(lessonId);
+      if (cur.isDone) s.add(cur.id); else s.delete(cur.id);
       return s;
     };
     // Desktop with a mouse: the steps are links with tooltips, and the side
@@ -231,7 +275,7 @@
     // "all lessons" button opens the same list in a sheet.
     const desktopNav = matchMedia(DESKTOP_NAV_QUERY);
     const lessonList = () => (courseLessonIds ?? []).map((id) => ({ id, ...courseLessons.get(id) }));
-    const stepsNow = () => stepItems(lessonList(), doneNow(), lessonId);
+    const stepsNow = () => stepItems(lessonList(), doneNow(), cur.id);
     const refreshSteps = () => {
       if (!courseLessonIds) return;
       renderStepBar(steps, stepsNow(), {
@@ -239,47 +283,122 @@
       });
     };
     // The side list, shown once the rest of the side column has its final
-    // shape (see outlineReady below), so it never moves after it appears.
+    // shape (see below), so it never moves after it appears.
     const outline = $("outline");
     const outlineList = $("outline-list");
     let outlineShown = false;
     const refreshOutline = () => {
       if (!courseLessonIds || !outlineShown) return;
-      renderOutline(outlineList, outlineGroups(lessonList(), doneNow(), lessonId), { prefix: "side" });
+      renderOutline(outlineList, outlineGroups(lessonList(), doneNow(), cur.id), { prefix: "side" });
     };
-    const navReady = (async () => {
-      const [courseSnap, lessonsSnap] = await Promise.all([
-        getDoc(doc(db, "courses", lesson.courseId)),
-        getDocs(query(collection(db, "lessons"), where("courseId", "==", lesson.courseId), orderBy("order"))),
-      ]);
-      courseUrl = courseSnap.exists()
-        ? `/app/course/${encodeURIComponent(courseSnap.data().slug)}`
-        : "/app/my-courses";
-      $("back").setAttribute("href", courseUrl);
-      lessonsSnap.docs.forEach((d) => courseLessons.set(d.id, d.data()));
-      courseLessonIds = lessonsSnap.docs.map(d => d.id);
-      $("position").textContent = positionLabel(lessonPosition(courseLessonIds, lessonId));
+
+    // Last lesson with other lessons still open: say how many, and link to
+    // the first of them.
+    const showWhatsLeft = () => {
+      if (!courseLessonIds) return;
+      const u = upNext(courseLessonIds, completedIds, cur.id);
+      if (u.type !== "open") { $("left").hidden = true; return; }
+      $("left-text").textContent = `${remainingLabel(u.remaining)}.`;
+      $("left-link").setAttribute("href", lessonHref(u.id));
+      $("left").hidden = false;
+    };
+
+    // Position line, step bar, prev/next and the cards that depend on the
+    // course. Safe to call again at any time.
+    const setLink = (el, href) => {
+      if (href) { el.setAttribute("href", href); el.classList.remove("is-empty"); }
+      else { el.removeAttribute("href"); el.classList.add("is-empty"); }
+    };
+    const drawNav = () => {
+      if (!courseLessonIds || !cur) return;
+      const st = lessonState(courseLessonIds, completedIds, cur.id);
+      $("position").textContent = st.positionText;
       refreshSteps();
-      const n = findNeighbors(courseLessonIds, lessonId);
-      const show = (el, id) => {
-        if (!id) return;
-        el.setAttribute("href", lessonHref(id));
-        el.classList.remove("is-empty");
-      };
-      show($("prev"), n.prev);
-      if (n.next) {
-        show(next, n.next);
+      setLink(prev, st.prev ? lessonHref(st.prev) : null);
+      const icon = next.querySelector(".nav-next-icon");
+      if (st.next) {
+        next.querySelector(".nav-label").textContent = "לשיעור הבא";
+        icon.removeAttribute("hidden");
+        setLink(next, lessonHref(st.next));
       } else {
         // Last lesson: the "next" slot leads back to the course, with no
         // arrow, so it does not look like a second "back" button.
         next.querySelector(".nav-label").textContent = "לכל השיעורים";
-        next.querySelector(".nav-next-icon").remove();
-        next.setAttribute("href", courseUrl);
-        next.classList.remove("is-empty");
+        icon.setAttribute("hidden", "");
+        setLink(next, courseUrl);
       }
       $("nav").classList.remove("is-waiting");
       $("all-lessons").classList.remove("is-waiting");
-    })().catch((e) => console.error("lesson nav failed", e));
+      showWhatsLeft();
+      checkFinished();
+      refreshOutline();
+    };
+    const prefetchNeighbors = () => {
+      if (courseLessonIds && cur) prefetchVideoUrls(neighborIds(courseLessonIds, cur.id), idToken);
+    };
+
+    // ─── Course load: cache first, then the server ───
+    let navDrawn;
+    const navReady = new Promise((r) => { navDrawn = r; });
+    let progressLoaded = false;
+    const applyCourse = (courseSnap, lessonDocs) => {
+      if (courseSnap?.exists()) {
+        courseUrl = `/app/course/${encodeURIComponent(courseSnap.data().slug)}`;
+      }
+      $("back").setAttribute("href", courseUrl);
+      courseLessons.clear();
+      lessonDocs.forEach((d) => courseLessons.set(d.id, d.data()));
+      courseLessonIds = lessonDocs.map((d) => d.id);
+      // A newer title from the server.
+      const fresh = courseLessons.get(cur.id);
+      if (fresh && fresh.title !== cur.lesson.title) {
+        cur.lesson = { ...cur.lesson, title: fresh.title };
+        title.textContent = fresh.title;
+        document.title = lessonDocTitle(fresh.title);
+      }
+      drawNav();
+      navDrawn();
+    };
+    const applyProgress = (docs) => {
+      docs.forEach((d) => {
+        const p = d.data();
+        if (p.completed) completedIds.add(d.id);
+        if (Number.isFinite(p.lastPositionSec)) loadedPositions.set(d.id, p.lastPositionSec);
+      });
+      // The lesson on screen follows its live toggle state.
+      if (cur.isDone) completedIds.add(cur.id); else completedIds.delete(cur.id);
+    };
+    const loadCourse = (courseId) => {
+      const lessonsQuery = query(collection(db, "lessons"), where("courseId", "==", courseId), orderBy("order"));
+      const progressCol = collection(db, "users", user.uid, "progress");
+      // From the cache: only when it has the whole course (at least this
+      // lesson and one more), so a half cache never shows a wrong count.
+      const cached = Promise.all([
+        getDocFromCache(doc(db, "courses", courseId)).catch(() => null),
+        getDocsFromCache(lessonsQuery),
+        getDocsFromCache(progressCol).catch(() => null),
+      ]).then(([c, l, p]) => {
+        if (courseLessonIds) return; // the server was faster
+        const list = l.docs;
+        if (list.length < 2 || !list.some((d) => d.id === cur.id)) return;
+        if (p) applyProgress(p.docs);
+        applyCourse(c, list);
+      }).catch(() => {});
+      const server = Promise.all([
+        getDoc(doc(db, "courses", courseId)),
+        getDocs(lessonsQuery),
+      ]).then(([c, l]) => applyCourse(c, l.docs));
+      server.catch((e) => console.error("lesson nav failed", e));
+      // Which lessons are done (same query as the course page).
+      const progress = Promise.all([server, getDocs(progressCol)])
+        .then(([, snap]) => {
+          applyProgress(snap.docs);
+          progressLoaded = true;
+          drawNav();
+        })
+        .catch((e) => { progressLoaded = true; console.error("loading progress failed", e); });
+      return { cached, server, progress };
+    };
 
     // ─── Step tooltips (desktop) ───
     const tip = $("step-tip");
@@ -318,8 +437,11 @@
     const sheet = $("sheet");
     const sheetList = $("sheet-list");
     const allBtn = $("all-lessons");
+    // Set when a row in the sheet switched the lesson: focus then goes to the
+    // new title, not back to the button.
+    let sheetSwitching = false;
     allBtn.addEventListener("click", () => {
-      renderOutline(sheetList, outlineGroups(lessonList(), doneNow(), lessonId), { prefix: "sheet" });
+      renderOutline(sheetList, outlineGroups(lessonList(), doneNow(), cur.id), { prefix: "sheet" });
       document.documentElement.classList.add("has-sheet");
       sheet.showModal();
       centerCurrent(sheetList);
@@ -329,27 +451,19 @@
     sheet.addEventListener("click", (e) => { if (e.target === sheet) sheet.close(); });
     sheet.addEventListener("close", () => {
       document.documentElement.classList.remove("has-sheet");
+      if (sheetSwitching) { sheetSwitching = false; return; }
       allBtn.focus();
     });
     // Back from the next lesson (page restored from cache): start closed.
     addEventListener("pageshow", (e) => { if (e.persisted && sheet.open) sheet.close(); });
 
-    // Last lesson with other lessons still open: say how many, and link to
-    // the first of them.
-    const showWhatsLeft = () => {
-      const u = upNext(courseLessonIds, completedIds, lessonId);
-      if (u.type !== "open") { $("left").hidden = true; return; }
-      $("left-text").textContent = `${remainingLabel(u.remaining)}.`;
-      $("left-link").setAttribute("href", lessonHref(u.id));
-      $("left").hidden = false;
-    };
-
-    // The bar at the bottom: what to watch next, or what is left.
+    // ─── Up next bar ───
     let upnextOpen = false;
     const openUpNext = async () => {
+      const s = cur;
       await navReady;
-      if (!courseLessonIds || upnextOpen) return;
-      const u = upNext(courseLessonIds, doneNow(), lessonId);
+      if (!courseLessonIds || upnextOpen || s !== cur) return;
+      const u = upNext(courseLessonIds, doneNow(), s.id);
       const target = u.id ? courseLessons.get(u.id) : null;
       if (u.type === "next") {
         fillUpNext(upnextBar, { icon: lessonIcon(target), kicker: "השיעור הבא",
@@ -372,17 +486,19 @@
 
     // When a video ends, make the next step big and easy to tap.
     const highlightNext = async () => {
+      const s = cur;
       await navReady;
+      if (s !== cur) return;
       next.classList.add("is-primary");
       openUpNext();
     };
 
-    const progSnap = await getDoc(doc(db, "users", user.uid, "progress", lessonId));
-    const startAt = progSnap.exists() ? (progSnap.data().lastPositionSec || 0) : 0;
-
-    const save = (extra) => {
+    // ─── Saving ───
+    // Always for the lesson id it was called with, never "the current one".
+    const save = (id, extra) => {
+      if ("lastPositionSec" in extra) savedPositions.set(id, extra.lastPositionSec);
       const saved = setDoc(
-        doc(db, "users", user.uid, "progress", lessonId),
+        progressRef(id),
         { updatedAt: new Date().toISOString(), ...extra },
         { merge: true }
       );
@@ -390,108 +506,107 @@
       // Callers still get the same promise, errors included.
       if ("completed" in extra) {
         saved.then(() => {
-          if (extra.completed) completedIds.add(lessonId); else completedIds.delete(lessonId);
+          if (extra.completed) completedIds.add(id); else completedIds.delete(id);
           checkFinished();
+          // A lesson left before its save finished: its step and row now
+          // show the saved state (the lesson on screen draws its own).
+          if (id !== cur.id) { refreshSteps(); refreshOutline(); showWhatsLeft(); }
         }, () => {});
       }
       return saved;
     };
 
-    // "Mark as done" toggle under the player. Starts from the saved progress doc.
-    isDone = progSnap.exists() && progSnap.data().completed === true;
-    // The state last drawn on the page. The moment plays only when it changes
-    // during this visit; the first render is instant.
-    let shownDone = null;
+    // ─── The done toggle ───
+    // shownDone: the state last drawn. The moment plays only when it changes
+    // while this lesson is on screen; the first render is instant.
     const renderDone = () => {
-      const animate = shownDone !== null && shownDone !== isDone;
-      setDoneButton(doneBtn, isDone, { animate });
-      fillStep(steps, lessonId, isDone, { instant: !animate });
+      const s = cur;
+      const animate = s.shownDone !== null && s.shownDone !== s.isDone;
+      setDoneButton(doneBtn, s.isDone, { animate });
+      fillStep(steps, s.id, s.isDone, { instant: !animate });
       relabelSteps(steps, stepsNow());
       refreshOutline();
-      if (animate) announce(live, isDone ? DONE_ANNOUNCE : UNDONE_ANNOUNCE);
-      shownDone = isDone;
+      if (animate) announce(live, s.isDone ? DONE_ANNOUNCE : UNDONE_ANNOUNCE);
+      s.shownDone = s.isDone;
     };
     // Only updates the button; callers save the doc themselves.
-    const markDone = () => { isDone = true; renderDone(); };
-    // Set once the 90% rule has fired or the student chose by hand, so the
-    // auto rule never overrides a manual "not done".
-    let autoDone = isDone;
+    const markDone = (s) => { if (s !== cur) return; s.isDone = true; renderDone(); };
     doneBtn.addEventListener("click", async () => {
-      const want = !isDone;
+      const s = cur;
+      const want = !s.isDone;
       doneBtn.disabled = true;
       try {
-        await save({ completed: want });
-        isDone = want;
-        autoDone = true;
-        renderDone();
+        await save(s.id, { completed: want });
+        s.isDone = want;
+        // Set once the 90% rule has fired or the student chose by hand, so
+        // the auto rule never overrides a manual "not done".
+        s.autoDone = true;
+        if (s === cur) renderDone();
       } catch (e) {
         console.error("saving done state failed", e);
       } finally {
-        doneBtn.disabled = false;
+        if (s === cur) doneBtn.disabled = false;
       }
     });
-    renderDone();
 
-    // Load which lessons are done (same query as the course page), then check
-    // the finish card. The current lesson follows the live toggle state, in
-    // case it was saved while this query was running.
-    const progressReady = Promise.all([navReady, getDocs(collection(db, "users", user.uid, "progress"))])
-      .then(([, snap]) => {
-        snap.docs.forEach((d) => { if (d.data().completed) completedIds.add(d.id); });
-        if (isDone) completedIds.add(lessonId); else completedIds.delete(lessonId);
-        checkFinished();
-        refreshSteps();
-        showWhatsLeft();
-      })
-      .catch((e) => console.error("loading progress failed", e));
+    // ─── Media ───
+    // Stops the old lesson: its last position is written once, under its own
+    // id, then its listeners go and the player is emptied.
+    const leaveLesson = (s) => {
+      if (!s.isImage && shouldFlushPosition({
+        attached: s.attached, currentTime: video.currentTime, lastSaved: s.lastSaved, ended: video.ended,
+      })) {
+        save(s.id, { lastPositionSec: Math.floor(video.currentTime) }).catch(() => {});
+      }
+      s.ac.abort();
+      if (s.attached) {
+        video.pause();
+        video.removeAttribute("src");
+        video.load();
+        image.removeAttribute("src");
+      }
+    };
 
-    // Desktop side list: after the cards above it have appeared.
-    Promise.all([navReady, progressReady, mediaReady]).then(() => {
-      if (!courseLessonIds?.length) return;
-      outlineShown = true;
-      refreshOutline();
-      outline.hidden = false;
-      centerCurrent(outlineList);
-    });
-
-    const token = await user.getIdToken();
-    const resp = await fetch(`/api/video-url?lessonId=${encodeURIComponent(lessonId)}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (resp.status === 403) { showError("אין לך גישה לשיעור הזה"); throw new Error("403"); }
-    if (!resp.ok) { showError(isImage ? "שגיאה בטעינת הטיפ" : "שגיאה בטעינת הסרטון"); throw new Error("video-url failed"); }
-    const { url } = await resp.json();
-    // Show the toggle only once the lesson has loaded (not next to an error).
-    doneBtn.classList.remove("is-waiting");
-    $("feedback").hidden = false;
-    mediaSettled();
-
-    if (isImage) {
-      // Tips are images: show them instead of the player, and count as done once seen.
-      video.remove();
-      image.hidden = false;
-      image.setAttribute("alt", lesson.title ?? "");
-      image.addEventListener("load", () => { markDone(); save({ completed: true }); });
-      image.setAttribute("src", url);
-    } else {
-      image.remove();
+    const attachMedia = (s, url) => {
+      const { signal } = s.ac;
+      s.attached = true;
+      const loaded = () => { if (s === cur) setLoading(false); };
+      if (s.isImage) {
+        // Tips are images: show them instead of the player, and count as done once seen.
+        video.hidden = true;
+        image.hidden = false;
+        image.setAttribute("alt", s.lesson.title ?? "");
+        image.addEventListener("load", () => { loaded(); markDone(s); save(s.id, { completed: true }); }, { signal });
+        image.addEventListener("error", loaded, { signal });
+        image.setAttribute("src", url);
+        return;
+      }
+      image.hidden = true;
+      video.hidden = false;
+      video.addEventListener("loadedmetadata", () => {
+        loaded();
+        if (s.startAt > 0) video.currentTime = s.startAt;
+      }, { signal });
+      // iPhones load nothing before play, so the loading state also ends on
+      // play, on an error, or after a short wait.
+      video.addEventListener("play", loaded, { signal });
+      video.addEventListener("error", loaded, { signal });
+      setTimeout(loaded, 3000);
       video.src = url;
-      video.addEventListener("loadedmetadata", () => { if (startAt > 0) video.currentTime = startAt; });
 
-      let lastSaved = 0;
-      const savePosition = (extra) => save({ lastPositionSec: Math.floor(video.currentTime), ...extra });
-      // Done at 90% watched. Written once per visit, not on every tick.
+      const savePosition = (extra) => save(s.id, { lastPositionSec: Math.floor(video.currentTime), ...extra });
+      // Done at 90% watched. Written once per lesson visit, not on every tick.
       video.addEventListener("timeupdate", () => {
-        if (!autoDone && shouldComplete(video.currentTime, video.duration)) {
-          autoDone = true;
-          markDone();
-          lastSaved = video.currentTime;
+        if (!s.autoDone && shouldComplete(video.currentTime, video.duration)) {
+          s.autoDone = true;
+          markDone(s);
+          s.lastSaved = video.currentTime;
           savePosition({ completed: true });
           return;
         }
-        if (video.currentTime - lastSaved > 10) { lastSaved = video.currentTime; savePosition({}); }
-      });
-      video.addEventListener("ended", () => { markDone(); savePosition({ completed: true }); highlightNext(); });
+        if (video.currentTime - s.lastSaved > 10) { s.lastSaved = video.currentTime; savePosition({}); }
+      }, { signal });
+      video.addEventListener("ended", () => { markDone(s); savePosition({ completed: true }); highlightNext(); }, { signal });
 
       // Up next bar: open while she is past 90% (or at the end), closed again
       // if she goes back to watch an earlier part. Display only, saves nothing.
@@ -499,9 +614,131 @@
         if (video.ended || shouldComplete(video.currentTime, video.duration)) openUpNext();
         else closeUpNext();
       };
-      video.addEventListener("timeupdate", syncUpNext);
-      video.addEventListener("seeked", syncUpNext);
-    }
+      video.addEventListener("timeupdate", syncUpNext, { signal });
+      video.addEventListener("seeked", syncUpNext, { signal });
+    };
+
+    // Draws the lesson and loads its media. `first` is the page load; later
+    // calls are in-place switches.
+    // opts: { push: add a history entry, focus: move focus to the title }
+    const showLesson = async (id, { push = false, focus = false, first = null } = {}) => {
+      if (!first && !progressLoaded) {
+        // A very fast click: wait for the saved progress, so the done state
+        // and the resume position are right.
+        await course.progress;
+      }
+      const lesson = first ? first.lesson : courseLessons.get(id);
+      if (!lesson) throw new Error(`lesson ${id} is not in this course`);
+      const old = first ? null : cur;
+      if (old) leaveLesson(old);
+
+      const prog = first?.prog?.exists() ? first.prog.data() : null;
+      const s = {
+        id, lesson, isImage: lesson.kind === "image",
+        ac: new AbortController(), attached: false, lastSaved: 0, shownDone: null,
+        isDone: first ? prog?.completed === true : completedIds.has(id),
+        startAt: first ? (prog?.lastPositionSec || 0) : resumeAt(id, { saved: savedPositions, loaded: loadedPositions }),
+      };
+      s.autoDone = s.isDone;
+      cur = s;
+      if (push) history.pushState({ lessonId: id }, "", lessonHref(id));
+
+      // Text and states that belong to this lesson.
+      title.textContent = lesson.title;
+      document.title = lessonDocTitle(lesson.title);
+      $("whatsapp").setAttribute("href", whatsAppFeedbackUrl(lesson.title));
+      // Lessons are videos unless marked otherwise; older docs have no `kind`.
+      frame.classList.toggle("is-image", s.isImage);
+      msg.textContent = "";
+      frame.hidden = false;
+      doneBtn.hidden = false;
+      doneBtn.disabled = false;
+      lessonBody.classList.remove("is-pending");
+      renderDone();
+      if (old) {
+        // A switch: the loading state shows on the frame only.
+        setLoading(true);
+        hideTip();
+        closeUpNext();
+        next.classList.remove("is-primary");
+        drawNav();
+        if (focus) {
+          title.focus({ preventScroll: true });
+          scrollTo({ top: 0, behavior: reducedMotion.matches ? "instant" : "smooth" });
+        }
+        announce(live, switchAnnouncement(lessonState(courseLessonIds, completedIds, id).position, lesson.title));
+      }
+
+      let url;
+      try {
+        url = await (first ? first.url : getVideoUrl(id, idToken));
+      } catch (e) {
+        if (s !== cur) return;
+        if (e?.status === 403) { showError("אין לך גישה לשיעור הזה"); return; }
+        // A switch that could not get its video: try a normal page load.
+        if (old) { location.assign(lessonHref(id)); return; }
+        showError(s.isImage ? "שגיאה בטעינת הטיפ" : "שגיאה בטעינת הסרטון");
+        return;
+      }
+      if (s !== cur) return; // she already moved on
+      // Show the toggle only once the lesson has loaded (not next to an error).
+      doneBtn.classList.remove("is-waiting");
+      $("feedback").hidden = false;
+      mediaSettled();
+      attachMedia(s, url);
+      prefetchNeighbors();
+    };
+
+    // Any failure while switching: fall back to a normal page load.
+    const switchTo = (id, opts) => showLesson(id, opts).catch((e) => {
+      console.error("switching lesson failed", e);
+      location.assign(lessonHref(id));
+    });
+
+    // Plain left clicks on links to a lesson of this course (prev/next, up
+    // next, step bar, side list, sheet, "continue"). The links keep their
+    // real href, so a new tab, a middle click and no JS still work.
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest?.("a[href]");
+      if (!a) return;
+      const id = switchTarget({
+        href: a.href, target: a.getAttribute("target"), download: a.hasAttribute("download"),
+        button: e.button, ctrlKey: e.ctrlKey, metaKey: e.metaKey, shiftKey: e.shiftKey,
+        altKey: e.altKey, defaultPrevented: e.defaultPrevented,
+      }, { origin: location.origin, lessonIds: courseLessonIds });
+      if (!id) return;
+      e.preventDefault();
+      if (sheet.open) { sheetSwitching = true; sheet.close(); }
+      if (id === cur.id) return;
+      switchTo(id, { push: true, focus: true });
+    });
+
+    // Back and forward between lessons of this page.
+    addEventListener("popstate", (e) => {
+      const id = e.state?.lessonId ?? lessonIdFromPath(location.pathname);
+      if (!id || id === cur.id) return;
+      if (!courseLessonIds?.includes(id)) { location.reload(); return; }
+      if (sheet.open) { sheetSwitching = true; sheet.close(); }
+      switchTo(id, { push: false, focus: false });
+    });
+    history.replaceState({ lessonId: firstId }, "");
+
+    // ─── First lesson ───
+    // showLesson sets `cur` before its first await, so the course load below
+    // can read it.
+    const firstShown = showLesson(firstId, { first: { lesson: firstLesson, prog: firstProg, url: firstUrl } })
+      .catch((e) => console.error("showing the lesson failed", e));
+    const course = loadCourse(firstLesson.courseId);
+    Promise.all([navReady, firstShown]).then(prefetchNeighbors);
+
+    // Desktop side list: after the cards above it have appeared.
+    Promise.all([navReady, course.progress, mediaReady, firstShown]).then(() => {
+      if (!courseLessonIds?.length) return;
+      outlineShown = true;
+      refreshOutline();
+      outline.hidden = false;
+      centerCurrent(outlineList);
+    });
   </script>
 </body>
 </html>
