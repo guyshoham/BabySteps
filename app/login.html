@@ -54,6 +54,13 @@
     </div>
   </main>
 
+  <!-- Legal links (U20). The app pages have no footer, so a small row here. -->
+  <nav aria-label="מידע משפטי" style="display:flex; flex-wrap:wrap; justify-content:center; gap:0 var(--s-5); margin-block-start:var(--s-5); font-size:var(--fs-small);">
+    <a class="app-link" href="/terms" style="display:inline-flex; align-items:center; min-block-size:44px;">תנאי שימוש</a>
+    <a class="app-link" href="/privacy" style="display:inline-flex; align-items:center; min-block-size:44px;">מדיניות פרטיות</a>
+    <a class="app-link" href="/accessibility" style="display:inline-flex; align-items:center; min-block-size:44px;">הצהרת נגישות</a>
+  </nav>
+
   <script type="module">
     import { signIn, resetPassword, auth, onAuthStateChanged } from "/app/firebase-client.js";
     import { safeNext } from "/app/safe-next.js";

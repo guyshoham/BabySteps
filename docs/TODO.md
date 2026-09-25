@@ -133,29 +133,16 @@ what is still open.
 
 ## Trust and legal
 
-- [ ] **[T1] P1 — Terms of use, refund policy and health disclaimer.** `/terms` returns 404 and no
-  page mentions refunds or says the course is not medical advice. Selling online without terms
-  invites disputes and PayPal claims, and Israeli distance-selling rules give buyers cancellation
-  rights that may or may not apply to digital content once watched. **Fix:** write a short Hebrew
-  `/terms` page: what the buyer gets, personal use only (no sharing the login), how long access
-  lasts, the WhatsApp terms (C5), and the refund rule (for example full refund within 14 days if
-  fewer than 3 lessons were watched; check it with an accountant or lawyer). Link it in the footer
-  and under the PayPal button. Add one line on the sales page and the course page: "התכנים אינם
-  תחליף לייעוץ רפואי או לפיזיותרפיה. בכל חשש, התייעצי עם רופא/ת הילדים". For a refund: refund in
-  PayPal, delete the enrollment doc in Firestore, issue a credit note (F2).
-- [ ] **[T2] P2 — Privacy policy.** `/privacy` returns 404. The site stores buyer emails and
-  progress, passes data through PayPal, Make, Firebase, Cloudflare and Vercel, and mothers send
-  videos of their babies on WhatsApp. Israeli privacy law (Amendment 13, in force since August
-  2025) expects clear notice. **Fix:** a short Hebrew `/privacy` page: what is stored and where, who
-  processes it, how long baby videos are kept on WhatsApp, and how to ask for deletion. Link it in
-  the footer and on the login page.
-- [ ] **[T3] P2 — Accessibility statement and a real footer.** `index.html:320-322`. There is no
-  accessibility statement, and the footer text is very low contrast (`opacity:0.4`). The footer has
-  no email, no business number, and no legal links. Israeli rules require a statement for many
-  sites; check whether the small-business exemption applies. **Fix:** add `/accessibility` with the
-  level reached and a contact for problems. On every page, the app included, show a contact email,
-  "עוסק פטור" with the number if Yarden agrees, and links to T1, T2 and the statement. Fix the
-  contrast. The React rebuild on `@babysteps/ui` is the place to meet the standard fully.
+- [ ] **[T1] P1 — Health line on the sales and course pages.** `/terms` is live (refund rule,
+  health disclaimer, personal use). What is left: add one line on the sales page and on the course
+  page: "התכנים אינם תחליף לייעוץ רפואי או לפיזיותרפיה. בכל חשש, התייעצי עם רופא/ת הילדים". A lawyer
+  may review the terms later. For a refund: refund in PayPal, delete the enrollment doc in
+  Firestore, issue a credit note (F2).
+- [ ] **[T3] P2 — Accessibility: what the statement lists as not done.** `/accessibility` is live
+  and lists the gaps: no captions on the course videos and the teaser (planned), golden tips are
+  images with only the title as alt text, no skip link in the app. Fix these, then update the
+  statement and its date. The React rebuild on `@babysteps/ui` is the place to meet the standard
+  fully. Never add "עוסק פטור" or a business number (owner decision, 2026-09-26).
 
 ## SEO, speed and analytics
 
@@ -186,9 +173,6 @@ what is still open.
   `ol.bs-lesson-list` in the LessonListItem FullList story (children are not list items) and a
   heading-order warning in the AppScreens example. **Fix:** wrap items in `<li>` and fix heading
   levels. Then consider `@storybook/addon-vitest` so a11y violations fail CI.
-- [ ] **[U20] P2 — Link the legal pages.** `/terms`, `/privacy` and `/accessibility` exist only as
-  drafts (#39, #42, #46). **Fix:** once Yarden approves them, remove `noindex`, add footer links on
-  every page (the footer uses `.footer-link` now), and link terms under the PayPal button.
 - [ ] **[U21] P2 — Nav text overlaps on the tummy time page.** `challenge/tummy-time/index.html:76-78`.
   The nav holds the brand, "כניסה לקורס" and a bordered "→ חזרה לדף הבית" button. At 360px and 320px
   "כניסה לקורס" is drawn on top of "ירדן שוהם / מתחילים בקטן", and at 390px the boxes touch. The

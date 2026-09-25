@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <script>document.documentElement.classList.add('js')</script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <link rel="icon" type="image/png" href="/assets/logos/logo-peach.png">
+    <link rel="apple-touch-icon" href="/assets/logos/logo-peach.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light">
+    <title>הצהרת נגישות | מתחילים בקטן</title>
+    <meta name="description" content="הצהרת הנגישות של האתר מתחילים בקטן: מה הונגש, מה עוד לא, ואיך לפנות לרכזת הנגישות.">
+    <link rel="canonical" href="https://baby-steps-murex.vercel.app/accessibility">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap"></noscript>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/assets/css/legal.css">
+    <style>
+        /* Metric-matched fallback while Rubik loads, so text does not reflow (CLS). */
+        @font-face {
+            font-family: "Rubik Fallback";
+            src: local("Arial"), local("ArialMT");
+            size-adjust: 102.9%;
+        }
+        body { font-family: 'Rubik', 'Rubik Fallback', system-ui, sans-serif; }
+    </style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">דלגי לתוכן</a>
+
+<nav class="site-nav" aria-label="ראשי">
+    <div class="site-nav__inner container">
+        <a class="site-brand" href="/">
+            <img class="site-brand-logo" src="/assets/logos/logo-peach.png" alt="" width="44" height="44" decoding="async">
+            <span>
+                <span class="site-brand-name">ירדן שוהם</span>
+                <span class="site-brand-tag">מתחילים בקטן</span>
+            </span>
+        </a>
+        <div class="nav-actions">
+            <a class="nav-login" href="/app/login">כניסה לקורס</a>
+        </div>
+    </div>
+</nav>
+
+<main id="main" class="legal">
+    <div class="container legal__grid">
+
+        <header class="legal__head">
+            <h1 class="t-display">הצהרת נגישות</h1>
+            <p class="t-lead">חשוב לי שכל הורה יוכל להשתמש באתר ובקורס בקלות, גם עם מוגבלות. כאן כתוב מה כבר נגיש, מה עוד לא, ואיך לפנות אליי.</p>
+            <p class="t-small legal__date">עודכן לאחרונה: <time datetime="2026-09-26">26.9.2026</time></p>
+        </header>
+
+        <nav class="legal__toc" aria-labelledby="toc-title">
+            <h2 id="toc-title" class="legal__toc-title">בדף הזה</h2>
+            <ol>
+                <li><a href="#level">רמת הנגישות</a></li>
+                <li><a href="#done">מה נעשה באתר</a></li>
+                <li><a href="#limits">מה עוד לא נגיש</a></li>
+                <li><a href="#coordinator">רכזת הנגישות</a></li>
+                <li><a href="#report">איך מדווחים על בעיה</a></li>
+            </ol>
+        </nav>
+
+        <article class="legal__body">
+
+            <section class="legal__section" id="level" aria-labelledby="level-h">
+                <h2 id="level-h"><span class="legal__n">1.</span>רמת הנגישות</h2>
+                <p class="legal__key">האתר עומד בחלק מדרישות תקן 5568 ברמה AA.</p>
+                <p>התקן הישראלי 5568 מבוסס על ההנחיות הבינלאומיות <bdi>WCAG 2.0</bdi>. האתר עוד לא עומד בכל הדרישות של התקן. הפירוט נמצא בסעיף 3, ואני ממשיכה לשפר.</p>
+            </section>
+
+            <section class="legal__section" id="done" aria-labelledby="done-h">
+                <h2 id="done-h"><span class="legal__n">2.</span>מה נעשה באתר</h2>
+                <ul>
+                    <li>האתר כתוב בעברית ומוצג מימין לשמאל. שפת הדף מוגדרת, כך שקורא מסך מקריא אותו נכון.</li>
+                    <li>לתמונות יש טקסט חלופי. תמונות שהן קישוט בלבד מסומנות כך שקורא מסך מדלג עליהן.</li>
+                    <li>אפשר להגיע לכל הקישורים והכפתורים במקלדת, ורואים בבירור איפה נמצא הפוקוס.</li>
+                    <li>בדפי האתר יש קישור "דלגי לתוכן" בראש הדף.</li>
+                    <li>צבעי הטקסט נבדקו, כדי שהניגוד מול הרקע יהיה 4.5:1 לפחות.</li>
+                    <li>כשמבקשים במכשיר "הפחתת תנועה", האנימציות באתר נעצרות.</li>
+                    <li>האתר מותאם לטלפון, והטקסט גדל כשמגדילים את התצוגה.</li>
+                    <li>כפתורים וקישורים גדולים מספיק כדי ללחוץ עליהם בקלות באצבע.</li>
+                    <li>בטופס הכניסה לקורס יש תווית לכל שדה, והודעות שגיאה מוקראות.</li>
+                </ul>
+            </section>
+
+            <section class="legal__section" id="limits" aria-labelledby="limits-h">
+                <h2 id="limits-h"><span class="legal__n">3.</span>מה עוד לא נגיש</h2>
+                <ul>
+                    <li>לסרטוני הקורס ולסרטון ההצצה בדף הקורס אין עדיין כתוביות. כתוביות לסרטוני הקורס נמצאות בתכנון.</li>
+                    <li>טיפי הזהב בקורס הם תמונות. הטקסט החלופי שלהן הוא רק שם הטיפ, ולא כל התוכן שבתמונה.</li>
+                    <li>באזור הקורסים אין עדיין קישור "דלגי לתוכן".</li>
+                    <li>התשלום נעשה באתר של <bdi>PayPal</bdi>, והקשר האישי נעשה בווטסאפ. הנגישות שלהם לא בשליטה שלי.</li>
+                    <li>עוד לא בדקתי את האתר עם כל קוראי המסך וכל המכשירים.</li>
+                </ul>
+                <p>אם משהו באתר לא נגיש לך, אשמח לעזור ולתת לך את המידע בדרך אחרת, למשל בווטסאפ, בטלפון או במייל.</p>
+            </section>
+
+            <aside class="legal__contact" id="coordinator" aria-labelledby="coordinator-h">
+                <h2 id="coordinator-h"><span class="legal__n">4.</span>רכזת הנגישות</h2>
+                <p>רכזת הנגישות היא ירדן שוהם. אפשר לפנות אליי:</p>
+                <ul>
+                    <li><a href="https://wa.me/972542366243?text=%D7%94%D7%99%D7%99%2C%20%D7%A0%D7%AA%D7%A7%D7%9C%D7%AA%D7%99%20%D7%91%D7%91%D7%A2%D7%99%D7%99%D7%AA%20%D7%A0%D7%92%D7%99%D7%A9%D7%95%D7%AA%20%D7%91%D7%90%D7%AA%D7%A8" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-whatsapp"/></svg><span>ווטסאפ או טלפון <span dir="ltr">054-236-6243</span></span></a></li>
+                    <li><a href="mailto:yarden.babysteps@gmail.com"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-mail"/></svg><bdi dir="ltr">yarden.babysteps@gmail.com</bdi></a></li>
+                </ul>
+            </aside>
+
+            <section class="legal__section" id="report" aria-labelledby="report-h">
+                <h2 id="report-h"><span class="legal__n">5.</span>איך מדווחים על בעיה</h2>
+                <p>נתקלת בבעיית נגישות? אשמח לשמוע. כדי שאוכל לעזור מהר, כדאי לכתוב:</p>
+                <ul>
+                    <li>באיזה דף הייתה הבעיה.</li>
+                    <li>מה ניסית לעשות, ומה קרה.</li>
+                    <li>באיזה מכשיר, דפדפן או תוכנת עזר השתמשת (אם ידוע לך).</li>
+                </ul>
+                <p>אחזור אלייך תוך 14 ימי עבודה.</p>
+            </section>
+
+        </article>
+    </div>
+</main>
+
+<footer class="site-footer">
+    <div class="site-footer__inner container">
+        <div class="site-footer__brand">
+            <img class="site-footer__logo" src="/assets/logos/logo-peach.png" alt="" width="44" height="44" loading="lazy" decoding="async">
+            <div>
+                <p class="site-footer__name">ירדן שוהם, מתחילים בקטן</p>
+                <p class="site-footer__tag">מלווה התפתחותית. קורסים דיגיטליים לתינוקות.</p>
+            </div>
+        </div>
+        <ul class="site-footer__links">
+            <li><a href="https://wa.me/972542366243" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-whatsapp"/></svg><bdi>WhatsApp</bdi></a></li>
+            <li><a href="https://www.instagram.com/yarden_shoham7/" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-instagram"/></svg><bdi>Instagram</bdi></a></li>
+            <li><a href="/app/login"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-lock"/></svg>כניסה לקורס</a></li>
+        </ul>
+        <p class="site-footer__meta">© 2026 ירדן שוהם. כל הזכויות שמורות.</p>
+        <ul class="site-footer__legal">
+            <li><a href="/terms">תנאי שימוש</a></li>
+            <li><a href="/privacy">מדיניות פרטיות</a></li>
+            <li><a href="/accessibility" aria-current="page">הצהרת נגישות</a></li>
+        </ul>
+    </div>
+</footer>
+
+<script src="/site.js" defer></script>
+
+</body>
+</html>

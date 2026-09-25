@@ -804,3 +804,31 @@ summary {
     animation: confettiFall 1.8s ease-in forwards;
     pointer-events: none;
 }
+
+/* ─── Footer legal links (U20) ────────── */
+/* Added by the legal pages PR. Small row under the copyright line:
+   <ul class="site-footer__legal"><li><a href="/terms">…</a></li>…</ul>
+   #f3dfd0 on brown is about 6.5:1. WP8 may move this next to the footer rules. */
+.site-footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--s-5);
+    margin-block-start: calc(-1 * var(--s-4));
+}
+.site-footer__legal a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: var(--fs-small);
+    color: #f3dfd0;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+}
+.site-footer__legal a:hover,
+.site-footer__legal a[aria-current="page"] { color: #fff; }
+.site-footer__legal a:focus-visible { outline-color: #fff; }
+@media (min-width: 768px) {
+    .site-footer__legal { grid-column: 1 / -1; }
+}
+/* ─── end footer legal links ─── */
