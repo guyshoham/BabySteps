@@ -38,11 +38,11 @@ export const DATA = {
   lessons: [
     // — 10 סרטוני הדרכה — titles taken from the source filenames
     { id: "rolling-01", courseId: "rolling", order: 1,  kind: "video", title: "התהפכויות",              r2Key: "rolling/lesson-01.mp4", durationSec: 0, description: "" },
-    { id: "rolling-02", courseId: "rolling", order: 2,  kind: "video", title: "חימום — חלק א",          r2Key: "rolling/lesson-02.mp4", durationSec: 0, description: "" },
-    { id: "rolling-03", courseId: "rolling", order: 3,  kind: "video", title: "חימום — חלק ב",          r2Key: "rolling/lesson-03.mp4", durationSec: 0, description: "" },
+    { id: "rolling-02", courseId: "rolling", order: 2,  kind: "video", title: "חימום, חלק א",          r2Key: "rolling/lesson-02.mp4", durationSec: 0, description: "" },
+    { id: "rolling-03", courseId: "rolling", order: 3,  kind: "video", title: "חימום, חלק ב",          r2Key: "rolling/lesson-03.mp4", durationSec: 0, description: "" },
     { id: "rolling-04", courseId: "rolling", order: 4,  kind: "video", title: "אקורדיון",               r2Key: "rolling/lesson-04.mp4", durationSec: 0, description: "" },
-    { id: "rolling-05", courseId: "rolling", order: 5,  kind: "video", title: "מזרונים — חלק א",        r2Key: "rolling/lesson-05.mp4", durationSec: 0, description: "" },
-    { id: "rolling-06", courseId: "rolling", order: 6,  kind: "video", title: "מזרונים — חלק ב",        r2Key: "rolling/lesson-06.mp4", durationSec: 0, description: "" },
+    { id: "rolling-05", courseId: "rolling", order: 5,  kind: "video", title: "מזרונים, חלק א",        r2Key: "rolling/lesson-05.mp4", durationSec: 0, description: "" },
+    { id: "rolling-06", courseId: "rolling", order: 6,  kind: "video", title: "מזרונים, חלק ב",        r2Key: "rolling/lesson-06.mp4", durationSec: 0, description: "" },
     { id: "rolling-07", courseId: "rolling", order: 7,  kind: "video", title: "מעקב מבט",               r2Key: "rolling/lesson-07.mp4", durationSec: 0, description: "" },
     { id: "rolling-08", courseId: "rolling", order: 8,  kind: "video", title: "לביאה וגורייה",          r2Key: "rolling/lesson-08.mp4", durationSec: 0, description: "" },
     { id: "rolling-09", courseId: "rolling", order: 9,  kind: "video", title: "מודעות לכפות הרגליים",   r2Key: "rolling/lesson-09.mp4", durationSec: 0, description: "" },

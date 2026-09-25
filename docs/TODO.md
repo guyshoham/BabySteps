@@ -30,23 +30,15 @@ what is still open.
 
 ## Conversion
 
-- [ ] **[C2] P1 — Remove the crossed-out price.** The fake "200+" numbers and the star ratings are
-  gone (2026-09-26). What is left: both offer cards on `challenge/rolling/index.html` still show
-  ₪205 crossed out, and ₪205 was never a real price. That is misleading under Israeli consumer law.
-  **Fix:** remove the strikethrough, or run a real launch price with an end date ("מחיר השקה עד
-  31.10") and raise the price on that date.
-- [ ] **[C3] P3 — One more FAQ question.** The FAQ on the rolling page (#73) answers age, access,
-  phone, refund, WhatsApp, the login email and paying without PayPal. **Fix:** ask Yarden about
-  premature babies ("מתאים גם לפגים?") and add the answer.
+- [ ] **[C2] P3 — Optional: a real launch price.** Owner decision 2026-09-26: keep the ₪205
+  crossed-out price for now (see `docs/decisions/2026-09-26-owner-decisions.md`). **Fix (only if the
+  owner asks):** turn it into a real launch price with an end date ("מחיר השקה עד 31.10") and raise
+  the price to ₪205 on that date.
 - [ ] **[C4] P2 — Say who it is for in the hero.** `challenge/rolling/index.html:487`. The hero
   talks about calm and confidence but never says the baby's age, the length of the course, or that
   it works on a phone. Mothers from Instagram decide in seconds. **Fix:** add one line under the
   title, for example "לתינוקות בגילאי 3 עד 7 חודשים · 10 סרטונים קצרים · צופים מהנייד" (confirm the
   age range and lengths with Yarden).
-- [ ] **[C5] P3 — A response time for the WhatsApp feedback.** The page and the FAQ now say the
-  feedback has no time limit, but they give no response time. An open promise can bury a solo owner
-  once sales grow. **Fix:** if the load grows, agree a response time with Yarden (for example
-  "מענה תוך 48 שעות בימי חול") and show it in the FAQ and on `/terms`.
 - [ ] **[C6] P2 — One clear way to pay.** `challenge/rolling/index.html:635-668` (`.pay__grid`). Two equal cards
   (PayPal and Bit/Paybox) split the choice, and the Bit/Paybox path needs Yarden to enroll the
   buyer by hand (`docs/go-live-checklist.md:160`). Many Israeli mothers do not have PayPal and may
@@ -90,10 +82,6 @@ what is still open.
   empty and `durationSec` is 0 (`:12` says no page reads it). A parent cannot find a tip again or
   plan a session. **Fix:** get real titles and one-line descriptions from Yarden, fill durations,
   reseed, and show the description and length on `app/lesson.html` and `app/course.html`.
-- [ ] **[L11] P3 — Dashes in lesson titles.** `scripts/course-data.js:41-45`. Four titles use an em
-  dash ("חימום — חלק א"), and the course and lesson pages show them as is. The site style has no em
-  dashes, and the sales page already writes "חימום, חלק א". **Fix:** change them to a comma, check
-  `tests/sales-syllabus.test.js`, and reseed.
 
 ## Trust and legal
 
@@ -170,6 +158,3 @@ what is still open.
 - [ ] **[H1] P3 — Delete `staging/`.** 696 MB of the web-ready videos (the same 18 files as in R2,
   checked 2026-09-25). **Fix:** Guy uploads `staging/` to Google Drive as a backup first, then
   `rm -rf staging/`.
-- [ ] **[H12] P3 — Stale line in CLAUDE.md.** It says the `app/` pages still use the Tailwind CDN.
-  They do not since WP5 to WP7: they load `app/app.css` and the page CSS files. **Fix:** update the
-  "Course platform" line.
