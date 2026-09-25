@@ -24,12 +24,14 @@ export function continueLabel({ done, total }) {
   return "המשיכי מאיפה שעצרת";
 }
 
-// One entry per lesson, in order, for the step bar: true when that lesson is done.
-// A gap stays a gap, so the bar shows exactly which steps are done.
+// One entry per lesson for the step bar. The bar is a progress bar, not a map:
+// it fills from the start, one step per done lesson, so "2 מתוך 18" always shows
+// as the first 2 steps. The lesson list shows which lessons are done.
 export function stepStates(lessonIds, completedIds) {
   const ids = Array.isArray(lessonIds) ? lessonIds : [];
   const completed = completedIds instanceof Set ? completedIds : new Set(completedIds ?? []);
-  return ids.map((id) => completed.has(id));
+  const done = ids.filter((id) => completed.has(id)).length;
+  return ids.map((_, i) => i < done);
 }
 
 // The progress line and the step bar's spoken value: "3 מתוך 18 שיעורים".

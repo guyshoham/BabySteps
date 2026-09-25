@@ -43,9 +43,10 @@ describe("continueLabel", () => {
 });
 
 describe("stepStates", () => {
-  it("marks each lesson done or not, in order, gaps included", () => {
-    expect(stepStates(L, new Set(["l2", "l4"]))).toEqual([false, true, false, true]);
+  it("fills from the start, one step per done lesson, whatever lessons are done", () => {
+    expect(stepStates(L, new Set(["l2", "l4"]))).toEqual([true, true, false, false]);
     expect(stepStates(L, ["l1", "other"])).toEqual([true, false, false, false]);
+    expect(stepStates(L, L)).toEqual([true, true, true, true]);
   });
   it("handles missing input", () => {
     expect(stepStates(undefined, undefined)).toEqual([]);
