@@ -19,81 +19,203 @@
   --app-radius-lg: var(--r-lg);
 }
 
+/* ─── Base ───────────────────────────────
+   Safe next to Tailwind (course and lesson pages still load it): these match
+   its preflight. Login, auth-action and my-courses do not load Tailwind. */
+*, *::before, *::after { box-sizing: border-box; }
 body {
-  font-family: 'Rubik', sans-serif;
-  background: var(--app-cream);
-  color: var(--app-text);
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--c-cream);
+  color: var(--c-ink);
   -webkit-font-smoothing: antialiased;
 }
-
-/* Text */
-.app-mid { color: var(--app-text-mid); }
-.app-muted { color: var(--app-text-muted); }
-.app-brown { color: var(--app-brown); }
-.app-link { color: var(--app-brown); text-decoration: underline; text-underline-offset: 3px; }
-
-/* Surfaces */
-.app-card {
-  background: #fff;
-  border-radius: var(--app-radius-lg);
-  box-shadow: var(--app-shadow);
+button, input { font: inherit; }
+[hidden] { display: none !important; }
+/* Tailwind's .hidden, for the pages that do not load Tailwind. */
+.app-page .hidden { display: none; }
+.app-sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  margin: -1px;
+  padding: 0;
+  border: 0;
 }
-.app-shadow { box-shadow: var(--app-shadow); }
-a.app-card, a.app-row { transition: box-shadow 0.2s, transform 0.2s; }
-a.app-card:hover, a.app-row:hover { box-shadow: var(--app-shadow-hover); transform: translateY(-1px); }
-.app-row { border-radius: var(--app-radius-md); box-shadow: var(--app-shadow); }
-.app-rounded { border-radius: var(--app-radius-md); }
-.app-rounded-lg { border-radius: var(--app-radius-lg); }
 
-/* Buttons */
+/* ─── Text ─────────────────────────────── */
+.app-mid { color: var(--c-ink-soft); }
+.app-muted { color: var(--c-ink-muted); }
+.app-brown { color: var(--c-brown); }
+.app-link {
+  color: var(--c-brown);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.app-link:hover { text-decoration-thickness: 2px; }
+button.app-link { background: none; border: 0; padding: 0; cursor: pointer; }
+
+/* ─── Icons ────────────────────────────── */
+/* <svg class="app-icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-lock"/></svg>
+   Chevrons also get .icon--dir so they point the right way in RTL.
+   (.icon lives in styles.css, which app pages do not load.) */
+.app-icon {
+  display: inline-block;
+  inline-size: 1.25em;
+  block-size: 1.25em;
+  flex-shrink: 0;
+  vertical-align: -0.25em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+[dir="rtl"] .app-icon.icon--dir { transform: scaleX(-1); }
+
+/* ─── Surfaces ─────────────────────────── */
+/* On cream a card has a shadow and no border. */
+.app-card {
+  background: var(--c-paper);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-1);
+}
+.app-shadow { box-shadow: var(--shadow-1); }
+.app-row { border-radius: var(--r-md); box-shadow: var(--shadow-1); }
+.app-rounded { border-radius: var(--r-md); }
+.app-rounded-lg { border-radius: var(--r-lg); }
+a.app-card:hover, a.app-row:hover { box-shadow: var(--shadow-2); }
+
+/* ─── Buttons ──────────────────────────── */
+/* 44px tap target at least. Press feedback is a small scale, never a ripple. */
 .app-btn,
 .app-btn-outline {
-  display: inline-block;
-  border-radius: var(--app-radius-md);
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-block-size: 44px;
+  border-radius: var(--r-md);
+  font-weight: 500;
   text-align: center;
-  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+  text-decoration: none;
+  cursor: pointer;
 }
-.app-btn { background: var(--app-brown); color: #fff; }
-.app-btn:hover { background: var(--app-brown-light); box-shadow: 0 8px 24px rgba(112, 66, 41, 0.22); }
-.app-btn:disabled { opacity: 0.7; cursor: default; }
-.app-btn-outline { background: #fff; color: var(--app-brown); border: 1.5px solid var(--app-brown); }
-.app-btn-outline:hover { background: var(--app-peach); }
+.app-btn { background: var(--c-brown); color: #fff; border: 1.5px solid var(--c-brown); }
+.app-btn:hover { background: var(--c-brown-hover); border-color: var(--c-brown-hover); }
+.app-btn:disabled { opacity: 0.8; cursor: default; }
+.app-btn:disabled:hover { background: var(--c-brown); border-color: var(--c-brown); }
+.app-btn-outline { background: var(--c-paper); color: var(--c-brown); border: 1.5px solid var(--c-brown); }
+.app-btn-outline:hover { background: var(--c-peach); }
 
-/* Form fields */
+/* ─── Form fields ──────────────────────── */
+/* 16px text stops iOS from zooming in on focus. */
 .app-input {
+  display: block;
+  inline-size: 100%;
+  min-block-size: 48px;
+  padding: 10px 14px;
+  font-size: 16px;
   border: 1.5px solid var(--app-line);
-  border-radius: var(--app-radius-md);
-  background: #fff;
-  color: var(--app-text);
+  border-radius: var(--r-md);
+  background: var(--c-paper);
+  color: var(--c-ink);
 }
-.app-input::placeholder { color: #a88a76; }
-.app-input:focus { outline: 2px solid var(--app-brown); outline-offset: 1px; border-color: var(--app-brown); }
+.app-input::placeholder { color: #8f6f5c; } /* 4.5:1 on white */
+.app-input:focus { outline: 2px solid var(--c-brown); outline-offset: 1px; border-color: var(--c-brown); }
+
+.app-field { display: grid; gap: var(--s-2); }
+.app-label { font-size: var(--fs-small); font-weight: 500; color: var(--c-ink); }
+.app-help { font-size: var(--fs-small); color: var(--c-ink-muted); }
+
+/* Password with a show or hide button inside the field. The value is LTR, so
+   the button sits on the physical right, where the Hebrew label starts. */
+.app-password { position: relative; }
+.app-password .app-input { padding-right: 80px; }
+.app-password-toggle {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  bottom: 3px;
+  min-inline-size: 68px;
+  padding: 0 var(--s-3);
+  border: 0;
+  border-radius: calc(var(--r-md) - 3px);
+  background: transparent;
+  color: var(--c-brown);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  cursor: pointer;
+}
+.app-password-toggle:hover { background: var(--c-peach); }
+
+/* Form messages: set the class with className and the text with textContent. */
+.app-msg { font-size: var(--fs-small); line-height: 1.5; }
+.app-msg:empty { display: none; }
+.app-msg--error { color: var(--c-error); }
+.app-msg--ok { color: #1d6b47; } /* darker than --c-done so small text passes AA */
+.app-msg--info { color: var(--c-ink-soft); font-size: var(--fs-body); line-height: 1.6; }
 
 /* Lesson number badge (not done yet) */
-.app-badge { background: var(--app-peach); color: var(--app-brown); }
+.app-badge { background: var(--c-peach); color: var(--c-brown); }
 
 /* Keyboard focus, brown like the brand */
-a:focus-visible, button:focus-visible { outline: 2px solid var(--app-brown); outline-offset: 2px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--c-brown); outline-offset: 2px; }
+
+/* ─── Skeleton (loading rows) ──────────── */
+/* Give it a size: <span class="app-skeleton" style="inline-size:60%;block-size:14px"></span>.
+   .app-skeleton--text is one line of text tall. Put the group in a role="status"
+   box with a hidden "טוען..." label. It shimmers only when motion is allowed. */
+.app-skeleton {
+  display: block;
+  border-radius: var(--r-sm);
+  background: rgba(112, 66, 41, 0.08);
+}
+.app-skeleton--text { block-size: 0.9em; }
+
+/* ─── Motion (only when allowed) ───────── */
+@media (prefers-reduced-motion: no-preference) {
+  .app-btn, .app-btn-outline {
+    transition: background-color var(--dur-state) var(--ease-out),
+                border-color var(--dur-state) var(--ease-out),
+                transform var(--dur-press) var(--ease-out);
+  }
+  .app-btn:not(:disabled):active, .app-btn-outline:active { transform: scale(0.98); }
+  a.app-card, a.app-row { transition: box-shadow var(--dur-state) var(--ease-out); }
+  .app-password-toggle, .app-signout { transition: background-color var(--dur-state) var(--ease-out); }
+  .app-skeleton {
+    background: linear-gradient(90deg,
+      rgba(112, 66, 41, 0.07) 0%, rgba(112, 66, 41, 0.14) 50%, rgba(112, 66, 41, 0.07) 100%);
+    background-size: 200% 100%;
+    animation: app-shimmer 1.4s linear infinite;
+  }
+}
+@keyframes app-shimmer {
+  from { background-position: 100% 0; }
+  to { background-position: -100% 0; }
+}
 
 /* ─── Shared header (app/app-shell.js) ─── */
+/* Solid cream with a hairline, like the site nav. No blur. */
 .app-header {
   position: sticky;
   top: 0;
   z-index: 50;
   align-self: stretch;
-  /* Bleed over the page's 1rem (Tailwind p-4) padding. */
+  /* Bleed over the page's 1rem padding (Tailwind p-4 or .app-page). */
   margin: -1rem -1rem 1rem;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(112, 66, 41, 0.08);
+  background: var(--c-cream);
+  border-bottom: 1px solid var(--c-line);
 }
 .app-header-inner {
   max-width: 48rem;
   margin: 0 auto;
-  padding: 8px 16px;
-  min-height: 56px;
+  padding: 6px 16px;
+  min-height: var(--nav-h);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -102,9 +224,11 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--app-brown); out
 .app-brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  min-block-size: 44px;
   text-decoration: none;
   flex-shrink: 0;
+  border-radius: var(--r-sm);
 }
 .app-brand-logo {
   width: 40px;
@@ -113,9 +237,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--app-brown); out
   object-fit: cover;
 }
 .app-brand-name {
-  font-weight: 800;
-  font-size: 15px;
-  color: var(--app-text);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--c-ink);
   line-height: 1;
 }
 .app-user {
@@ -125,8 +249,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--app-brown); out
   min-width: 0;
 }
 .app-user-email {
-  font-size: 12px;
-  color: var(--app-text-muted);
+  font-size: var(--fs-label);
+  color: var(--c-ink-muted);
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -134,13 +258,119 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--app-brown); out
 }
 .app-signout {
   flex-shrink: 0;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--app-brown);
-  padding: 6px 12px;
-  border-radius: var(--app-radius-sm);
-  border: 1.5px solid rgba(112, 66, 41, 0.35);
+  min-block-size: 40px;
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--c-brown);
+  padding: 0 14px;
+  border-radius: var(--r-md);
+  border: 1.5px solid rgba(112, 66, 41, 0.4);
   background: transparent;
   white-space: nowrap;
+  cursor: pointer;
 }
-.app-signout:hover { background: var(--app-peach); }
+.app-signout:hover { background: var(--c-peach); }
+.app-signout:disabled { opacity: 0.75; cursor: default; }
+
+/* ─── Pages without Tailwind (login, auth-action, my-courses) ─── */
+.app-page {
+  min-block-size: 100dvh;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  font-size: var(--fs-body);
+  line-height: 1.6;
+}
+/* Hold the header's space until app-shell.js adds it, so the page does not
+   jump down (header height + hairline + the 1rem gap under it). */
+.app-page:not(:has(> .app-header)) { padding-top: calc(var(--nav-h) + 1px + 1rem); }
+.app-page h1, .app-page h2, .app-page p { margin: 0; }
+.app-h1 {
+  font-size: var(--fs-h2);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--c-ink);
+  text-wrap: balance;
+}
+.app-lead { color: var(--c-ink-soft); text-wrap: pretty; }
+
+/* Login and password card */
+.app-auth {
+  inline-size: 100%;
+  max-inline-size: 26rem;
+  margin: auto;
+  padding: var(--s-6) var(--s-5) var(--s-5);
+  display: grid;
+  gap: var(--s-5);
+}
+.app-auth-head { display: grid; gap: var(--s-2); justify-items: start; }
+.app-auth-portrait {
+  inline-size: 64px;
+  block-size: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-block-end: var(--s-2);
+  box-shadow: 0 0 0 4px var(--c-peach);
+}
+.app-form { display: grid; gap: var(--s-4); }
+.app-form .app-btn { inline-size: 100%; min-block-size: 48px; margin-block-start: var(--s-1); }
+.app-auth-alt { justify-self: start; min-block-size: 44px; margin-block-start: calc(-1 * var(--s-4)); font-size: var(--fs-small); }
+.app-auth .app-btn { inline-size: 100%; min-block-size: 48px; }
+/* The one warm area: the first-time hint and help, in her voice. */
+.app-note {
+  background: var(--c-peach);
+  border-radius: var(--r-md);
+  padding: var(--s-4);
+  display: grid;
+  gap: var(--s-2);
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--c-ink-soft);
+}
+.app-note strong { color: var(--c-ink); font-weight: 500; }
+
+/* My courses */
+/* Same width as the header content, so the edges line up. */
+.app-wrap { inline-size: 100%; max-inline-size: calc(48rem - 32px); margin-inline: auto; }
+.app-courses-head { padding-block: var(--s-4) var(--s-5); }
+.app-course-list { display: grid; gap: var(--s-4); }
+.app-course {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-3);
+  padding-inline-end: var(--s-4);
+  color: inherit;
+  text-decoration: none;
+}
+.app-course-cover {
+  display: block;
+  inline-size: 88px;
+  block-size: 110px;
+  border-radius: var(--r-md);
+  object-fit: cover;
+}
+.app-course-body { display: grid; gap: var(--s-1); min-inline-size: 0; }
+.app-course-title { font-size: var(--fs-h3); font-weight: 500; line-height: 1.3; color: var(--c-ink); }
+.app-course-desc {
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  color: var(--c-ink-soft);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.app-course-go { color: var(--c-brown); inline-size: 24px; block-size: 24px; }
+.app-course--nocover { grid-template-columns: 1fr auto; padding: var(--s-5); }
+.app-state { padding: var(--s-6) var(--s-5); display: grid; gap: var(--s-3); justify-items: start; }
+.app-state .app-btn { padding-inline: var(--s-5); margin-block-start: var(--s-2); }
+.app-state-title { font-size: var(--fs-h3); font-weight: 500; line-height: 1.3; color: var(--c-ink); }
+.app-state-title.app-msg--error { color: var(--c-error); }
+
+@media (min-width: 768px) {
+  .app-course { padding: var(--s-4); padding-inline-end: var(--s-5); gap: var(--s-5); }
+  .app-course-cover { inline-size: 112px; block-size: 140px; }
+  .app-auth { padding: var(--s-7) var(--s-6) var(--s-6); }
+}

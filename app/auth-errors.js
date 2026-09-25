@@ -1,4 +1,4 @@
-// app/auth-errors.js — pure helper: Firebase Auth error code -> clear Hebrew message.
+// app/auth-errors.js: pure helper, Firebase Auth error code -> clear Hebrew message.
 // Pass the `code` from a caught Firebase error. `kind` is "signin" (default) or
 // "reset" (the forgot-password flow), which changes the wording of the fallback.
 export const HELP_WHATSAPP = "https://wa.me/972542366243";

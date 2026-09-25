@@ -1,4 +1,4 @@
-// app/course-list.js — pure helper for the "my courses" page.
+// app/course-list.js: pure helper for the "my courses" page.
 // Drops courses marked `published: false` and sorts the rest by `order`.
 // A course with no `published` field counts as published. A course with no
 // `order` goes last. Ties keep their input order.
