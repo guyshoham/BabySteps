@@ -82,8 +82,8 @@
 }
 
 /* Step bar: one small equal step per lesson ("small steps"). Not done steps
-   are a hairline color, done steps green, and the current one is brown and
-   half again as tall. Each step draws its bar in ::before (the track) and
+   are a hairline color, done steps green, and the current one is half again
+   as tall: brown until done, then green. Each step draws its bar in ::before (the track) and
    ::after (the done fill), inset 1.5px on each side: the steps look apart,
    but the links touch, so the mouse never falls into a gap. */
 .steps {
@@ -124,12 +124,11 @@
   block-size: 9px;
   background: var(--c-brown);
 }
-/* The current lesson once done: green inside a thin brown edge, so it still
-   reads as "you are here". */
+/* The current lesson: height says "you are here", color says the status.
+   Once done, the green fill covers the whole taller step (no brown edge). */
 .step.is-current::after {
-  inset-block-start: calc(50% - 2.5px);
-  block-size: 5px;
-  border-radius: 1px;
+  inset-block-start: calc(50% - 4.5px);
+  block-size: 9px;
 }
 
 /* Desktop: the steps are links. The row keeps its height (negative margin);
