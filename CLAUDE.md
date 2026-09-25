@@ -16,7 +16,7 @@ Hebrew (RTL) site for Yarden Shoham, a developmental coach. Two parts:
    2026-08-13.
 2. **Course platform** (live): a gated, paid video-course area under `/app/*` with auth,
    enrollment, and progress tracking. It runs on Vercel at https://baby-steps-murex.vercel.app,
-   with Firebase, R2 and Make wired up. The `app/` pages still use the Tailwind CDN.
+   with Firebase, R2 and Make wired up. The `app/` pages load `app/app.css` plus page CSS files (no Tailwind).
 
 ## Design & plan docs (read these first when resuming course-platform work)
 
