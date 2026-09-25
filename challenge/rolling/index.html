@@ -46,15 +46,6 @@
            peach band (D) → the offer, two ways to pay (E) → FAQ → footer.
            Phones get a sticky buy bar. */
 
-        /* U25 and CLS: Rubik loads late (media="print" swap). Until then the
-           text uses Arial scaled to Rubik's width, so the hero lines wrap the
-           same way before and after the swap and the teaser does not jump. */
-        @font-face {
-            font-family: 'Rubik Fallback';
-            src: local('Arial'), local('ArialMT');
-            size-adjust: 102.5%;
-        }
-        .sales { font-family: 'Rubik', 'Rubik Fallback', system-ui, sans-serif; }
         .sales h2 { margin: 0; }
         .sr-only {
             position: absolute;
@@ -70,7 +61,7 @@
         .hero__grid { display: grid; gap: var(--s-6); }
         .hero__text { --stack-gap: var(--s-4); }
         /* U25: one heading, no forced break. Rubik 700 and the fallback wrap alike. */
-        .hero__title { max-inline-size: 16ch; }
+        .hero__title { max-inline-size: 8em; } /* was 16ch: em does not change when Rubik swaps in */
         .hero__actions {
             display: flex;
             flex-wrap: wrap;
