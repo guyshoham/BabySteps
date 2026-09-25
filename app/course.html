@@ -4,51 +4,97 @@
   <meta charset="UTF-8" />
   <meta name="robots" content="noindex, nofollow" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>קורס — מתחילים בקטן</title>
+  <meta name="color-scheme" content="light" />
+  <title>הקורס, מתחילים בקטן</title>
   <link rel="icon" type="image/png" href="/assets/logos/logo-peach.png" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/app/app.css" />
+  <link rel="stylesheet" href="/app/course.css" />
   <link rel="manifest" href="/app/manifest.webmanifest" />
   <meta name="theme-color" content="#704229" />
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-title" content="מתחילים בקטן" />
 </head>
-<body class="min-h-screen p-4">
-  <div class="max-w-2xl mx-auto py-4">
+<body class="course-page">
+  <!-- Holds the header's place until app-shell.js mounts it, so the page does not jump. -->
+  <div id="shell-slot" class="cp-shell-slot" aria-hidden="true"></div>
+  <div class="cp-wrap">
     <!-- ?all=1 shows the list even with one course. -->
-    <a href="/app/my-courses?all=1" class="text-sm app-link">→ הקורסים שלי</a>
-    <h1 id="title" class="text-2xl font-bold mt-2"></h1>
-    <p id="desc" class="app-mid mt-1"></p>
-  </div>
-  <div id="loading" role="status" aria-live="polite"
-       class="max-w-2xl mx-auto flex items-center justify-center gap-3 py-12 text-[#704229]">
-    <span class="w-6 h-6 border-4 border-[#704229]/20 border-t-[#704229] rounded-full animate-spin" aria-hidden="true"></span>
-    <span>טוען...</span>
-  </div>
-  <section id="progress-box" class="max-w-2xl mx-auto app-card p-5 mb-4 hidden">
-    <p id="progress-text" class="font-medium text-[#704229]"></p>
-    <div id="progress-bar" role="progressbar" aria-valuemin="0" aria-label="התקדמות בקורס"
-         class="mt-2 h-2 w-full bg-[#704229]/15 rounded-full overflow-hidden">
-      <div id="progress-fill" class="h-full bg-[#704229] rounded-full" style="width:0%"></div>
+    <a href="/app/my-courses?all=1" class="cp-back">
+      <svg class="cp-icon cp-icon--dir" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-back"/></svg>
+      הקורסים שלי
+    </a>
+
+    <div id="course" class="cp-layout">
+      <aside class="cp-aside">
+        <header class="cp-head">
+          <div class="cp-cover">
+            <img id="cover" alt="" width="720" height="900" decoding="async" hidden />
+          </div>
+          <div class="cp-head-text">
+            <h1 id="title" class="cp-title"><span class="app-skeleton cp-sk-title"></span></h1>
+            <p id="desc" class="cp-desc">
+              <span class="app-skeleton cp-sk-line"></span>
+              <span class="app-skeleton cp-sk-line"></span>
+              <span class="app-skeleton cp-sk-line cp-sk-line--short"></span>
+            </p>
+          </div>
+        </header>
+
+        <section id="progress-box" class="cp-progress" aria-label="ההתקדמות שלך">
+          <p id="progress-text" class="cp-progress-text"><span class="app-skeleton cp-sk-count"></span></p>
+          <div id="progress-bar" class="cp-steps" role="progressbar" aria-valuemin="0"
+               aria-label="התקדמות בקורס"></div>
+          <a id="continue" href="#" class="app-btn cp-continue" aria-disabled="true" tabindex="-1">
+            <span id="continue-label"></span>
+            <svg class="cp-icon cp-icon--dir" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-forward"/></svg>
+          </a>
+        </section>
+      </aside>
+
+      <div class="cp-main">
+        <div id="loading" role="status" aria-live="polite" class="cp-loading">
+          <span class="cp-sr">טוען את השיעורים...</span>
+          <div class="cp-group" aria-hidden="true">
+            <span class="app-skeleton cp-sk-heading"></span>
+            <div class="cp-list">
+              <span class="cp-sk-row"><span class="app-skeleton cp-sk-dot"></span><span class="app-skeleton cp-sk-text"></span></span>
+              <span class="cp-sk-row"><span class="app-skeleton cp-sk-dot"></span><span class="app-skeleton cp-sk-text"></span></span>
+              <span class="cp-sk-row"><span class="app-skeleton cp-sk-dot"></span><span class="app-skeleton cp-sk-text"></span></span>
+              <span class="cp-sk-row"><span class="app-skeleton cp-sk-dot"></span><span class="app-skeleton cp-sk-text"></span></span>
+              <span class="cp-sk-row"><span class="app-skeleton cp-sk-dot"></span><span class="app-skeleton cp-sk-text"></span></span>
+              <span class="cp-sk-row"><span class="app-skeleton cp-sk-dot"></span><span class="app-skeleton cp-sk-text"></span></span>
+            </div>
+          </div>
+        </div>
+
+        <main id="lessons" class="cp-groups" hidden></main>
+
+        <section id="feedback" class="app-card cp-feedback" hidden>
+          <div class="cp-feedback-text">
+            <p class="cp-feedback-title">צלמי את התרגול ושלחי לי לפידבק אישי</p>
+            <p class="cp-feedback-sub">סרטון קצר מהבית מספיק. אני אחזור אלייך עם טיפים שמתאימים לתינוק שלך.</p>
+          </div>
+          <a id="feedback-link" href="#" target="_blank" rel="noopener" class="app-btn-outline cp-feedback-btn">
+            <svg class="cp-icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-whatsapp"/></svg>
+            שלחי לי בוואטסאפ
+          </a>
+        </section>
+      </div>
     </div>
-    <a id="continue" href="#"
-       class="mt-4 block app-btn px-4 py-3"></a>
-  </section>
-  <main id="lessons" class="max-w-2xl mx-auto space-y-2"></main>
-  <section id="feedback" class="max-w-2xl mx-auto app-card p-5 mt-6 text-center hidden">
-    <p class="font-bold text-[#704229]">צלמי את התרגול ושלחי לי לפידבק אישי</p>
-    <p class="text-sm app-muted mt-1">סרטון קצר מהבית מספיק. אני אחזור אלייך עם טיפים שמתאימים לתינוק שלך.</p>
-    <a id="feedback-link" href="#" target="_blank" rel="noopener"
-       class="mt-3 app-btn-outline px-5 py-2">שלחי לי בוואטסאפ</a>
-  </section>
-  <div id="problem" class="max-w-2xl mx-auto text-center app-card p-6 hidden">
-    <p id="problem-title" class="font-bold text-lg text-[#704229]"></p>
-    <p id="problem-text" class="text-sm app-mid mt-2"></p>
-    <div class="mt-4 flex flex-wrap justify-center gap-3">
-      <a href="/app/my-courses" class="app-btn px-4 py-2">לקורסים שלי</a>
-      <a href="https://wa.me/972542366243" target="_blank" rel="noopener"
-         class="app-btn-outline px-4 py-2">כתבי לנו בוואטסאפ</a>
+
+    <div id="problem" class="app-card cp-problem" hidden>
+      <p id="problem-title" class="cp-problem-title"></p>
+      <p id="problem-text" class="cp-problem-text"></p>
+      <div class="cp-problem-actions">
+        <a href="/app/my-courses" class="app-btn cp-btn">לקורסים שלי</a>
+        <a href="https://wa.me/972542366243" target="_blank" rel="noopener" class="app-btn-outline cp-btn">
+          <svg class="cp-icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-whatsapp"/></svg>
+          כתבי לנו בוואטסאפ
+        </a>
+      </div>
     </div>
   </div>
 
@@ -56,10 +102,18 @@
     import {
       requireAuth, db, signOut, collection, query, where, orderBy, getDocs, doc, getDoc,
     } from "/app/firebase-client.js";
-    import { courseProgress, continueLabel, whatsAppCourseFeedbackUrl } from "/app/course-progress.js";
+    import {
+      courseProgress, continueLabel, whatsAppCourseFeedbackUrl, stepStates, progressText,
+    } from "/app/course-progress.js";
+    import { groupLessons, lessonIcon } from "/app/course-sections.js";
     import { mountAppHeader } from "/app/app-shell.js";
 
+    const SPRITE = "/assets/icons/sprite.svg";
+    const DEFAULT_COVER = "/assets/videos/rolling-teaser-poster.jpg";
+    const $ = (id) => document.getElementById(id);
+
     const slug = decodeURIComponent(location.pathname.split("/").pop());
+    $("shell-slot").remove();
     const shell = mountAppHeader();
     const user = await requireAuth();
     shell.showUser(user.email, async () => {
@@ -73,12 +127,12 @@
     };
     function showProblem(kind) {
       const [title, text] = PROBLEMS[kind];
-      document.getElementById("problem-title").textContent = title;
-      document.getElementById("problem-text").textContent = text;
-      document.getElementById("problem").classList.remove("hidden");
+      $("problem-title").textContent = title;
+      $("problem-text").textContent = text;
+      $("course").hidden = true;
+      $("problem").hidden = false;
     }
 
-    const loading = document.getElementById("loading");
     try {
       const problem = await render();
       if (problem) showProblem(problem);
@@ -86,7 +140,25 @@
       console.error(err);
       showProblem("error");
     } finally {
-      loading.classList.add("hidden");
+      $("loading").hidden = true;
+    }
+
+    // A sprite icon: <svg class="cp-icon"><use href="...#id"/></svg>.
+    function icon(id, extra = "") {
+      const NS = "http://www.w3.org/2000/svg";
+      const svg = document.createElementNS(NS, "svg");
+      svg.setAttribute("class", `cp-icon ${extra}`.trim());
+      svg.setAttribute("aria-hidden", "true");
+      const use = document.createElementNS(NS, "use");
+      use.setAttribute("href", `${SPRITE}#${id}`);
+      svg.appendChild(use);
+      return svg;
+    }
+
+    // Only our own images: a site path like /assets/... (never a remote URL).
+    function coverSrc(value) {
+      const v = String(value ?? "");
+      return /^\/[A-Za-z0-9/_.-]+$/.test(v) && !v.startsWith("//") ? v : DEFAULT_COVER;
     }
 
     // Renders the course. Returns "notFound" or "noAccess" when it cannot.
@@ -108,53 +180,111 @@
       const progressSnap = await getDocs(collection(db, "users", user.uid, "progress"));
       const completed = new Set(progressSnap.docs.filter(d => d.data().completed).map(d => d.id));
 
-      document.getElementById("title").textContent = c.title ?? "";
-      document.getElementById("desc").textContent = c.description ?? "";
+      // Build with DOM APIs only (textContent / setAttribute), never innerHTML.
+      $("title").textContent = c.title ?? "";
+      $("desc").textContent = c.description ?? "";
+      if (c.title) document.title = `${c.title}, מתחילים בקטן`;
+      const cover = $("cover");
+      cover.setAttribute("src", coverSrc(c.coverImage));
+      cover.hidden = false;
 
       const lessonHref = (id) => `/app/lesson/${encodeURIComponent(id)}`;
-      const lessonIds = lessonsSnap.docs.map((d) => d.id);
+      const lessons = lessonsSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      const lessonIds = lessons.map((l) => l.id);
       const prog = courseProgress(lessonIds, completed);
       // The current lesson is the next one to watch; none when the course is finished.
       const currentId = prog.done < prog.total ? prog.nextId : null;
 
+      const box = $("progress-box");
       if (prog.total > 0) {
-        document.getElementById("progress-text").textContent =
-          `${prog.done} מתוך ${prog.total} שיעורים`;
-        const bar = document.getElementById("progress-bar");
+        $("progress-text").textContent = progressText(prog);
+        const bar = $("progress-bar");
         bar.setAttribute("aria-valuemax", String(prog.total));
         bar.setAttribute("aria-valuenow", String(prog.done));
-        bar.setAttribute("aria-valuetext", `${prog.done} מתוך ${prog.total} שיעורים`);
-        document.getElementById("progress-fill").style.width =
-          `${Math.round((prog.done / prog.total) * 100)}%`;
-        const cont = document.getElementById("continue");
+        bar.setAttribute("aria-valuetext", progressText(prog));
+        let filled = 0;
+        stepStates(lessonIds, completed).forEach((done) => {
+          const seg = document.createElement("span");
+          seg.className = "cp-step";
+          if (done) {
+            const fill = document.createElement("span");
+            fill.className = "cp-step-fill";
+            // Fill one after the other from the start side, once, on load.
+            fill.style.setProperty("--i", String(filled++));
+            seg.appendChild(fill);
+          }
+          bar.appendChild(seg);
+        });
+        const cont = $("continue");
         cont.href = lessonHref(prog.nextId);
-        cont.textContent = continueLabel(prog);
-        document.getElementById("progress-box").classList.remove("hidden");
+        cont.removeAttribute("aria-disabled");
+        cont.removeAttribute("tabindex");
+        $("continue-label").textContent = continueLabel(prog);
+      } else {
+        box.hidden = true;
       }
 
-      const feedback = document.getElementById("feedback-link");
-      feedback.href = whatsAppCourseFeedbackUrl(c.title);
-      document.getElementById("feedback").classList.remove("hidden");
+      $("feedback-link").href = whatsAppCourseFeedbackUrl(c.title);
+      $("feedback").hidden = false;
 
-      const wrap = document.getElementById("lessons");
-      lessonsSnap.docs.forEach((d, i) => {
-        const l = d.data();
-        const done = completed.has(d.id);
-        const current = d.id === currentId;
-        const a = document.createElement("a");
-        a.href = lessonHref(d.id);
-        a.className = `flex items-center gap-3 bg-white app-row px-4 py-3 border-2 ${current ? "border-[#704229]" : "border-transparent"}`;
-        if (current) a.setAttribute("aria-current", "step");
-        // Build with DOM APIs — never innerHTML with Firestore data.
-        const badge = document.createElement("span");
-        badge.className = `w-6 h-6 flex items-center justify-center rounded-full ${done ? "bg-[#2f9e6b] text-white" : "app-badge"} text-sm font-medium`;
-        badge.textContent = done ? "✓" : String(i + 1);
-        const label = document.createElement("span");
-        label.className = "font-medium";
-        label.textContent = l.title ?? "";
-        a.append(badge, label);
-        wrap.appendChild(a);
-      });
+      const wrap = $("lessons");
+      for (const group of groupLessons(lessons)) {
+        const section = document.createElement("section");
+        section.className = `cp-group cp-group--${group.key}`;
+        const headId = `group-${group.key}`;
+        section.setAttribute("aria-labelledby", headId);
+
+        const head = document.createElement("div");
+        head.className = "cp-group-head";
+        const h2 = document.createElement("h2");
+        h2.id = headId;
+        h2.className = "cp-group-title";
+        h2.textContent = group.label;
+        const groupDone = group.lessons.filter((l) => completed.has(l.id)).length;
+        const meta = document.createElement("span");
+        meta.className = "cp-group-meta";
+        meta.textContent = `${groupDone} מתוך ${group.lessons.length}`;
+        head.append(h2, meta);
+
+        const list = document.createElement("ol");
+        list.className = "cp-list";
+        for (const l of group.lessons) {
+          const done = completed.has(l.id);
+          const current = l.id === currentId;
+          const a = document.createElement("a");
+          a.href = lessonHref(l.id);
+          a.className = "cp-row" + (done ? " is-done" : "") + (current ? " is-current" : "");
+          if (current) a.setAttribute("aria-current", "step");
+
+          const title = document.createElement("span");
+          title.className = "cp-row-title";
+          title.textContent = l.title ?? "";
+          // Tip tiles are narrow: a done tip shows the check in place of its type icon.
+          const tile = group.key === "tips";
+          a.append(tile && done && !current
+            ? icon("i-check", "cp-row-done")
+            : icon(lessonIcon(l, group.key), "cp-row-icon"), title);
+
+          if (current) {
+            const here = document.createElement("span");
+            here.className = "cp-here";
+            here.textContent = "כאן עצרת";
+            a.appendChild(here);
+          } else if (done) {
+            if (!tile) a.appendChild(icon("i-check", "cp-row-done"));
+            const sr = document.createElement("span");
+            sr.className = "cp-sr";
+            sr.textContent = "בוצע";
+            a.appendChild(sr);
+          }
+          const li = document.createElement("li");
+          li.appendChild(a);
+          list.appendChild(li);
+        }
+        section.append(head, list);
+        wrap.appendChild(section);
+      }
+      wrap.hidden = false;
       return null;
     }
   </script>
