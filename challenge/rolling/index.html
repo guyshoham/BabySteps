@@ -3,17 +3,18 @@
 <head>
     <script>document.documentElement.classList.add('js')</script>
     <script defer src="/_vercel/insights/script.js"></script>
-    <link rel="icon" type="image/png" href="../../assets/logos/logo-peach.png">
-    <link rel="apple-touch-icon" href="../../assets/logos/logo-peach.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ירדן שוהם - מתחילים בקטן | קורס התהפכות דיגיטלי</title>
-    <meta name="description" content="קורס דיגיטלי שעוזר לתינוק שלך להתהפך: סרטוני הדרכה קצרים, טיפים מעשיים וליווי אישי בווטסאפ, מאת ירדן שוהם, מלווה התפתחותית.">
+    <meta name="color-scheme" content="light">
+    <title>קורס מתהפכים | ירדן שוהם, מתחילים בקטן</title>
+    <meta name="description" content="קורס מתהפכים: קורס דיגיטלי שעוזר לתינוק שלך להתהפך. 12 סרטונים, 6 טיפי זהב וליווי אישי בווטסאפ, מאת ירדן שוהם, מלווה התפתחותית.">
     <link rel="canonical" href="https://baby-steps-murex.vercel.app/challenge/rolling">
+    <link rel="icon" type="image/png" href="/assets/logos/logo-peach.png">
+    <link rel="apple-touch-icon" href="/assets/logos/logo-peach.png">
 
     <!-- Open Graph meta tags (WhatsApp, Facebook, etc.) -->
-    <meta property="og:title" content="מתחילים בקטן — קורס התהפכות דיגיטלי | ירדן שוהם">
-    <meta property="og:description" content="קורס דיגיטלי ממוקד שייתן לך את כל הכלים לעזור לתינוק שלך לעבור את שלב ההתהפכות — 10 סרטוני הדרכה, 6 טיפי זהב וליווי אישי בווטסאפ.">
+    <meta property="og:title" content="קורס מתהפכים | ירדן שוהם, מתחילים בקטן">
+    <meta property="og:description" content="כל הכלים לעזור לתינוק שלך לעבור את שלב ההתהפכות: 12 סרטונים, 6 טיפי זהב וליווי אישי בווטסאפ.">
     <meta property="og:image" content="https://baby-steps-murex.vercel.app/assets/og-rolling.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -24,643 +25,768 @@
 
     <!-- Twitter Card meta tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="מתחילים בקטן — קורס התהפכות דיגיטלי | ירדן שוהם">
-    <meta name="twitter:description" content="קורס דיגיטלי ממוקד שייתן לך את כל הכלים לעזור לתינוק שלך לעבור את שלב ההתהפכות — 10 סרטוני הדרכה, 6 טיפי זהב וליווי אישי בווטסאפ.">
+    <meta name="twitter:title" content="קורס מתהפכים | ירדן שוהם, מתחילים בקטן">
+    <meta name="twitter:description" content="כל הכלים לעזור לתינוק שלך לעבור את שלב ההתהפכות: 12 סרטונים, 6 טיפי זהב וליווי אישי בווטסאפ.">
     <meta name="twitter:image" content="https://baby-steps-murex.vercel.app/assets/og-rolling.jpg">
+
+    <!-- The teaser poster is the largest thing in the first screen. -->
+    <link rel="preload" as="image" href="/assets/videos/rolling-teaser-poster.jpg" fetchpriority="high">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap"></noscript>
-    <link rel="stylesheet" href="../../styles.css">
+    <!-- Only the weights this page uses: 300 lead, 400 body, 500 labels, 700 headings. -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap"></noscript>
+    <link rel="stylesheet" href="/styles.css">
     <style>
-        /* ─── Problem Cards ───────────────────── */
-        .problem-card {
-            border: 1.5px solid rgba(112,66,41,0.1);
-            border-radius: 12px;
-            padding: 36px 28px;
-            background: #fff;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .problem-card:hover {
-            border-color: var(--brand-peach-dark);
-            box-shadow: 0 4px 20px rgba(112,66,41,0.08);
-        }
-        .problem-card .icon-wrap {
-            width: 52px;
-            height: 52px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 18px;
-            font-size: 24px;
-        }
+        /* ─── Rolling sales page ─────────────────
+           Shape (docs/design/2026-09-26-art-direction.md, 4 and 9 WP3):
+           split hero with the teaser (A) → who it is for, a short list (B) →
+           about Yarden (A) → the real syllabus (C) → messages on the one
+           peach band (D) → the offer, two ways to pay (E) → FAQ → footer.
+           Phones get a sticky buy bar. */
 
-        /* ─── Pricing Cards ───────────────────── */
-        .price-card {
-            border-radius: 16px;
+        /* U25 and CLS: Rubik loads late (media="print" swap). Until then the
+           text uses Arial scaled to Rubik's width, so the hero lines wrap the
+           same way before and after the swap and the teaser does not jump. */
+        @font-face {
+            font-family: 'Rubik Fallback';
+            src: local('Arial'), local('ArialMT');
+            size-adjust: 102.5%;
+        }
+        .sales { font-family: 'Rubik', 'Rubik Fallback', system-ui, sans-serif; }
+        .sales h2 { margin: 0; }
+        .sr-only {
+            position: absolute;
+            inline-size: 1px;
+            block-size: 1px;
             overflow: hidden;
-        }
-        .price-card-featured {
-            box-shadow: 0 16px 60px rgba(112,66,41,0.16);
-            border: 2px solid var(--brand-brown);
-        }
-        .price-card-plain {
-            border: 1.5px solid rgba(112,66,41,0.15);
-        }
-        .price-badge {
-            display: inline-block;
-            background: var(--brand-brown);
-            color: #fff;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            padding: 4px 14px;
-            border-radius: 3px;
-        }
-        .price-badge-soft {
-            display: inline-block;
-            background: var(--brand-mint-dark);
-            color: var(--brand-brown);
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            padding: 4px 14px;
-            border-radius: 3px;
+            clip-path: inset(50%);
+            white-space: nowrap;
         }
 
-        /* ─── Hero strip ──────────────────────── */
-        .hero-tag {
+        /* ── Hero: text on the start side, the teaser on the end side ── */
+        .hero { padding-block: var(--s-5) var(--s-8); }
+        .hero__grid { display: grid; gap: var(--s-6); }
+        .hero__text { --stack-gap: var(--s-4); }
+        /* U25: one heading, no forced break. Rubik 700 and the fallback wrap alike. */
+        .hero__title { max-inline-size: 16ch; }
+        .hero__actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: var(--s-3) var(--s-5);
+            margin-block-start: var(--s-2);
+        }
+        .text-link {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(255,255,255,0.7);
-            border: 1px solid rgba(112,66,41,0.15);
-            color: var(--brand-brown);
-            font-size: 13px;
-            font-weight: 600;
-            padding: 6px 16px;
-            border-radius: 4px;
-            letter-spacing: 0.03em;
-        }
-        .hero-tag::before {
-            content: '';
-            display: inline-block;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--brand-brown);
-        }
-
-        /* ─── Social proof bar ────────────────── */
-        .proof-bar {
-            background: var(--brand-brown);
-            color: rgba(255,255,255,0.9);
+            gap: var(--s-1);
+            min-block-size: 44px;
+            color: var(--c-brown);
+            font-size: var(--fs-body);
             font-weight: 500;
-            letter-spacing: 0.04em;
-            text-align: center;
+            text-decoration: underline;
+            text-decoration-color: rgba(112, 66, 41, 0.35);
+            text-underline-offset: 5px;
+            transition: text-decoration-color var(--dur-state) var(--ease-out);
+        }
+        .text-link:hover { text-decoration-color: currentColor; }
+
+        /* Teaser frame (signature moment 1). 9:16 like the video, never taller
+           than 80% of the screen (U28). */
+        .teaser {
+            position: relative;
+            inline-size: min(100%, calc(80svh * 9 / 16));
+            aspect-ratio: 9 / 16;
+            border-radius: var(--r-lg);
+            overflow: hidden;
+            background: var(--c-peach);
+            box-shadow: var(--shadow-1);
+        }
+        .teaser video {
+            inline-size: 100%;
+            block-size: 100%;
+            object-fit: cover;
+            background: var(--c-peach);
+        }
+        .teaser__play {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: var(--s-3);
+            inline-size: 100%;
+            border: 0;
+            border-radius: inherit;
+            background: transparent;
+            color: var(--c-ink);
+        }
+        .teaser__disc {
+            display: grid;
+            place-items: center;
+            inline-size: 72px;
+            block-size: 72px;
+            border-radius: 50%;
+            background: var(--c-brown);
+            color: var(--c-peach);
+            box-shadow: var(--shadow-2);
+            transition: transform var(--dur-state) var(--ease-out),
+                        background-color var(--dur-state) var(--ease-out);
+        }
+        /* The play glyph sits a little toward its point, so it looks centered. */
+        .teaser__disc .icon { inline-size: 32px; block-size: 32px; transform: translateX(2px); }
+        .teaser__play:hover .teaser__disc { transform: scale(1.04); background: var(--c-brown-hover); }
+        .teaser__play:active .teaser__disc { transform: scale(0.98); }
+        .teaser__label {
+            padding: 2px var(--s-3);
+            border-radius: var(--r-sm);
+            background: rgba(253, 246, 240, 0.94);
+            font-size: var(--fs-small);
+            font-weight: 500;
+            line-height: 1.6;
+        }
+        .teaser__play:focus-visible { outline-offset: -6px; }
+        .teaser.is-playing .teaser__play { display: none; }
+
+        @media (min-width: 1024px) {
+            .hero { padding-block: var(--s-6) var(--s-5); }
+            .hero__grid {
+                grid-template-columns: repeat(12, minmax(0, 1fr));
+                align-items: center;
+                gap: var(--s-6);
+            }
+            /* In RTL, column 1 is the right edge: text on the start side. */
+            .hero__text { grid-column: 1 / span 6; grid-row: 1; }
+            .hero__media { grid-column: 8 / span 5; grid-row: 1; justify-self: end; }
+            /* The whole frame fits in the first screen, under the nav. */
+            .teaser { inline-size: calc(min(80vh, 100svh - var(--nav-h) - 2 * var(--s-6)) * 9 / 16); }
         }
 
-        /* ─── Sticky CTA bar ──────────────────── */
-        .sticky-cta {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 50;
-            background: var(--brand-brown);
+        /* ── Who it is for: a short list, not cards ── */
+        .fit__grid { display: grid; gap: var(--s-6); }
+        .fit__head { --stack-gap: var(--s-4); }
+        .fit__list { border-block-start: 1px solid var(--c-line); }
+        .fit__list li {
+            padding-block: var(--s-5);
+            border-block-end: 1px solid var(--c-line);
+            font-size: var(--fs-body);
+            line-height: 1.7;
+            color: var(--c-ink-soft);
+            max-inline-size: var(--measure);
+        }
+        .fit__list strong {
+            display: block;
+            margin-block-end: var(--s-1);
+            font-size: var(--fs-h3);
+            font-weight: 500;
+            line-height: 1.3;
+            color: var(--c-ink);
+        }
+        .fit__note strong { color: var(--c-ink); font-weight: 500; }
+        @media (min-width: 1024px) {
+            .fit__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: start; }
+            .fit__head { grid-column: 1 / span 5; }
+            .fit__list { grid-column: 7 / span 6; }
+        }
+
+        /* ── About Yarden: photo and her words ── */
+        /* The list above already ends in open space: one gap, not two. */
+        .about { padding-block-start: 0; }
+        .about__grid { display: grid; gap: var(--s-6); }
+        .about__photo {
+            margin: 0;
+            aspect-ratio: 4 / 5;
+            max-inline-size: 420px;
+            border-radius: var(--r-lg);
+            overflow: hidden;
+            background: var(--c-peach);
+        }
+        .about__photo img {
+            inline-size: 100%;
+            block-size: 100%;
+            object-fit: cover;
+            object-position: 50% 40%;
+        }
+        .about__text { --stack-gap: var(--s-4); }
+        .about__text strong { color: var(--c-ink); font-weight: 500; }
+        @media (min-width: 768px) {
+            .about__grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; gap: var(--s-7); }
+        }
+        @media (min-width: 1024px) {
+            .about__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+            .about__photo { grid-column: 1 / span 5; }
+            .about__text { grid-column: 7 / span 6; }
+        }
+
+        /* ── Syllabus: the real lessons in 3 groups ── */
+        .syl__head { --stack-gap: var(--s-3); margin-block-end: var(--s-6); }
+        .syl__count { font-size: var(--fs-lead); font-weight: 400; color: var(--c-ink-soft); }
+        .syl__grid { display: grid; gap: var(--s-5); }
+        .syl__side { display: grid; gap: var(--s-5); align-content: start; }
+        .syl-group { padding: var(--s-5) var(--s-4) var(--s-3); }
+        .syl-group__title {
+            display: flex;
+            align-items: center;
+            gap: var(--s-3);
+            padding-inline: var(--s-2);
+            font-size: var(--fs-h3);
+            font-weight: 500;
+            line-height: 1.3;
+            color: var(--c-ink);
+        }
+        .syl-group__title .icon { color: var(--c-brown); }
+        .syl-group__desc { padding-inline: var(--s-2); margin-block: var(--s-2) var(--s-3); }
+        .syl-rows > li {
+            display: flex;
+            align-items: center;
+            gap: var(--s-3);
+            min-block-size: 48px;
+            padding: var(--s-2);
+            font-size: var(--fs-body);
+            line-height: 1.4;
+            color: var(--c-ink-soft);
+        }
+        .syl-rows > li + li { border-block-start: 1px solid var(--c-line); }
+        .syl-rows .icon { color: var(--c-ink-muted); }
+        .syl-rows__more { display: block; margin-block-start: 2px; }
+        /* Tips: 6 short titles, two per line. */
+        .syl-rows--tips { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--s-4); }
+        .syl-rows--tips > li + li { border-block-start: 0; }
+        .syl-rows--tips > li:nth-child(n + 3) { border-block-start: 1px solid var(--c-line); }
+        /* The personal feedback: not a lesson, so a quiet line of its own. */
+        .syl-extra {
+            display: flex;
+            gap: var(--s-4);
+            align-items: flex-start;
+            padding: var(--s-5);
+            border: 1px solid rgba(112, 66, 41, 0.22);
+            border-radius: var(--r-lg);
+        }
+        .syl-extra > .icon { color: var(--c-brown); margin-block-start: 2px; }
+        .syl-extra p { margin-block-start: var(--s-1); }
+        @media (min-width: 768px) {
+            .syl-group { padding: var(--s-6) var(--s-5) var(--s-4); }
+        }
+        @media (min-width: 1024px) {
+            .syl__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: start; gap: var(--s-6); }
+            .syl__main { grid-column: 1 / span 6; }
+            .syl__side { grid-column: 7 / span 6; }
+        }
+
+        /* ── Messages: her students' words, on the one peach band ── */
+        .msgs__grid { display: grid; gap: var(--s-6); }
+        .msgs__list { display: grid; gap: var(--s-5); }
+        .msg { margin: 0; max-inline-size: 34rem; }
+        .msg blockquote {
+            margin: 0;
+            padding: var(--s-4) var(--s-5);
+            background: var(--c-paper);
+            border-radius: var(--r-lg);
+            /* The corner on the sender side, like a chat message. */
+            border-start-start-radius: 4px;
+        }
+        .msg blockquote p {
+            font-size: var(--fs-body);
+            line-height: 1.7;
+            color: var(--c-ink-soft);
+        }
+        .msg figcaption {
+            margin-block-start: var(--s-2);
+            padding-inline-start: var(--s-3);
+            font-size: var(--fs-small);
+            font-weight: 500;
+            color: var(--c-brown);
+        }
+        @media (min-width: 1024px) {
+            .msgs__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: start; }
+            .msgs__grid > h2 { grid-column: 1 / span 4; }
+            .msgs__list { grid-column: 6 / span 7; }
+            /* A thread, not a grid: the short one sits a step in. */
+            .msg:nth-child(2) { margin-inline-start: var(--s-7); }
+        }
+
+        /* ── Offer: what you get, then two full ways to pay ── */
+        .offer__head { --stack-gap: var(--s-5); margin-block-end: var(--s-6); }
+        .gets { display: grid; gap: var(--s-3); }
+        .gets li {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--s-3);
+            font-size: var(--fs-body);
+            line-height: 1.5;
+            color: var(--c-ink-soft);
+        }
+        .gets .icon { color: var(--c-brown); inline-size: 22px; block-size: 22px; margin-block-start: 1px; }
+        .pay__grid { display: grid; gap: var(--s-5); }
+        .pay {
+            display: flex;
+            flex-direction: column;
+            gap: var(--s-4);
+        }
+        .pay--main { box-shadow: var(--shadow-2); }
+        .pay__name { font-size: var(--fs-h3); font-weight: 500; line-height: 1.3; color: var(--c-ink); }
+        .price {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: var(--s-3);
+            color: var(--c-brown);
+        }
+        .price__now { font-size: 44px; font-weight: 700; line-height: 1; }
+        .price__old {
+            font-size: 22px;
+            font-weight: 400;
+            color: var(--c-ink-muted);
+            text-decoration: line-through;
+            text-decoration-thickness: 1.5px;
+        }
+        .price__note { font-size: var(--fs-small); color: var(--c-ink-muted); }
+        .pay__text { flex: 1; }
+        .pay__number {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: var(--s-3) var(--s-4);
+            border-radius: var(--r-md);
+            background: var(--c-cream);
+        }
+        .pay__number span:last-child {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--c-ink);
+            align-self: flex-start;
+        }
+        .pay .btn { inline-size: 100%; margin-block-start: auto; }
+        .offer__after {
+            display: grid;
+            gap: var(--s-3);
+            margin-block-start: var(--s-6);
+        }
+        .offer__after p {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--s-3);
+            font-size: var(--fs-body);
+            line-height: 1.6;
+            color: var(--c-ink-soft);
+        }
+        .offer__after .icon { color: var(--c-brown); margin-block-start: 2px; }
+        .offer__after a {
+            color: var(--c-brown);
+            font-weight: 500;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+        @media (min-width: 768px) {
+            .pay__grid { grid-template-columns: 1fr 1fr; align-items: stretch; }
+            .gets { grid-template-columns: 1fr 1fr; column-gap: var(--s-6); }
+        }
+        @media (min-width: 1024px) {
+            .offer .container { max-inline-size: calc(920px + 2 * var(--gutter)); }
+        }
+
+        /* ── FAQ: native <details> ── */
+        .faq__list, .faq h2 { max-inline-size: 760px; }
+        .faq h2 { margin-block-end: var(--s-5); }
+        .faq__list { border-block-start: 1px solid var(--c-line); }
+        .faq__item { border-block-end: 1px solid var(--c-line); }
+        .faq__item summary {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.12);
+            gap: var(--s-4);
+            padding-block: var(--s-4);
+            list-style: none;
+            font-size: var(--fs-body);
+            font-weight: 500;
+            line-height: 1.4;
+            color: var(--c-ink);
+        }
+        .faq__item summary::-webkit-details-marker { display: none; }
+        .faq__item summary .icon {
+            color: var(--c-brown);
+            transform: rotate(90deg);
+            transition: transform var(--dur-state) var(--ease-out);
+        }
+        .faq__item[open] summary .icon { transform: rotate(-90deg); }
+        .faq__item summary:hover { color: var(--c-brown); }
+        .faq__item p {
+            padding-block-end: var(--s-5);
+            font-size: var(--fs-body);
+            line-height: 1.7;
+            color: var(--c-ink-soft);
+            max-inline-size: var(--measure);
         }
 
-        /* ─── Page-specific: mobile defaults ───── */
-        .content-box .feature-row-highlight { margin: 0 -20px; padding: 24px 20px; }
-        .about-grid { display: grid; grid-template-columns: 1fr; gap: 32px; align-items: center; }
-        .about-photo { display: block; order: 2; }
-        .about-photo img { width: 100%; max-width: 280px; height: 300px; }
-        .price-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        .problem-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-        .hero-buttons { gap: 10px; }
-        .hero-buttons .btn-primary,
-        .hero-buttons .btn-outline { width: 100%; text-align: center; font-size: 0.9rem; padding-right: 16px; padding-left: 16px; }
-        .trust-signals { gap: 20px; }
-        .proof-bar { font-size: 13px; padding: 12px 16px; }
-        .price-card-body { padding: 24px 24px 28px; }
-        .price-card-header { padding: 24px 24px 20px; }
-        .sticky-cta { padding: 12px 16px max(12px, env(safe-area-inset-bottom)); }
-        .hide-mobile { display: none !important; }
-
-        /* ─── Page-specific: tablet (min-width: 768px) ───── */
+        /* ── Sticky buy bar (phones only) ── */
+        .buybar {
+            position: fixed;
+            inset-inline: 0;
+            inset-block-end: 0;
+            z-index: 90;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--s-3);
+            padding: var(--s-3) var(--gutter) max(var(--s-3), env(safe-area-inset-bottom));
+            background: var(--c-paper);
+            border-block-start: 1px solid var(--c-line);
+            box-shadow: var(--shadow-2);
+            transform: translateY(110%);
+            visibility: hidden;
+            transition: transform var(--dur-enter) var(--ease-out),
+                        visibility 0s linear var(--dur-enter);
+        }
+        .buybar.is-shown {
+            transform: none;
+            visibility: visible;
+            transition: transform var(--dur-enter) var(--ease-out), visibility 0s;
+        }
+        .buybar__name { font-size: 15px; font-weight: 700; color: var(--c-ink); line-height: 1.3; }
+        .buybar__meta { font-size: var(--fs-small); color: var(--c-ink-soft); }
+        .buybar .btn { flex-shrink: 0; }
         @media (min-width: 768px) {
-            .content-box .feature-row-highlight { margin: 0 -40px; padding: 24px 40px; }
-            .about-grid { grid-template-columns: 1fr 1fr; gap: 48px; }
-            .about-photo { order: 0; }
-            .about-photo img { max-width: 320px; height: 380px; }
-            .price-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
-            .problem-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-            .hero-buttons { gap: 12px; }
-            .hero-buttons .btn-primary,
-            .hero-buttons .btn-outline { width: auto; font-size: 1.05rem; }
-            .trust-signals { gap: 32px; }
-            .proof-bar { font-size: 14px; padding: 14px 24px; }
-            .price-card-body { padding: 28px 36px 36px; }
-            .price-card-header { padding: 28px 36px 24px; }
-            .sticky-cta { padding: 14px 24px; }
-            .hide-mobile { display: inline-block !important; }
+            .buybar { display: none; }
         }
-
-        /* ─── Page-specific: desktop (min-width: 1024px) ───── */
-        @media (min-width: 1024px) {
-            .content-box .feature-row-highlight { margin: 0 -44px; padding: 24px 44px; }
-            .about-grid { gap: 56px; }
-            .about-photo img { max-width: 340px; height: 400px; }
-        }
-
-        /* ─── Nav link highlight on scroll ───── */
-        .nav-progress {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            height: 2px;
-            background: var(--brand-brown);
-            transition: width 0.15s linear;
+        /* The nav buy button only where the bar is not shown. */
+        .nav-buy { display: none; }
+        @media (min-width: 768px) {
+            .nav-buy { display: inline-flex; }
         }
     </style>
 </head>
-<body>
+<body class="sales">
 
-<!-- ░░ SOCIAL PROOF BAR ░░ -->
-<div class="proof-bar">
-    ✓ &nbsp; כבר למעלה מ-200 אמהות עזרו לתינוק שלהן להתהפך עם הקורס הזה
-</div>
+<a class="skip-link" href="#main">דלגי לתוכן</a>
 
-<!-- ░░ NAV ░░ -->
-<nav class="site-nav">
-    <div class="nav-progress" id="navProgress" style="width:0%"></div>
-    <div class="nav-inner" style="max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;">
-        <a href="../../" class="site-brand">
-            <img src="../../assets/logos/logo-peach.png" alt="מתחילים בקטן - ירדן שוהם" class="site-brand-logo" width="52" height="52" decoding="async">
-            <div>
-                <div class="site-brand-name">ירדן שוהם</div>
-                <div class="site-brand-tag">מתחילים בקטן</div>
-            </div>
+<nav class="site-nav" aria-label="ראשי">
+    <div class="site-nav__inner container">
+        <a class="site-brand" href="/">
+            <img class="site-brand-logo" src="/assets/logos/logo-peach.png" alt="" width="44" height="44" decoding="async">
+            <span>
+                <span class="site-brand-name">ירדן שוהם</span>
+                <span class="site-brand-tag">מתחילים בקטן</span>
+            </span>
         </a>
         <div class="nav-actions">
-            <a href="/app/login" class="nav-login">כניסה לקורס</a>
-            <a href="#register" class="btn-primary hide-mobile" style="padding:10px 24px; font-size:14px;">לרכישה ←</a>
+            <a class="nav-login" href="/app/login">כניסה לקורס</a>
+            <a class="btn btn--primary btn--sm nav-buy" href="#register">לרכישת הקורס</a>
         </div>
     </div>
 </nav>
 
-<!-- ░░ HERO ░░ -->
-<header class="hero-pad" style="background:var(--brand-peach); overflow:hidden; position:relative;">
+<main id="main">
 
-    <!-- Subtle background accent -->
-    <div style="position:absolute; top:-80px; left:-80px; width:400px; height:400px; border-radius:50%; background:rgba(252,210,170,0.4); pointer-events:none;"></div>
-    <div style="position:absolute; bottom:-60px; right:-40px; width:280px; height:280px; border-radius:50%; background:rgba(232,243,239,0.6); pointer-events:none;"></div>
-
-    <div style="max-width:760px; margin:0 auto; text-align:center; position:relative; z-index:2;">
-        <div style="margin-bottom:24px;">
-            <span class="hero-tag">קורס דיגיטלי · צפייה מיידית</span>
-        </div>
-
-        <h1 class="hero-title" style="font-weight:800; color:var(--text-dark); margin-bottom:20px;">
-            לעזור לבייבי שלך להתהפך —<br>
-            <span style="color:var(--brand-brown); font-weight:300;">בצורה רגועה, מאורגנת ומקצועית</span>
-        </h1>
-
-        <p class="hero-subtitle" style="line-height:1.8; color:var(--text-mid); max-width:580px; margin:0 auto 32px; font-weight:400;">
-            היי אהובה, כאן ירדן. בניתי עבורך קורס דיגיטלי ממוקד שייתן לך את כל הכלים לעזור לתינוק שלך לעבור את שלב ההתהפכות — בביטחון מלא.
-        </p>
-
-        <div class="hero-buttons" style="display:flex; flex-wrap:wrap; justify-content:center;">
-            <a href="#register" class="btn-primary" style="font-size:1.05rem;">רכישה וגישה מיידית ←</a>
-            <a href="#about" class="btn-outline" style="font-size:1.05rem;">מה יש בקורס?</a>
-        </div>
-
-        <!-- Star rating social proof -->
-        <div style="margin-top:32px; display:flex; flex-direction:column; align-items:center; gap:8px;">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <span style="color:#f5a623; font-size:20px; letter-spacing:2px;">★★★★★</span>
-                <span style="font-size:13px; color:var(--text-mid); font-weight:600;">200+ אמהות מרוצות</span>
-            </div>
-        </div>
-
-        <!-- Trust signals -->
-        <div class="trust-signals" style="margin-top:20px; display:flex; justify-content:center; flex-wrap:wrap;">
-            <div style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-mid);">
-                <span style="color:var(--brand-brown); font-size:16px;">✓</span> 10 סרטוני הדרכה
-            </div>
-            <div style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-mid);">
-                <span style="color:var(--brand-brown); font-size:16px;">✓</span> 6 טיפי זהב
-            </div>
-            <div style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-mid);">
-                <span style="color:var(--brand-brown); font-size:16px;">✓</span> ליווי אישי בווטסאפ
-            </div>
-        </div>
-    </div>
-</header>
-
-<!-- ░░ TEASER VIDEO ░░ -->
-<section class="section-pad" style="background:#fff;">
-    <div style="max-width:900px; margin:0 auto;">
-
-        <div style="text-align:center; margin-bottom:56px;">
-            <p style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brand-brown); font-weight:700; margin-bottom:12px;">הצצה לקורס</p>
-            <h2 class="section-heading" style="font-weight:800; color:var(--text-dark); margin-bottom:0;">רוצה לראות איך זה נראה?</h2>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="reveal video-wrap" id="videoWrap" style="max-width:480px; margin:0 auto;">
-            <video id="teaserVideo" controls playsinline preload="none" poster="../../assets/videos/rolling-teaser-poster.jpg" style="width:100%; border-radius:16px; box-shadow:0 4px 32px rgba(112,66,41,0.08); display:block;">
-                <source src="../../assets/videos/rolling-teaser.mp4" type="video/mp4">
-            </video>
-            <div class="video-play-btn" id="videoPlayBtn">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" style="margin-right:-3px;">
-                    <path d="M8 5l13 7-13 7V5z" fill="var(--brand-brown)"/>
-                </svg>
-            </div>
-        </div>
-
-    </div>
-</section>
-
-<!-- ░░ ABOUT ░░ -->
-<section class="section-pad" style="background:#fff;">
-    <div style="max-width:860px; margin:0 auto;">
-        <div class="about-grid">
-
-            <!-- Photo -->
-            <div class="reveal about-photo" style="display:flex; justify-content:center;">
-                <img src="../../assets/about.jpg" alt="ירדן שוהם עם תינוק" width="750" height="1000" loading="lazy" decoding="async" style="width:100%; object-fit:cover; object-position:top center; border-radius:16px; box-shadow:0 8px 32px rgba(112,66,41,0.12);">
-            </div>
-
-            <!-- Text -->
-            <div class="reveal reveal-delay-1">
-                <p style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brand-brown); font-weight:700; margin:0 0 12px;">מי אני?</p>
-                <h2 style="font-size:1.8rem; font-weight:800; color:var(--text-dark); margin:0 0 24px; line-height:1.25;">ירדן שוהם</h2>
-
-                <p style="font-size:1rem; line-height:1.9; color:var(--text-mid); margin:0 0 18px;">
-                    אמא לשניים ומלווה התפתחותית מוסמכת מטעם <strong style="color:var(--text-dark);">"צעד ראשון"</strong>. אני מדריכת בייבי יוגה ועיסוי תינוקות, ועובדת עם הורים ותינוקות כבר שנים.
-                </p>
-
-                <p style="font-size:1rem; line-height:1.9; color:var(--text-mid); margin:0 0 18px;">
-                    אני מגיעה מעולם החינוך, לאחר כ-6 שנים כאשת חינוך והוראה. מאז ומתמיד עולם התינוקות ריתק אותי, ריגש אותי, סיקרן אותי ומשך אותי אליו. הקסם שקורה במפגש עם תינוק והוריו גורם ללב שלי להתרחב ולחייך מאוזן לאוזן.
-                </p>
-
-                <p style="font-size:1rem; line-height:1.9; color:var(--text-mid); margin:0 0 28px;">
-                    הקורס הזה מבוסס על הכלים המקצועיים שאני מלמדת בסדנאות שלי — ועכשיו ארזתי אותם בפורמט שאת יכולה לצרוך מהבית, בזמן שמתאים לך.
-                </p>
-
-                <div style="display:flex; flex-wrap:wrap; gap:10px;">
-                    <span style="background:#fff; border:1.5px solid var(--brand-peach-dark); color:var(--brand-brown); font-size:13px; font-weight:600; padding:6px 14px; border-radius:6px;">מלווה התפתחותית מוסמכת</span>
-                    <span style="background:#fff; border:1.5px solid var(--brand-peach-dark); color:var(--brand-brown); font-size:13px; font-weight:600; padding:6px 14px; border-radius:6px;">מדריכת בייבי יוגה</span>
-                    <span style="background:#fff; border:1.5px solid var(--brand-peach-dark); color:var(--brand-brown); font-size:13px; font-weight:600; padding:6px 14px; border-radius:6px;">עיסוי תינוקות</span>
+    <!-- Hero: one heading, one line, one button, one quiet link. The teaser is the asset. -->
+    <header class="hero" id="top">
+        <div class="container hero__grid">
+            <div class="hero__text stack">
+                <h1 class="t-display hero__title enter">לעזור לבייבי שלך להתהפך, בצורה רגועה ומקצועית</h1>
+                <p class="t-lead enter" style="--i:1">היי אהובה, כאן ירדן. בניתי את קורס מתהפכים כדי לתת לך את כל הכלים לעזור לתינוק שלך לעבור את שלב ההתהפכות בביטחון.</p>
+                <div class="hero__actions enter" style="--i:2">
+                    <a class="btn btn--primary" href="#register">לרכישת הקורס</a>
+                    <a class="text-link" href="#syllabus">מה יש בקורס</a>
                 </div>
             </div>
 
-        </div>
-    </div>
-</section>
-
-<!-- ░░ FOR WHOM ░░ -->
-<section class="section-pad" style="background:#fff;">
-    <div style="max-width:900px; margin:0 auto;">
-
-        <div style="text-align:center; margin-bottom:56px;">
-            <p style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brand-brown); font-weight:700; margin-bottom:12px;">מזהה את עצמך?</p>
-            <h2 class="section-heading" style="font-weight:800; color:var(--text-dark); margin-bottom:0;">האם זה המצב אצלכם כרגע?</h2>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="problem-grid">
-
-            <div class="problem-card reveal reveal-delay-1">
-                <div class="icon-wrap bg-peach">🙆</div>
-                <h3 style="font-size:1.05rem; font-weight:700; margin-bottom:8px;">התינוק לא מתהפך כלל</h3>
-                <p style="font-size:0.9rem; color:#7a5a48; line-height:1.7;">אתם מנסים, אבל הוא עדיין לא עושה את התנועה בעצמו ואתם לא בטוחים מה לעשות.</p>
-            </div>
-
-            <div class="problem-card reveal reveal-delay-2">
-                <div class="icon-wrap bg-pink">🔄</div>
-                <h3 style="font-size:1.05rem; font-weight:700; margin-bottom:8px;">מתהפך רק לפעמים</h3>
-                <p style="font-size:0.9rem; color:#7a5a48; line-height:1.7;">יש ניסיונות, אבל ההתהפכות לא קורית בצורה עקבית ועצמאית.</p>
-            </div>
-
-            <div class="problem-card reveal reveal-delay-3">
-                <div class="icon-wrap bg-blue-soft">↩️</div>
-                <h3 style="font-size:1.05rem; font-weight:700; margin-bottom:8px;">מתהפך לכיוון אחד בלבד</h3>
-                <p style="font-size:0.9rem; color:#7a5a48; line-height:1.7;">התינוק מצליח לאחד הצדדים אבל מתקשה עם הצד השני — דבר שחשוב לאזן.</p>
-            </div>
-
-        </div>
-
-        <div class="highlight-box" style="margin-top:24px; background:var(--brand-mint); border-radius:12px; border-right:4px solid var(--brand-mint-dark);">
-            <p style="font-size:1rem; line-height:1.8; color:var(--text-mid); margin:0;">
-                <strong style="color:var(--text-dark);">אם הכרת לפחות אחד מהמצבים האלה —</strong> הקורס הזה נבנה בדיוק בשבילך. בצעדים קטנים, עם ידיים, מהסלון שלך.
-            </p>
-        </div>
-
-    </div>
-</section>
-
-<!-- ░░ COURSE CONTENT ░░ -->
-<section id="about" class="section-pad" style="background:var(--brand-peach);">
-    <div style="max-width:900px; margin:0 auto;">
-
-        <div style="text-align:center; margin-bottom:56px;">
-            <p style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brand-brown); font-weight:700; margin-bottom:12px;">תוכן הקורס</p>
-            <h2 class="section-heading" style="font-weight:800; color:var(--text-dark); margin-bottom:0;">מה מחכה לך בפנים?</h2>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="content-box reveal" style="background:#fff; border-radius:16px; box-shadow:0 4px 32px rgba(112,66,41,0.08);">
-
-            <div class="feature-row">
-                <div class="feature-num">1</div>
-                <div>
-                    <h3 style="font-size:1.05rem; font-weight:700; margin:0 0 6px;">10 סרטוני הדרכה פרקטיים</h3>
-                    <p style="font-size:0.9rem; color:#7a5a48; margin:0; line-height:1.7;">תרגילים מפורטים שניתן ליישם מיד — מהסלון שלך, ללא ציוד מיוחד.</p>
+            <div class="hero__media">
+                <div class="teaser" id="teaser">
+                    <video id="teaserVideo" controls playsinline preload="none" width="720" height="1280" poster="/assets/videos/rolling-teaser-poster.jpg" aria-label="סרטון הצצה לקורס מתהפכים, דקה וחצי">
+                        <source src="/assets/videos/rolling-teaser.mp4" type="video/mp4">
+                    </video>
+                    <button class="teaser__play" id="teaserPlay" type="button" hidden aria-label="הפעלת סרטון הצצה לקורס, דקה וחצי">
+                        <span class="teaser__disc"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-play"/></svg></span>
+                        <span class="teaser__label t-num" aria-hidden="true">הצצה לקורס · 1:30</span>
+                    </button>
                 </div>
             </div>
-
-            <div class="feature-row">
-                <div class="feature-num">2</div>
-                <div>
-                    <h3 style="font-size:1.05rem; font-weight:700; margin:0 0 6px;">6 טיפי זהב</h3>
-                    <p style="font-size:0.9rem; color:#7a5a48; margin:0; line-height:1.7;">טיפים מעשיים שיעזרו לך ללוות את התינוק בצורה הכי נכונה.</p>
-                </div>
-            </div>
-
-            <div class="feature-row">
-                <div class="feature-num">3</div>
-                <div>
-                    <h3 style="font-size:1.05rem; font-weight:700; margin:0 0 6px;">בונוס: הכנה לשלב הזחילה</h3>
-                    <p style="font-size:0.9rem; color:#7a5a48; margin:0; line-height:1.7;">סרטון ייחודי שיבנה את התשתית המוטורית לשלב ההתפתחותי הבא.</p>
-                </div>
-            </div>
-
-            <div class="feature-row feature-row-highlight" style="background:var(--brand-peach); border-bottom:1px solid rgba(112,66,41,0.07);">
-                <div class="feature-num">4</div>
-                <div style="flex:1; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
-                    <div>
-                        <h3 style="font-size:1.05rem; font-weight:700; margin:0 0 6px;">ליווי אישי בווטסאפ ⭐</h3>
-                        <p style="font-size:0.9rem; color:#7a5a48; margin:0; line-height:1.7;">שולחת לי סרטון של התרגול — ואני מחזירה פידבק ודיוק אישי.</p>
-                    </div>
-                    <span style="font-size:11px; font-weight:700; background:var(--brand-brown); color:#fff; padding:3px 10px; border-radius:3px; align-self:flex-start; white-space:nowrap;">הכי שווה</span>
-                </div>
-            </div>
-
-
         </div>
-    </div>
-</section>
+    </header>
 
-<!-- ░░ TESTIMONIALS ░░ -->
-<section class="section-pad" style="background:var(--brand-peach);">
-    <div style="max-width:860px; margin:0 auto;">
-
-        <div style="text-align:center; margin-bottom:48px;">
-            <p style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brand-brown); font-weight:700; margin-bottom:12px;">מה אומרות האמהות?</p>
-            <h2 class="section-heading" style="font-weight:800; color:var(--text-dark); margin-bottom:0;">חוויות מהשטח</h2>
-            <div class="section-divider"></div>
+    <!-- Who it is for -->
+    <section class="section fit" aria-labelledby="fit-title">
+        <div class="container fit__grid">
+            <div class="fit__head stack reveal">
+                <h2 id="fit-title" class="t-h2">למי הקורס מתאים</h2>
+                <p class="t-body fit__note">לתינוקות בגיל 3 עד 7 חודשים. <strong>אם הכרת לפחות מצב אחד מהרשימה,</strong> הקורס נבנה בדיוק בשבילך: בצעדים קטנים, עם הידיים, מהסלון שלך.</p>
+            </div>
+            <ul class="fit__list" role="list">
+                <li><strong>התינוק עוד לא מתהפך</strong>את מנסה, אבל הוא עדיין לא עושה את התנועה בעצמו, ולא ברור לך מה לעשות.</li>
+                <li><strong>מתהפך רק לפעמים</strong>יש ניסיונות, אבל ההתהפכות עוד לא קורית בצורה עקבית ועצמאית.</li>
+                <li><strong>מתהפך רק לצד אחד</strong>לצד אחד הוא מצליח, ולצד השני עוד קשה לו. את זה חשוב לאזן.</li>
+            </ul>
         </div>
+    </section>
 
-        <div class="testimonial-grid">
-
-            <div class="testimonial-card reveal reveal-delay-1">
-                <div class="star-row">★★★★★</div>
-                <p style="font-size:0.95rem; line-height:1.8; color:var(--text-mid); margin:0 0 16px;">"ירדנוש, את כבר יודעת כמה שאני חושבת שאת מדהימה עם תוכן שכל אמא חייבת לצרוך. גם באיך שאת משתפת על עצמך בתוכן באינסטגרם וגורמת לכולנו להרגיש יותר טוב, וגם בתוכן המקצועי שלך שאת מגישה ברמה הכי נעימה ומקיפה שפשוט כיף לצפות בו לרכוש ידע ובמיוחד לתרגל עם אמירי :) ומחכות לקורס הבאאא"</p>
-                <div style="font-weight:700; font-size:0.88rem; color:var(--brand-brown);">כרמל</div>
+    <!-- About Yarden -->
+    <section class="section about" aria-labelledby="about-title">
+        <div class="container about__grid">
+            <figure class="about__photo">
+                <img src="/assets/about.jpg" alt="ירדן שוהם מחייכת אל תינוק ששוכב על כרית הנקה" width="750" height="1000" loading="lazy" decoding="async">
+            </figure>
+            <div class="about__text stack reveal">
+                <h2 id="about-title" class="t-h2">נעים להכיר, אני ירדן</h2>
+                <p class="t-body">אמא לשניים ומלווה התפתחותית מוסמכת מטעם <strong>"צעד ראשון"</strong>. אני מדריכת בייבי יוגה ועיסוי תינוקות, ועובדת עם הורים ותינוקות כבר שנים.</p>
+                <p class="t-body">אני מגיעה מעולם החינוך, אחרי כ-6 שנים כאשת חינוך והוראה. עולם התינוקות תמיד ריתק אותי, והקסם שקורה במפגש עם תינוק והוריו גורם ללב שלי להתרחב.</p>
+                <p class="t-body">הקורס מבוסס על הכלים המקצועיים שאני מלמדת בסדנאות שלי. עכשיו ארזתי אותם כך שתוכלי ללמוד מהבית, בזמן שמתאים לך.</p>
             </div>
-
-            <div class="testimonial-card reveal reveal-delay-2">
-                <div class="star-row">★★★★★</div>
-                <p style="font-size:0.95rem; line-height:1.8; color:var(--text-mid); margin:0 0 16px;">"ירדנוש אהובה שלייי, מעבר לזה שאת חברה את אשת מקצוע נדירההה 😍 תודה על כל העזרה, על הליווי הצמוד ועל התמיכה! ללא ספק למדתי ממך מלא ואני בטוחה שכולם פה יכולות להעיד על כך. איזה כיף שיש אותך!! זכינו בך וכמובן שמחכות לקורס הבא ❤️❤️❤️❤️"</p>
-                <div style="font-weight:700; font-size:0.88rem; color:var(--brand-brown);">טל</div>
-            </div>
-
-            <div class="testimonial-card reveal reveal-delay-3">
-                <div class="star-row">★★★★★</div>
-                <p style="font-size:0.95rem; line-height:1.8; color:var(--text-mid); margin:0 0 16px;">"תודה רבהה ירדן על הכל!! כבר קורס שני שאני איתך, אין כמוך ❤️"</p>
-                <div style="font-weight:700; font-size:0.88rem; color:var(--brand-brown);">אוריה</div>
-            </div>
-
         </div>
+    </section>
 
-    </div>
-</section>
-
-<!-- ░░ PRICING ░░ -->
-<section id="register" class="section-pad" style="background:#fff;">
-    <div style="max-width:860px; margin:0 auto;">
-
-        <div style="text-align:center; margin-bottom:56px;">
-            <p style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brand-brown); font-weight:700; margin-bottom:12px;">הצטרפות לקורס</p>
-            <h2 class="section-heading" style="font-weight:800; color:var(--text-dark); margin-bottom:8px;">בחרי את הדרך הנוחה לך</h2>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="price-grid" style="align-items:stretch;">
-
-            <!-- PayPal -->
-            <div class="reveal reveal-delay-1" style="display:flex; flex-direction:column;">
-            <div style="text-align:center; margin-bottom:10px;">
-                <span style="display:inline-block; background:linear-gradient(135deg,#f5a623,#e8920e); color:#fff; font-size:11px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; padding:5px 22px; border-radius:20px; box-shadow:0 2px 10px rgba(245,166,35,0.4);">⭐ הכי מומלץ</span>
-            </div>
-            <div class="price-card price-card-featured" style="flex:1;">
-                <div class="price-card-header" style="background:var(--brand-brown); color:#fff;">
-                    <span class="price-badge" style="background:rgba(255,255,255,0.2); margin-bottom:16px; display:inline-block;">גישה מיידית</span>
-                    <div style="font-size:2.8rem; font-weight:800; line-height:1; margin-bottom:4px;"><span data-price-ignore style="text-decoration:line-through; opacity:0.5; font-size:1.6rem;">₪205</span> <span data-price="rolling">₪175</span></div>
-                    <div style="font-size:0.85rem; opacity:0.75;">תשלום חד-פעמי</div>
-                </div>
-                <div class="price-card-body" style="background:#fff;">
-                    <h3 style="font-size:1.1rem; font-weight:700; margin:0 0 12px;">תשלום דרך PayPal</h3>
-                    <p style="font-size:0.9rem; color:#7a5a48; line-height:1.8; margin-bottom:12px;">
-                        הדרך המהירה ביותר: משלמות דרך PayPal ומקבלות מייל עם פרטי גישה — מיד אחרי התשלום.
-                    </p>
-                    <p style="font-size:0.82rem; color:#7a5a48; line-height:1.6; margin-bottom:20px;">✓ גישה מיידית &nbsp;·&nbsp; ✓ ללא עיכובים &nbsp;·&nbsp; ✓ מאובטח</p>
-                    <ul style="list-style:none; padding:0; margin:0 0 32px; display:flex; flex-direction:column; gap:10px;">
-                        <li style="display:flex; align-items:center; gap:10px; font-size:0.88rem; color:var(--text-mid);">
-                            <span style="color:var(--brand-brown); font-weight:700;">✓</span> גישה מלאה לכל הסרטונים
-                        </li>
-                        <li style="display:flex; align-items:center; gap:10px; font-size:0.88rem; color:var(--text-mid);">
-                            <span style="color:var(--brand-brown); font-weight:700;">✓</span> ליווי אישי בווטסאפ
-                        </li>
-                    </ul>
-                    <a href="https://www.paypal.com/ncp/payment/SDBZ5YS6JNKLQ" target="_blank" rel="noopener" class="btn-primary btn-pulse" style="width:100%; text-align:center; display:block; font-size:1rem;">שלמי וקבלי גישה מיידית ←</a>
-                </div>
-            </div>
+    <!-- Syllabus: the real lessons, same titles as scripts/course-data.js (tests/sales-syllabus.test.js) -->
+    <section class="section syl" id="syllabus" aria-labelledby="syl-title">
+        <div class="container">
+            <div class="syl__head stack reveal">
+                <h2 id="syl-title" class="t-h2">מה יש בקורס</h2>
+                <p class="syl__count t-num">12 סרטונים · 6 טיפי זהב</p>
             </div>
 
-            <!-- Bit / Pepper -->
-            <div class="price-card price-card-plain reveal reveal-delay-2">
-                <div class="price-card-header" style="background:var(--brand-mint);">
-                    <span class="price-badge-soft" style="margin-bottom:16px; display:inline-block;">העברה ידנית</span>
-                    <div style="font-size:2.8rem; font-weight:800; line-height:1; margin-bottom:4px; color:var(--text-dark);"><span data-price-ignore style="text-decoration:line-through; opacity:0.5; font-size:1.6rem;">₪205</span> <span data-price="rolling">₪175</span></div>
-                    <div style="font-size:0.85rem; color:var(--text-mid);">תשלום חד-פעמי</div>
+            <div class="syl__grid">
+                <div class="card syl-group syl__main">
+                    <h3 class="syl-group__title"><svg class="icon icon--24" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-play"/></svg>10 סרטוני הדרכה</h3>
+                    <p class="syl-group__desc t-small">תרגילים שאפשר ליישם מיד, מהסלון, בלי ציוד מיוחד.</p>
+                    <ol class="syl-rows" role="list">
+                        <li><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-play"/></svg><span data-lesson="rolling-01">התהפכויות</span></li>
+                        <li><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-play"/></svg><span data-lesson="rolling-02">חימום, חלק א</span></li>
+                        <li><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-play"/></svg><span data-lesson="rolling-03">חימום, חלק ב</span></li>
+                        <li><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-play"/></svg><span data-lesson="rolling-04">אקורדיון</span></li>
+                        <li><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-play"/></svg><span data-lesson="rolling-05">מזרונים, חלק א</span></li>
+                        <li><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-play"/></svg><span data-lesson="rolling-06">מזרונים, חלק ב</span></li>
+                        <li><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-play"/></svg><span data-lesson="rolling-07">מעקב מבט</span></li>
+                        <li><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-play"/></svg><span data-lesson="rolling-08">לביאה וגורייה</span></li>
+                        <li><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-play"/></svg><span data-lesson="rolling-09">מודעות לכפות הרגליים</span></li>
+                        <li><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-play"/></svg><span data-lesson="rolling-10">שעון</span></li>
+                    </ol>
                 </div>
-                <div class="price-card-body">
-                    <h3 style="font-size:1.1rem; font-weight:700; margin:0 0 12px;">ביט / Paybox</h3>
-                    <p style="font-size:0.9rem; color:#7a5a48; line-height:1.8; margin-bottom:12px;">
-                        מעבירות את הסכום לנייד שלמטה ושולחות לי הודעת אישור בווטסאפ.
-                    </p>
-                    <div style="background:var(--brand-peach); border-radius:8px; padding:16px 20px; margin-bottom:28px;">
-                        <p style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--brand-brown); font-weight:700; margin:0 0 4px;">מספר להעברה:</p>
-                        <p style="font-size:1.3rem; font-weight:800; color:var(--text-dark); margin:0; letter-spacing:0.05em;">054-236-6243</p>
+
+                <div class="syl__side">
+                    <div class="card syl-group">
+                        <h3 class="syl-group__title"><svg class="icon icon--24" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-photo"/></svg>6 טיפי זהב</h3>
+                        <p class="syl-group__desc t-small">טיפים מעשיים שיעזרו לך ללוות את התינוק בצורה הכי נכונה.</p>
+                        <ol class="syl-rows syl-rows--tips" role="list">
+                            <li><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-photo"/></svg><span data-lesson="rolling-tip-01">טיפ זהב 1</span></li>
+                            <li><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-photo"/></svg><span data-lesson="rolling-tip-02">טיפ זהב 2</span></li>
+                            <li><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-photo"/></svg><span data-lesson="rolling-tip-03">טיפ זהב 3</span></li>
+                            <li><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-photo"/></svg><span data-lesson="rolling-tip-04">טיפ זהב 4</span></li>
+                            <li><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-photo"/></svg><span data-lesson="rolling-tip-05">טיפ זהב 5</span></li>
+                            <li><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-photo"/></svg><span data-lesson="rolling-tip-06">טיפ זהב 6</span></li>
+                        </ol>
                     </div>
 
-                    <a href="https://wa.me/972542366243?text=היי ירדן, העברתי תשלום לקורס מתהפכים, אשמח לקבלת גישה!"
-                       class="btn-outline" style="width:100%; text-align:center; display:block; font-size:1rem;">
-                        שלחי אישור בווטסאפ ←
+                    <div class="card syl-group">
+                        <h3 class="syl-group__title"><svg class="icon icon--24" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-gift"/></svg>בונוס ונספח</h3>
+                        <ol class="syl-rows" role="list">
+                            <li>
+                                <svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-gift"/></svg>
+                                <span><span data-lesson="rolling-bonus-crawling">בונוס: הכנה לשלב הזחילה</span><span class="syl-rows__more t-small">סרטון שבונה את התשתית המוטורית לשלב ההתפתחותי הבא.</span></span>
+                            </li>
+                            <li><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-paperclip"/></svg><span data-lesson="rolling-appendix">נספח</span></li>
+                        </ol>
+                    </div>
+
+                    <div class="syl-extra">
+                        <svg class="icon icon--24" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-message"/></svg>
+                        <div>
+                            <h3 class="t-h3">ליווי אישי בווטסאפ</h3>
+                            <p class="t-body">שולחת לי סרטון של התרגול, ואני מחזירה לך פידבק ודיוק אישי. בלי הגבלת זמן.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Messages: real WhatsApp words from students, on the one peach band -->
+    <section class="section section--peach msgs" aria-labelledby="msgs-title">
+        <div class="container msgs__grid">
+            <h2 id="msgs-title" class="t-h2 reveal">מה אמהות כתבו לי</h2>
+            <div class="msgs__list">
+                <figure class="msg">
+                    <blockquote><p>ירדנוש, את כבר יודעת כמה שאני חושבת שאת מדהימה עם תוכן שכל אמא חייבת לצרוך. גם באיך שאת משתפת על עצמך בתוכן באינסטגרם וגורמת לכולנו להרגיש יותר טוב, וגם בתוכן המקצועי שלך שאת מגישה ברמה הכי נעימה ומקיפה שפשוט כיף לצפות בו לרכוש ידע ובמיוחד לתרגל עם אמירי :) ומחכות לקורס הבאאא</p></blockquote>
+                    <figcaption>כרמל</figcaption>
+                </figure>
+                <figure class="msg">
+                    <blockquote><p>תודה רבהה ירדן על הכל!! כבר קורס שני שאני איתך, אין כמוך ❤️</p></blockquote>
+                    <figcaption>אוריה</figcaption>
+                </figure>
+                <figure class="msg">
+                    <blockquote><p>ירדנוש אהובה שלייי, מעבר לזה שאת חברה את אשת מקצוע נדירההה 😍 תודה על כל העזרה, על הליווי הצמוד ועל התמיכה! ללא ספק למדתי ממך מלא ואני בטוחה שכולם פה יכולות להעיד על כך. איזה כיף שיש אותך!! זכינו בך וכמובן שמחכות לקורס הבא ❤️❤️❤️❤️</p></blockquote>
+                    <figcaption>טל</figcaption>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <!-- Offer: what you get, then two full ways to pay -->
+    <section class="section offer" id="register" aria-labelledby="offer-title">
+        <div class="container">
+            <div class="offer__head stack reveal">
+                <h2 id="offer-title" class="t-h2">הצטרפות לקורס מתהפכים</h2>
+                <ul class="gets" role="list">
+                    <li><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-check"/></svg>12 סרטונים ו-6 טיפי זהב</li>
+                    <li><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-check"/></svg>ליווי אישי בווטסאפ, ללא הגבלת זמן</li>
+                    <li><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-check"/></svg>גישה לכל החיים, מהנייד או מהמחשב</li>
+                    <li><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-check"/></svg>תשלום חד-פעמי</li>
+                </ul>
+            </div>
+
+            <div class="pay__grid">
+                <!-- PayPal: access arrives by email right after payment -->
+                <div class="card pay pay--main">
+                    <h3 class="pay__name">תשלום ב-<bdi>PayPal</bdi></h3>
+                    <p class="price t-num">
+                        <span class="sr-only">מחיר קודם</span><span class="price__old" data-price-ignore>₪205</span>
+                        <span class="sr-only">מחיר עכשיו</span><span class="price__now" data-price="rolling">₪175</span>
+                    </p>
+                    <div class="pay__text stack stack--sm">
+                        <p class="t-body">גישה מיידית. מיד אחרי התשלום מגיע מייל עם קישור לבחירת סיסמה, לכתובת של חשבון ה-<bdi>PayPal</bdi> ששילם.</p>
+                        <p class="t-body">אפשר לשלם בכרטיס אשראי, גם בלי חשבון <bdi>PayPal</bdi>.</p>
+                    </div>
+                    <a class="btn btn--primary" href="https://www.paypal.com/ncp/payment/SDBZ5YS6JNKLQ" target="_blank" rel="noopener"><span>לתשלום ב-<bdi>PayPal</bdi></span></a>
+                </div>
+
+                <!-- Bit / Paybox: a WhatsApp message to Yarden, then a manual transfer -->
+                <div class="card pay">
+                    <h3 class="pay__name">ביט / פייבוקס</h3>
+                    <p class="price t-num">
+                        <span class="sr-only">מחיר קודם</span><span class="price__old" data-price-ignore>₪205</span>
+                        <span class="sr-only">מחיר עכשיו</span><span class="price__now" data-price="rolling">₪175</span>
+                    </p>
+                    <div class="pay__text stack stack--sm">
+                        <p class="t-body">העברה ידנית. שולחות לי הודעה בווטסאפ, מעבירות את הסכום בביט או בפייבוקס, וכותבות לי לאיזה מייל לשלוח את הגישה.</p>
+                        <p class="pay__number"><span class="t-small">מספר להעברה</span><span class="t-num" dir="ltr">054-236-6243</span></p>
+                    </div>
+                    <a class="btn btn--quiet" href="https://wa.me/972542366243?text=%D7%94%D7%99%D7%99%20%D7%99%D7%A8%D7%93%D7%9F%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9C%D7%9D%20%D7%91%D7%91%D7%99%D7%98%20%2F%20%D7%A4%D7%99%D7%99%D7%91%D7%95%D7%A7%D7%A1%20%D7%A2%D7%9C%20%D7%A7%D7%95%D7%A8%D7%A1%20%D7%9E%D7%AA%D7%94%D7%A4%D7%9B%D7%99%D7%9D" target="_blank" rel="noopener">
+                        <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-whatsapp"/></svg>
+                        <span>לתשלום בביט / פייבוקס</span>
                     </a>
                 </div>
             </div>
 
+            <div class="offer__after">
+                <p><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-circle-check"/></svg><span>החזר מלא תוך 14 יום מהרכישה, אם נצפו פחות מ-3 שיעורים.</span></p>
+                <p><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-message"/></svg><span>יש שאלה לפני הרכישה? <a href="https://wa.me/972542366243" target="_blank" rel="noopener">דברי איתי בווטסאפ</a> או כתבי לי למייל <a href="mailto:yarden.babysteps@gmail.com"><bdi dir="ltr">yarden.babysteps@gmail.com</bdi></a></span></p>
+            </div>
         </div>
+    </section>
 
-        <p style="text-align:center; font-size:0.85rem; color:var(--text-mid); margin-top:28px;">
-            יש שאלה לפני הרכישה? <a href="https://wa.me/972542366243" style="color:var(--brand-brown); font-weight:600; text-decoration:underline;">דברי איתי ישירות בווטסאפ</a>
-        </p>
-
-    </div>
-</section>
-
-<!-- ░░ FOOTER ░░ -->
-<footer class="footer-inner site-footer">
-    <div class="footer-body">
-        <img src="../../assets/logos/logo-peach.png" alt="מתחילים בקטן" class="footer-logo" width="80" height="80" loading="lazy" decoding="async">
-        <div class="footer-title">ירדן שוהם — מתחילים בקטן</div>
-        <p class="footer-tagline">מלווה התפתחותית · קורס דיגיטלי להתהפכות</p>
-
-        <div class="footer-links">
-            <a href="https://wa.me/972542366243"
-               target="_blank" rel="noopener"
-               class="footer-link">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                WhatsApp
-            </a>
-            <a href="https://www.instagram.com/yarden_shoham7/"
-               target="_blank" rel="noopener"
-               class="footer-link">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-                Instagram
-            </a>
-            <a href="https://linktr.ee/yarden_shoham"
-               target="_blank" rel="noopener"
-               class="footer-link">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m13.73635 5.85251 4.00467 -4.11665 2.3248 2.3808 -4.20064 4.00466h5.9085v3.30473h-5.9365l4.22865 4.10766 -2.3248 2.3338L12.0005 12.099l-5.74052 5.76852 -2.3248 -2.3248 4.22864 -4.10766h-5.9375V8.12132h5.9085L3.93417 4.11666l2.3248 -2.3808 4.00468 4.11665V0h3.4727zm-3.4727 10.30614h3.4727V24h-3.4727z"/></svg>
-                Linktree
-            </a>
-            <a href="/app/login"
-               class="footer-link">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-                כניסה לקורס
-            </a>
+    <!-- FAQ -->
+    <section class="section faq" id="faq" aria-labelledby="faq-title">
+        <div class="container">
+            <h2 id="faq-title" class="t-h2 reveal">שאלות נפוצות</h2>
+            <div class="faq__list">
+                <details class="faq__item">
+                    <summary><span>מאיזה גיל מתאים הקורס?</span><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-forward"/></svg></summary>
+                    <p>הקורס מתאים לתינוקות בגיל 3 עד 7 חודשים: כאלה שעוד לא מתהפכים, מתהפכים רק לפעמים או רק לצד אחד. כל תינוק מתפתח בקצב שלו, ואין צורך למהר.</p>
+                </details>
+                <details class="faq__item">
+                    <summary><span>לכמה זמן יש לי גישה?</span><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-forward"/></svg></summary>
+                    <p>הגישה לקורס היא לכל החיים, ללא הגבלת זמן. אפשר לחזור לכל סרטון כמה פעמים שתרצי.</p>
+                </details>
+                <details class="faq__item">
+                    <summary><span>אפשר לצפות מהנייד?</span><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-forward"/></svg></summary>
+                    <p>כן. הקורס נפתח בדפדפן בנייד, בטאבלט או במחשב, בלי להתקין אפליקציה. נכנסים עם המייל והסיסמה שלך, וממשיכים מאיפה שעצרת.</p>
+                </details>
+                <details class="faq__item">
+                    <summary><span>מה אם זה לא עוזר?</span><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-forward"/></svg></summary>
+                    <p>יש החזר מלא תוך 14 יום מהרכישה, אם נצפו פחות מ-3 שיעורים. וחשוב לי שתדעי: אם משהו לא מתקדם, כתבי לי בווטסאפ ונחשוב יחד מה לדייק.</p>
+                </details>
+                <details class="faq__item">
+                    <summary><span>איך עובד הליווי בווטסאפ?</span><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-forward"/></svg></summary>
+                    <p>את מצלמת סרטון קצר של התרגול עם התינוק ושולחת לי בווטסאפ, למספר <span dir="ltr">054-236-6243</span>. אני צופה ומחזירה לך פידבק ודיוק אישי. הליווי לא מוגבל בזמן.</p>
+                </details>
+                <details class="faq__item">
+                    <summary><span>לאיזה מייל תגיע הגישה?</span><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-forward"/></svg></summary>
+                    <p>אם שילמת ב-<bdi>PayPal</bdi>, הגישה מגיעה למייל של חשבון ה-<bdi>PayPal</bdi> ששילם. במייל יש קישור לבחירת סיסמה. לא מצאת אותו? בדקי גם בתיקיית הספאם. אם שילמת בביט או בפייבוקס, שלחי לי בווטסאפ את המייל שאליו תרצי לקבל את הגישה.</p>
+                </details>
+                <details class="faq__item">
+                    <summary><span>אפשר לשלם בלי חשבון <bdi>PayPal</bdi>?</span><svg class="icon icon--20" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-forward"/></svg></summary>
+                    <p>כן. אפשר לשלם בכרטיס אשראי, גם בלי חשבון <bdi>PayPal</bdi>. ואפשר גם לשלם בביט או בפייבוקס.</p>
+                </details>
+            </div>
         </div>
+    </section>
 
-        <div class="footer-meta">
-            © 2026 ירדן שוהם · כל הזכויות שמורות
+</main>
+
+<footer class="site-footer">
+    <div class="site-footer__inner container">
+        <div class="site-footer__brand">
+            <img class="site-footer__logo" src="/assets/logos/logo-peach.png" alt="" width="44" height="44" loading="lazy" decoding="async">
+            <div>
+                <p class="site-footer__name">ירדן שוהם, מתחילים בקטן</p>
+                <p class="site-footer__tag">מלווה התפתחותית. קורסים דיגיטליים לתינוקות.</p>
+            </div>
         </div>
+        <ul class="site-footer__links">
+            <li><a href="https://wa.me/972542366243" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-whatsapp"/></svg><bdi>WhatsApp</bdi></a></li>
+            <li><a href="https://www.instagram.com/yarden_shoham7/" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-instagram"/></svg><bdi>Instagram</bdi></a></li>
+            <li><a href="/app/login"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-lock"/></svg>כניסה לקורס</a></li>
+        </ul>
+        <p class="site-footer__meta">© 2026 ירדן שוהם. כל הזכויות שמורות.</p>
     </div>
 </footer>
 
-<!-- ░░ STICKY MOBILE CTA ░░ -->
-<div class="sticky-cta" id="stickyCta" style="display:none;">
-    <div style="color:#fff;">
-        <div style="font-weight:700; font-size:15px;">קורס מתהפכים</div>
-        <div style="font-size:12px; opacity:0.7;"><span data-price="rolling">₪175</span> · גישה מיידית</div>
+<!-- Sticky buy bar, phones only. Shown once the hero is gone, hidden over the offer and the footer. -->
+<div class="buybar" id="stickyCta">
+    <div>
+        <p class="buybar__name">קורס מתהפכים</p>
+        <p class="buybar__meta t-num"><bdi><span data-price="rolling">₪175</span></bdi>, גישה לכל החיים</p>
     </div>
-    <a href="#register" style="background:#fff; color:var(--brand-brown); padding:10px 22px; border-radius:6px; font-weight:700; font-size:14px; text-decoration:none;">לרכישה ←</a>
+    <a class="btn btn--primary btn--sm" href="#register">לרכישת הקורס</a>
 </div>
 
 <script src="/site.js" defer></script>
 <script>
-    /* ── Video play overlay ──────────────────────────────────────── */
-    const teaserVideo = document.getElementById('teaserVideo');
-    const videoPlayBtn = document.getElementById('videoPlayBtn');
-    if (teaserVideo && videoPlayBtn) {
-        teaserVideo.addEventListener('play',  () => videoPlayBtn.classList.add('hidden'));
-        teaserVideo.addEventListener('pause', () => videoPlayBtn.classList.remove('hidden'));
-        teaserVideo.addEventListener('ended', () => videoPlayBtn.classList.remove('hidden'));
-    }
-
-    /* ── Smooth scroll with custom easing ───────────────────────── */
-    function easeInOutCubic(t) {
-        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    }
-
-    function smoothScrollTo(targetY, duration) {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            window.scrollTo(0, targetY);
-            return;
-        }
-        const startY = window.scrollY;
-        const diff   = targetY - startY;
-        let start    = null;
-
-        function step(timestamp) {
-            if (!start) start = timestamp;
-            const elapsed  = timestamp - start;
-            const progress = Math.min(elapsed / duration, 1);
-            window.scrollTo(0, startY + diff * easeInOutCubic(progress));
-            if (progress < 1) requestAnimationFrame(step);
-        }
-        requestAnimationFrame(step);
-    }
-
-    // Intercept all anchor links that point to #id targets
-    document.querySelectorAll('a[href^="#"]').forEach(link => {
-        link.addEventListener('click', e => {
-            const id = link.getAttribute('href').slice(1);
-            if (!id) return;
-            const target = document.getElementById(id);
-            if (!target) return;
-            e.preventDefault();
-            const navH   = document.querySelector('.site-nav').offsetHeight;
-            const targetY = target.getBoundingClientRect().top + window.scrollY - navH - 16;
-            smoothScrollTo(targetY, 800);
+    /* ── Teaser frame ──────────────────────────────────────────────
+       Without JS the video keeps its native controls. With JS the poster
+       shows our play button, and native controls appear only after play. */
+    (function () {
+        const frame = document.getElementById('teaser');
+        const video = document.getElementById('teaserVideo');
+        const play = document.getElementById('teaserPlay');
+        if (!frame || !video || !play) return;
+        video.controls = false;
+        play.hidden = false;
+        play.addEventListener('click', () => {
+            frame.classList.add('is-playing');
+            video.controls = true;
+            video.focus();
+            const p = video.play();
+            if (p && p.catch) p.catch(() => {});
         });
-    });
-
-    /* ── Scroll progress bar ─────────────────────────────────────── */
-    const navProgress = document.getElementById('navProgress');
-    function updateProgress() {
-        const scrolled = window.scrollY;
-        const total    = document.body.scrollHeight - window.innerHeight;
-        navProgress.style.width = (scrolled / total * 100) + '%';
-    }
-
-    /* ── Sticky CTA (mobile) ─────────────────────────────────────── */
-    // Hide the bar while the price section or the footer is on screen:
-    // there it repeats the price card or covers the footer.
-    const stickyCta = document.getElementById('stickyCta');
-    const stickyHiders = new Set();
-    const hiderObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) stickyHiders.add(entry.target);
-            else stickyHiders.delete(entry.target);
+        // At the end, back to the poster and our button.
+        video.addEventListener('ended', () => {
+            video.controls = false;
+            frame.classList.remove('is-playing');
+            video.load();
         });
-        checkScroll();
-    });
-    [document.getElementById('register'), document.querySelector('footer')]
-        .forEach(el => { if (el) hiderObserver.observe(el); });
+    })();
 
-    function checkScroll() {
-        updateProgress();
-        if (window.innerWidth < 768 && window.scrollY > 150 && stickyHiders.size === 0) {
-            stickyCta.style.display = 'flex';
-        } else {
-            stickyCta.style.display = 'none';
-        }
-    }
-    window.addEventListener('scroll', checkScroll);
-    window.addEventListener('resize', checkScroll);
+    /* ── Sticky buy bar ────────────────────────────────────────────
+       No scroll listeners: one IntersectionObserver watches the hero, the
+       offer and the footer. The bar shows when the hero is off screen and
+       neither the offer nor the footer is on screen (there it would repeat
+       the price cards or cover the footer). CSS hides it from 768px. */
+    (function () {
+        const bar = document.getElementById('stickyCta');
+        const hero = document.getElementById('top');
+        const hiders = [document.getElementById('register'), document.querySelector('footer')];
+        if (!bar || !hero || !('IntersectionObserver' in window)) return;
+        const onScreen = new Set();
+        const update = () => {
+            const show = !onScreen.has(hero) && !hiders.some(el => onScreen.has(el));
+            bar.classList.toggle('is-shown', show);
+        };
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(e => e.isIntersecting ? onScreen.add(e.target) : onScreen.delete(e.target));
+            update();
+        });
+        [hero, ...hiders].forEach(el => el && io.observe(el));
+    })();
 </script>
 
 </body>
