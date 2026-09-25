@@ -24,10 +24,15 @@
         <svg class="app-icon icon--dir" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-back"/></svg>חזרה לקורס
       </a>
       <h1 id="title" class="lesson-title"><span class="app-skeleton skel-title" aria-hidden="true"></span></h1>
-      <!-- "שיעור 3 מתוך 18" and one small step per lesson. Filled once the course loads. -->
+      <!-- "שיעור 3 מתוך 18" and one small step per lesson. Filled once the course loads.
+           Desktop: each step is a link with a tooltip. Phones: a picture, plus
+           the "all lessons" button that opens the sheet. -->
       <div class="lesson-where">
         <p id="position" class="lesson-position"><span class="app-skeleton skel-position" aria-hidden="true"></span></p>
         <div id="steps" class="steps" role="img" aria-label=""></div>
+        <button id="all-lessons" type="button" class="all-lessons is-waiting"
+                aria-haspopup="dialog" aria-controls="sheet">כל השיעורים</button>
+        <div id="step-tip" class="step-tip" aria-hidden="true"></div>
       </div>
     </header>
 
@@ -97,6 +102,12 @@
             <svg class="app-icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-brand-whatsapp"/></svg>שלחי לי בווטסאפ
           </a>
         </section>
+
+        <!-- Desktop only: every lesson of the course, this one highlighted. -->
+        <section id="outline" class="outline" hidden aria-labelledby="outline-title">
+          <h2 id="outline-title" class="outline-heading">תוכן הקורס</h2>
+          <div id="outline-list" class="outline-scroll"></div>
+        </section>
       </div>
     </div>
   </main>
@@ -115,6 +126,17 @@
     </div>
   </div>
 
+  <!-- Phones: the same lesson list in a bottom sheet. -->
+  <dialog id="sheet" class="sheet" aria-labelledby="sheet-title">
+    <div class="sheet-inner">
+      <div class="sheet-head">
+        <h2 id="sheet-title" class="outline-heading">תוכן הקורס</h2>
+        <button id="sheet-close" type="button" class="sheet-close">סגירה</button>
+      </div>
+      <div id="sheet-list" class="sheet-list outline-scroll"></div>
+    </div>
+  </dialog>
+
   <p id="live" class="app-sr-only" aria-live="polite"></p>
 
   <script type="module">
@@ -123,14 +145,18 @@
     } from "/app/firebase-client.js";
     import { mountAppHeader } from "/app/app-shell.js";
     import {
-      findNeighbors, lessonPosition, positionLabel, stepStates, doneCountLabel, remainingLabel, upNext,
+      findNeighbors, lessonPosition, positionLabel, doneCountLabel, remainingLabel, upNext,
     } from "/app/lesson-nav.js";
     import { shouldComplete } from "/app/lesson-progress.js";
     import { whatsAppFeedbackUrl, whatsAppTestimonialUrl, allDone } from "/app/lesson-extras.js";
     import {
-      renderSteps, fillStep, setDoneButton, announce, setFinish, setUpNext, fillUpNext, lessonIcon,
+      fillStep, setDoneButton, announce, setFinish, setUpNext, fillUpNext, lessonIcon,
       DONE_ANNOUNCE, UNDONE_ANNOUNCE,
     } from "/app/lesson-moment.js";
+    import {
+      DESKTOP_NAV_QUERY, stepItems, outlineGroups, placeTip, renderStepBar, relabelSteps,
+      fillTip, renderOutline, centerCurrent,
+    } from "/app/lesson-outline.js";
 
     const lessonId = decodeURIComponent(location.pathname.split("/").pop());
     const shell = mountAppHeader();
@@ -149,10 +175,15 @@
     const live = $("live");
     const upnextBar = $("upnext");
     // Error text under an empty frame reads as broken, so the frame goes.
+    // Resolves once the media request is answered (loaded or failed), when
+    // the side column has its final shape.
+    let mediaSettled;
+    const mediaReady = new Promise((r) => { mediaSettled = r; });
     const showError = (text) => {
       msg.textContent = text;
       frame.hidden = true;
       doneBtn.hidden = true;
+      mediaSettled();
     };
 
     const lessonSnap = await getDoc(doc(db, "lessons", lessonId));
@@ -195,10 +226,26 @@
       if (isDone) s.add(lessonId); else s.delete(lessonId);
       return s;
     };
+    // Desktop with a mouse: the steps are links with tooltips, and the side
+    // column lists every lesson. Otherwise the steps are a picture and the
+    // "all lessons" button opens the same list in a sheet.
+    const desktopNav = matchMedia(DESKTOP_NAV_QUERY);
+    const lessonList = () => (courseLessonIds ?? []).map((id) => ({ id, ...courseLessons.get(id) }));
+    const stepsNow = () => stepItems(lessonList(), doneNow(), lessonId);
     const refreshSteps = () => {
       if (!courseLessonIds) return;
-      renderSteps(steps, stepStates(courseLessonIds, doneNow(), lessonId),
-        doneCountLabel(courseLessonIds, doneNow()));
+      renderStepBar(steps, stepsNow(), {
+        interactive: desktopNav.matches, label: doneCountLabel(courseLessonIds, doneNow()),
+      });
+    };
+    // The side list, shown once the rest of the side column has its final
+    // shape (see outlineReady below), so it never moves after it appears.
+    const outline = $("outline");
+    const outlineList = $("outline-list");
+    let outlineShown = false;
+    const refreshOutline = () => {
+      if (!courseLessonIds || !outlineShown) return;
+      renderOutline(outlineList, outlineGroups(lessonList(), doneNow(), lessonId), { prefix: "side" });
     };
     const navReady = (async () => {
       const [courseSnap, lessonsSnap] = await Promise.all([
@@ -231,7 +278,61 @@
         next.classList.remove("is-empty");
       }
       $("nav").classList.remove("is-waiting");
+      $("all-lessons").classList.remove("is-waiting");
     })().catch((e) => console.error("lesson nav failed", e));
+
+    // ─── Step tooltips (desktop) ───
+    const tip = $("step-tip");
+    const tipBox = steps.parentElement;
+    const hideTip = () => tip.classList.remove("is-shown");
+    const showTip = (seg) => {
+      const item = stepsNow().find((s) => s.id === seg.dataset.id);
+      if (!item) return;
+      fillTip(tip, item);
+      const a = seg.getBoundingClientRect();
+      const t = tip.getBoundingClientRect();
+      const header = document.querySelector(".app-header");
+      const p = placeTip(a, { width: t.width, height: t.height },
+        { width: document.documentElement.clientWidth, height: innerHeight },
+        { topInset: header ? header.getBoundingClientRect().bottom : 0 });
+      // Viewport pixels to the .lesson-where box, which scrolls with the bar.
+      const box = tipBox.getBoundingClientRect();
+      tip.style.left = `${p.left - box.left}px`;
+      tip.style.top = `${p.top - box.top}px`;
+      tip.style.setProperty("--arrow", `${p.arrow}px`);
+      tip.dataset.side = p.side;
+      tip.classList.add("is-shown");
+    };
+    const stepLink = (el) => (steps.classList.contains("is-links") ? el.closest?.("a.step") : null);
+    steps.addEventListener("pointerover", (e) => { const s = stepLink(e.target); if (s) showTip(s); });
+    steps.addEventListener("pointerleave", () => {
+      const f = stepLink(document.activeElement);
+      if (f) showTip(f); else hideTip();
+    });
+    steps.addEventListener("focusin", (e) => { const s = stepLink(e.target); if (s) showTip(s); });
+    steps.addEventListener("focusout", (e) => { if (!steps.contains(e.relatedTarget)) hideTip(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") hideTip(); });
+    desktopNav.addEventListener("change", () => { hideTip(); refreshSteps(); });
+
+    // ─── All lessons sheet (phones) ───
+    const sheet = $("sheet");
+    const sheetList = $("sheet-list");
+    const allBtn = $("all-lessons");
+    allBtn.addEventListener("click", () => {
+      renderOutline(sheetList, outlineGroups(lessonList(), doneNow(), lessonId), { prefix: "sheet" });
+      document.documentElement.classList.add("has-sheet");
+      sheet.showModal();
+      centerCurrent(sheetList);
+    });
+    $("sheet-close").addEventListener("click", () => sheet.close());
+    // A click on the dim backdrop lands on the dialog itself (it has no padding).
+    sheet.addEventListener("click", (e) => { if (e.target === sheet) sheet.close(); });
+    sheet.addEventListener("close", () => {
+      document.documentElement.classList.remove("has-sheet");
+      allBtn.focus();
+    });
+    // Back from the next lesson (page restored from cache): start closed.
+    addEventListener("pageshow", (e) => { if (e.persisted && sheet.open) sheet.close(); });
 
     // Last lesson with other lessons still open: say how many, and link to
     // the first of them.
@@ -305,6 +406,8 @@
       const animate = shownDone !== null && shownDone !== isDone;
       setDoneButton(doneBtn, isDone, { animate });
       fillStep(steps, lessonId, isDone, { instant: !animate });
+      relabelSteps(steps, stepsNow());
+      refreshOutline();
       if (animate) announce(live, isDone ? DONE_ANNOUNCE : UNDONE_ANNOUNCE);
       shownDone = isDone;
     };
@@ -332,7 +435,7 @@
     // Load which lessons are done (same query as the course page), then check
     // the finish card. The current lesson follows the live toggle state, in
     // case it was saved while this query was running.
-    Promise.all([navReady, getDocs(collection(db, "users", user.uid, "progress"))])
+    const progressReady = Promise.all([navReady, getDocs(collection(db, "users", user.uid, "progress"))])
       .then(([, snap]) => {
         snap.docs.forEach((d) => { if (d.data().completed) completedIds.add(d.id); });
         if (isDone) completedIds.add(lessonId); else completedIds.delete(lessonId);
@@ -341,6 +444,15 @@
         showWhatsLeft();
       })
       .catch((e) => console.error("loading progress failed", e));
+
+    // Desktop side list: after the cards above it have appeared.
+    Promise.all([navReady, progressReady, mediaReady]).then(() => {
+      if (!courseLessonIds?.length) return;
+      outlineShown = true;
+      refreshOutline();
+      outline.hidden = false;
+      centerCurrent(outlineList);
+    });
 
     const token = await user.getIdToken();
     const resp = await fetch(`/api/video-url?lessonId=${encodeURIComponent(lessonId)}`, {
@@ -352,6 +464,7 @@
     // Show the toggle only once the lesson has loaded (not next to an error).
     doneBtn.classList.remove("is-waiting");
     $("feedback").hidden = false;
+    mediaSettled();
 
     if (isImage) {
       // Tips are images: show them instead of the player, and count as done once seen.
