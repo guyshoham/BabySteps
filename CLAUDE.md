@@ -73,10 +73,16 @@ PayPal ──▶ Make ──▶ POST /api/enroll ──▶ Firebase emails the s
 - `lib/r2.js` — `signUrl(r2Key)` → presigned R2 GET URL (S3-compatible, 2h default)
 - `api/enroll.js` — POST handler, fail-closed `x-enroll-secret` check, wires real deps
 - `api/video-url.js` — GET handler, parses `Bearer` token + `lessonId`, wires real deps
+- `api/admin-progress.js` + `lib/admin-progress-core.js` — GET, every student's progress for
+  admins only (401 no/bad token, 403 without the `admin: true` custom claim). `no-store`.
+- `lib/set-admin-core.js` + `scripts/set-admin.js` — give or take the admin claim
+  (`--email <email> [--remove] [--dry-run]`). Playbook: "Admin page" in `docs/go-live-checklist.md`
+- `app/admin.html` + `app/admin.js` + `app/admin-view.js` (pure filter/sort/summary helpers) +
+  `app/admin.css` — the admin page at `/app/admin`. `my-courses` shows a "ניהול" link to admins.
 - `app/firebase-config.js` — the real Firebase web config. It is public by design (the API key
   is not a secret; `firestore.rules` protect the data).
 - `app/firebase-client.js` — web SDK init + `requireAuth/signIn/signOut/resetPassword`
-- `app/login.html`, `app/my-courses.html`, `app/course.html`, `app/lesson.html` — gated pages
+- `app/login.html`, `app/my-courses.html`, `app/course.html`, `app/lesson.html`, `app/admin.html` — gated pages
 - `app/lesson-switch.js` — pure helpers for the lesson page's in-place switch. A click on
   another lesson of the course swaps it without a page load (`showLesson` in `lesson.html`,
   `history.pushState`, one `AbortController` per lesson for the video listeners). Links keep
@@ -87,7 +93,7 @@ PayPal ──▶ Make ──▶ POST /api/enroll ──▶ Firebase emails the s
   by `seed.js`, `prepare-videos.js` and `upload-videos.js`. Edit the data here.
 - `scripts/seed.js` — Firestore seeder for the 2 courses + lessons, safe to re-run (`--dry-run`)
 - `tests/*.test.js` — Vitest unit tests for `course-map`, `enroll-core`, `manual-enroll-core`,
-  `video-core`, `tester-core`, `prices` (also checks the site pages' price tags), and the app
+  `video-core`, `tester-core`, `set-admin-core`, `admin-progress-core`, `app/admin-view.js`, `prices` (also checks the site pages' price tags), and the app
   helpers `app/lesson-nav.js` and `app/safe-next.js`
 
 ## Design system (`packages/ui/`, `@babysteps/ui`)
@@ -123,7 +129,8 @@ PayPal ──▶ Make ──▶ POST /api/enroll ──▶ Firebase emails the s
 - Static-only visual check: `python3 -m http.server 8000`, open `/app/login.html` (note: clean
   URLs and `/api` won't work under a plain static server).
 - Tester login: `node --env-file=.env scripts/create-tester.js` creates `TESTER_EMAIL` (default
-  `tester@babysteps.test`) enrolled in all courses. Re-run to reset its password to `TESTER_PASSWORD`
+  `tester@babysteps.test`) enrolled in all courses. The tester is also an admin (custom claim
+  `admin: true`, kept on every run), so it can open `/app/admin`. Re-run to reset its password to `TESTER_PASSWORD`
   in `.env` (generated and appended there if missing). `--dry-run` shows what it would do.
 
 ## Environment variables (set in Vercel; see `.env.example`)
@@ -138,4 +145,4 @@ Open work lives in `docs/TODO.md`. Provisioning steps, and what is already check
 `docs/go-live-checklist.md`.
 
 ## Out of scope (v1, deferred): PDFs, Q&A/comments, certificates, refund/un-enroll automation,
-admin UI, subscriptions.
+subscriptions.

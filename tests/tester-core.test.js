@@ -10,6 +10,7 @@ function deps(over = {}) {
       { id: "no-flag" },
     ]),
     ensureEnrollment: vi.fn(async () => {}),
+    grantAdmin: vi.fn(async () => ({ changed: true })),
     ...over,
   };
 }
@@ -21,7 +22,7 @@ describe("runCreateTester", () => {
     expect(d.upsertUser).toHaveBeenCalledWith("t@x.test", "pw");
     expect(d.ensureEnrollment).toHaveBeenCalledWith("t1", "rolling", "tester", "tester");
     expect(d.ensureEnrollment).toHaveBeenCalledWith("t1", "no-flag", "tester", "tester");
-    expect(r).toEqual({ uid: "t1", created: true, courseIds: ["rolling", "no-flag"] });
+    expect(r).toEqual({ uid: "t1", created: true, courseIds: ["rolling", "no-flag"], admin: true, adminChanged: true });
   });
 
   it("does not enroll in an unpublished course", async () => {
@@ -29,6 +30,14 @@ describe("runCreateTester", () => {
     await runCreateTester(d, { email: "t@x.test", password: "pw" });
     expect(d.ensureEnrollment).not.toHaveBeenCalledWith("t1", "tummy-time", "tester", "tester");
     expect(d.ensureEnrollment).toHaveBeenCalledTimes(2);
+  });
+
+  it("makes the tester an admin on every run", async () => {
+    const d = deps({ grantAdmin: vi.fn(async () => ({ changed: false })) });
+    const r = await runCreateTester(d, { email: "t@x.test", password: "pw" });
+    expect(d.grantAdmin).toHaveBeenCalledWith("t1");
+    expect(r.admin).toBe(true);
+    expect(r.adminChanged).toBe(false);
   });
 
   it("rejects a missing password", async () => {

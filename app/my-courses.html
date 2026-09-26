@@ -19,6 +19,8 @@
 <body class="app-page">
   <div class="app-wrap app-courses-head">
     <h1 class="app-h1">הקורסים שלי</h1>
+    <!-- Only for admins (custom claim admin: true). The API checks it again. -->
+    <a id="admin-link" href="/app/admin" class="app-link app-admin-link" hidden>ניהול</a>
   </div>
 
   <!-- Skeleton rows in the shape of the course rows below. -->
@@ -75,6 +77,13 @@
       await signOut(); location.replace("/app/login");
     });
 
+    // Admins get a "ניהול" link, and stay on this list (no jump to the only course).
+    // The claim comes from the cached token, so this needs no network call.
+    const isAdmin = user.getIdTokenResult()
+      .then((t) => t.claims.admin === true)
+      .catch(() => false);
+    isAdmin.then((yes) => { document.getElementById("admin-link").hidden = !yes; });
+
     const loading = document.getElementById("loading");
     let redirecting = false;
     try {
@@ -112,7 +121,7 @@
       // One course only: skip the list and open it. replace() keeps "back" from
       // bouncing here again. ?all=1 (the course page's back link) keeps the list.
       const showAll = new URLSearchParams(location.search).has("all");
-      if (courses.length === 1 && courses[0].slug && !showAll) {
+      if (courses.length === 1 && courses[0].slug && !showAll && !(await isAdmin)) {
         location.replace(`/app/course/${encodeURIComponent(courses[0].slug)}`);
         return true;
       }

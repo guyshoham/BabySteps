@@ -332,7 +332,11 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--c-brown); outli
 /* My courses */
 /* Same width as the header content, so the edges line up. */
 .app-wrap { inline-size: 100%; max-inline-size: calc(48rem - 32px); margin-inline: auto; }
-.app-courses-head { padding-block: var(--s-4) var(--s-5); }
+.app-courses-head {
+  padding-block: var(--s-4) var(--s-5);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--s-3);
+}
+.app-admin-link { display: inline-flex; align-items: center; min-block-size: 44px; font-size: var(--fs-small); font-weight: 500; }
 .app-course-list { display: grid; gap: var(--s-4); }
 .app-course {
   display: grid;
