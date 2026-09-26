@@ -78,10 +78,15 @@
     });
 
     // Admins get a "ניהול" link, and stay on this list (no jump to the only course).
-    // The claim comes from the cached token, so this needs no network call.
-    const isAdmin = user.getIdTokenResult()
-      .then((t) => t.claims.admin === true)
-      .catch(() => false);
+    // The claim comes from the cached token. A token made before the claim was set
+    // lacks it for up to an hour, so refresh it once per browser session.
+    const isAdmin = (async () => {
+      if ((await user.getIdTokenResult()).claims.admin === true) return true;
+      try { if (sessionStorage.getItem("bs-claims-fresh")) return false; } catch {}
+      const fresh = await user.getIdTokenResult(true);
+      try { sessionStorage.setItem("bs-claims-fresh", "1"); } catch {}
+      return fresh.claims.admin === true;
+    })().catch(() => false);
     isAdmin.then((yes) => { document.getElementById("admin-link").hidden = !yes; });
 
     const loading = document.getElementById("loading");
