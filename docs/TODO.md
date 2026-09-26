@@ -91,6 +91,12 @@ what is still open.
   matches `assets/css/tokens.css` (Rubik only, brown as the only accent, site radii and shadows).
   Claude Design still has the old look. **Fix:** run the design-sync skill (config in
   `.design-sync/`) and check a few previews against Storybook.
+- [ ] **[U29] P2 — Sharp hero photo on the tummy time page.** `challenge/tummy-time/index.html:146`.
+  The photo `assets/card-tummy-time.jpg` is only 800x356. The page crops it to 4:3, so about 475px
+  of real width is stretched to 700px at 768 wide and to 440px on a 2x desktop screen. It looks
+  blurry next to the sharp photos on the other pages. **Fix:** get the original photo (or a new one
+  for B5) from Yarden, export it at 1200x900 as JPG and WebP, and serve it with `<picture>` and
+  `srcset` like the home page cards.
 
 ## Architecture
 

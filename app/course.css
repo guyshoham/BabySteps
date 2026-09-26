@@ -8,6 +8,8 @@
 .course-page ol { margin: 0; padding: 0; list-style: none; }
 
 .cp-wrap { inline-size: 100%; max-inline-size: 60rem; margin-inline: auto; }
+/* The header's logo and sign-out line up with the page's edges (content + its 16px padding). */
+.course-page .app-header-inner { max-width: calc(60rem + 32px); }
 
 .cp-back {
   display: inline-flex; align-items: center; gap: var(--s-1);
