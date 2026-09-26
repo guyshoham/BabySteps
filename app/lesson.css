@@ -29,6 +29,8 @@
   max-inline-size: 48rem;
   margin-inline: auto;
 }
+/* The header's logo and sign-out line up with the lesson's edges (content + its 16px padding). */
+.lesson-page .app-header-inner { max-width: calc(48rem + 32px); }
 
 /* Loading shapes use WP5's .app-skeleton (app.css); these set the size. */
 .skel-title { inline-size: 55%; block-size: 0.9em; margin-block: 0.15em; }

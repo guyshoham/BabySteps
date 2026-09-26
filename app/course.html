@@ -267,7 +267,8 @@
           if (current) {
             const here = document.createElement("span");
             here.className = "cp-here";
-            here.textContent = "כאן עצרת";
+            // Before the first lesson is done, "you stopped here" is not true yet.
+            here.textContent = prog.done === 0 ? "מתחילים כאן" : "כאן עצרת";
             a.appendChild(here);
           } else if (done) {
             if (!tile) a.appendChild(icon("i-check", "cp-row-done"));

@@ -164,7 +164,7 @@ a.app-card:hover, a.app-row:hover { box-shadow: var(--shadow-2); }
 .app-badge { background: var(--c-peach); color: var(--c-brown); }
 
 /* Keyboard focus, brown like the brand */
-a:focus-visible, button:focus-visible { outline: 2px solid var(--c-brown); outline-offset: 2px; }
+a:focus-visible, button:focus-visible, video:focus-visible { outline: 2px solid var(--c-brown); outline-offset: 2px; }
 
 /* Skip link: first in <body> on every app page, off screen until it gets
    focus, then shown over the header. app-shell.js moves focus to #main. */
@@ -180,10 +180,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--c-brown); outli
   font-size: var(--fs-body);
   font-weight: 500;
   text-decoration: none;
-  box-shadow: var(--shadow-2);
   transform: translateY(calc(-100% - var(--s-4)));
 }
-.app-skip-link:focus { transform: none; }
+/* The shadow only while shown: its 40px blur would leak into the top corner. */
+.app-skip-link:focus { transform: none; box-shadow: var(--shadow-2); }
 .app-skip-link:focus-visible { outline: 2px solid var(--c-ink); outline-offset: 2px; }
 @media (prefers-reduced-motion: no-preference) {
   .app-skip-link { transition: transform .15s ease-out; }

@@ -6,6 +6,8 @@
 .admin-page select { font: inherit; }
 
 .adm-wrap { inline-size: 100%; max-inline-size: 64rem; margin-inline: auto; display: grid; gap: var(--s-4); }
+/* The header's logo and sign-out line up with the page's edges (content + its 16px padding). */
+.admin-page .app-header-inner { max-width: calc(64rem + 32px); }
 
 .adm-back {
   display: inline-flex; align-items: center; gap: var(--s-1); justify-self: start;
