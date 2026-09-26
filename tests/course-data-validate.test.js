@@ -46,3 +46,26 @@ describe("validate: r2Key file names", () => {
     expect(errors).toEqual(['lesson b: r2Key "rolling/lesson-01.mp4" is used by another lesson']);
   });
 });
+
+describe("validate: image alt text", () => {
+  const image = (alt) => ({ ...lesson("tip", "rolling", 1, "rolling/tip-01.png"), kind: "image", alt });
+
+  it("fails on an image lesson with no alt text", () => {
+    expect(validate({ courses, lessons: [image(undefined)] })).toEqual(["lesson tip: image needs alt text"]);
+    expect(validate({ courses, lessons: [image("   ")] })).toEqual(["lesson tip: image needs alt text"]);
+  });
+
+  it("passes an image with alt text, and a video without one", () => {
+    expect(validate({
+      courses,
+      lessons: [image("טיפ: בתמונה תינוק"), lesson("v", "rolling", 2, "rolling/lesson-01.mp4")],
+    })).toEqual([]);
+  });
+
+  it("gives every golden tip in the real data its own alt text, not the title", () => {
+    const tips = DATA.lessons.filter((l) => l.kind === "image");
+    expect(tips.length).toBeGreaterThan(0);
+    for (const t of tips) expect(t.alt).not.toBe(t.title);
+    expect(new Set(tips.map((t) => t.alt)).size).toBe(tips.length);
+  });
+});

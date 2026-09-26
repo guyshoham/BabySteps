@@ -57,6 +57,48 @@ describe("mountAppHeader", () => {
   });
 });
 
+describe("skip link", () => {
+  function setup() {
+    const skip = document.createElement("a");
+    skip.className = "app-skip-link";
+    skip.setAttribute("href", "#main");
+    skip.textContent = "דלגי לתוכן";
+    const main = document.createElement("main");
+    main.id = "main";
+    main.tabIndex = -1;
+    document.body.replaceChildren(skip, main);
+    return { skip, main };
+  }
+
+  it("keeps the skip link first and puts the header right after it", () => {
+    const { skip } = setup();
+    const { header } = mountAppHeader();
+    expect(document.body.firstElementChild).toBe(skip);
+    expect(skip.nextElementSibling).toBe(header);
+  });
+
+  it("moves focus to main on click and adds no hash to the URL", () => {
+    const { skip, main } = setup();
+    mountAppHeader();
+    const ev = new MouseEvent("click", { bubbles: true, cancelable: true });
+    skip.dispatchEvent(ev);
+    expect(ev.defaultPrevented).toBe(true);
+    expect(document.activeElement).toBe(main);
+    expect(location.hash).toBe("");
+  });
+
+  for (const page of ["login", "my-courses", "course", "lesson", "auth-action", "admin"]) {
+    it(`app/${page}.html starts with the skip link and has one <main id="main">`, () => {
+      const html = readFileSync(join(ROOT, `app/${page}.html`), "utf8");
+      const body = html.slice(html.indexOf("<body"));
+      const firstTag = body.slice(body.indexOf(">") + 1).replace(/<!--[\s\S]*?-->/g, "").trim();
+      expect(firstTag.startsWith('<a class="app-skip-link" href="#main">דלגי לתוכן</a>')).toBe(true);
+      expect(html.match(/<main\b/g)).toHaveLength(1);
+      expect(html).toMatch(/<main id="main" tabindex="-1"/);
+    });
+  }
+});
+
 describe("home screen install", () => {
   const manifest = JSON.parse(readFileSync(join(ROOT, "app/manifest.webmanifest"), "utf8"));
 

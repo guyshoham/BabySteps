@@ -6,7 +6,7 @@
 //
 // `kind` decides how app/lesson.html renders the asset:
 //   "video" → <video> player with progress tracking
-//   "image" → <img>, marked complete once it loads
+//   "image" → <img>, marked complete once it loads; `alt` (required) is its alt text
 // Both are served the same way: a short-lived signed R2 URL from /api/video-url.
 //
 // `durationSec` is informational only — no page reads it yet.
@@ -48,13 +48,32 @@ export const DATA = {
     { id: "rolling-09", courseId: "rolling", order: 9,  kind: "video", title: "מודעות לכפות הרגליים",   r2Key: "rolling/lesson-09.mp4", durationSec: 0, description: "" },
     { id: "rolling-10", courseId: "rolling", order: 10, kind: "video", title: "שעון",                   r2Key: "rolling/lesson-10.mp4", durationSec: 0, description: "" },
 
-    // — 6 טיפי זהב — these are images, not videos
-    { id: "rolling-tip-01", courseId: "rolling", order: 11, kind: "image", title: "טיפ זהב 1", r2Key: "rolling/tip-01.png", description: "" },
-    { id: "rolling-tip-02", courseId: "rolling", order: 12, kind: "image", title: "טיפ זהב 2", r2Key: "rolling/tip-02.png", description: "" },
-    { id: "rolling-tip-03", courseId: "rolling", order: 13, kind: "image", title: "טיפ זהב 3", r2Key: "rolling/tip-03.png", description: "" },
-    { id: "rolling-tip-04", courseId: "rolling", order: 14, kind: "image", title: "טיפ זהב 4", r2Key: "rolling/tip-04.png", description: "" },
-    { id: "rolling-tip-05", courseId: "rolling", order: 15, kind: "image", title: "טיפ זהב 5", r2Key: "rolling/tip-05.png", description: "" },
-    { id: "rolling-tip-06", courseId: "rolling", order: 16, kind: "image", title: "טיפ זהב 6", r2Key: "rolling/tip-06.png", description: "" },
+    // — 6 טיפי זהב — these are images, not videos. `alt` is the image's alt
+    // text on the lesson page: what the photo shows and the tip's full text.
+    {
+      id: "rolling-tip-01", courseId: "rolling", order: 11, kind: "image", title: "טיפ זהב 1", r2Key: "rolling/tip-01.png", description: "",
+      alt: "טיפ מתגלגלים: מרחק נגיעה. בתמונה תינוק שוכב על הצד על שמיכה בפארק, ולידו משחק טבעות צבעוני. הטקסט: כאשר נרצה לעודד את התינוק להתהפך, חשוב שנקפיד שהמשחק שאיתו אנו מעודדים את התינוק יהיה במרחק נגיעה. כלומר, לא רחוק מדי ולא קרוב מדי, כך שהוא ירגיש את המשחק בקצה האצבע. באופן הזה נעורר אצל התינוק מוטיבציה שתעודד אותו להמשיך את הפעולה.",
+    },
+    {
+      id: "rolling-tip-02", courseId: "rolling", order: 12, kind: "image", title: "טיפ זהב 2", r2Key: "rolling/tip-02.png", description: "",
+      alt: "טיפ מתגלגלים: נדנדה. בתמונה תינוק מחייך שוכב על הבטן, על שמיכה בתוך נדנדה עגולה בגינה. הטקסט: רדו לגינה הציבורית וחפשו את הנדנדה העגולה. הניחו את מזרון העגלה או שמיכת פעילות על הנדנדה, והניחו את התינוק על הבטן. באופן הזה התינוק יחווה חוויות של שיווי משקל, שחשובות לשלב זה.",
+    },
+    {
+      id: "rolling-tip-03", courseId: "rolling", order: 13, kind: "image", title: "טיפ זהב 3", r2Key: "rolling/tip-03.png", description: "",
+      alt: "טיפ מתגלגלים: אלכסון. בתמונה תינוק שוכב על הגב על מחצלת ומושיט ידיים אל ספר בד צבעוני שמונח מעל ראשו. הטקסט: לאחר שהצגתן את החפץ בקו האמצע והתינוק שלח את ידיו לאחוז, הובילו את מבטו של התינוק אחרי החפץ אל הצד. הניחו את המשחק מאחורי הכתף שאליה תרצו שיתהפך, באלכסון לראש.",
+    },
+    {
+      id: "rolling-tip-04", courseId: "rolling", order: 14, kind: "image", title: "טיפ זהב 4", r2Key: "rolling/tip-04.png", description: "",
+      alt: "טיפ מתגלגלים: זמן צדדים. בתמונה תינוק שוכב על הצד באמבטיה של עגלה ומחזיק ספרון שעומד לידו. הטקסט: שהייה על הצדדים היא אחת מאבני היסוד שהתינוק צריך כדי להתפתח באופן מאורגן בכל שלבי ההתפתחות. נצלו את האמבטיה של העגלה לזמן צדדים, הציגו ספרון או משחק, ואל תשכחו את שני צידי הגוף.",
+    },
+    {
+      id: "rolling-tip-05", courseId: "rolling", order: 15, kind: "image", title: "טיפ זהב 5", r2Key: "rolling/tip-05.png", description: "",
+      alt: "טיפ מתגלגלים: אווירון. בתמונה תינוק שוכב על הבטן על מזרן, מרים את הראש ופורש את הידיים לצדדים כמו כנפיים. הטקסט: כאשר התינוק מרים את רגליו בשכיבה על הגב, נראה אותו מתרומם למנח אווירון בשכיבה על הבטן. מנח זה תקין והוא חלק מההתפתחות. חשוב לראות שהתינוק יודע לרדת מהגובה ולחזור לשכיבה מאורגנת על הבטן. הציגו לתינוק משחק בקו האמצע. אם זה לא מספיק, געו עם המשחק בכפות הידיים וחזרו לקו האמצע, ולאחר מכן העניקו מגע עמוק לרגליים.",
+    },
+    {
+      id: "rolling-tip-06", courseId: "rolling", order: 16, kind: "image", title: "טיפ זהב 6", r2Key: "rolling/tip-06.png", description: "",
+      alt: "טיפ מתגלגלים: כפות רגליים. בתמונה רגליו של תינוק במכנס פסים, עם כפות רגליים יחפות, על שטיח. הטקסט: אחד התנאים להתהפכות הוא שימוש בכפות הרגליים. תינוק נולד כשהוא אינו מודע לאיבריו. איבר שמכוסה בבגד מוריד את המודעות של המוח לאיבר ומקשה על התינוק להשתמש בו. לכן ההמלצה היא: בקיץ, בלי מכנס בכלל. בחורף, להלביש את התינוק במכנס בלי רגליות, עם גרביים, ולהוריד את הגרביים לפרקי זמן כשהבית מחומם.",
+    },
 
     // — בונוסים, בסוף הקורס —
     {
@@ -111,6 +130,8 @@ export function validate({ courses, lessons }) {
       basenamePerCourse.set(l.courseId, names);
     }
     if (l.kind !== "video" && l.kind !== "image") errors.push(`lesson ${l.id}: kind must be "video" or "image"`);
+    // An image is read only through its alt text, so every image needs one.
+    if (l.kind === "image" && !(typeof l.alt === "string" && l.alt.trim())) errors.push(`lesson ${l.id}: image needs alt text`);
     const seen = orderPerCourse.get(l.courseId) ?? new Set();
     if (seen.has(l.order)) errors.push(`lesson ${l.id}: order ${l.order} already used in ${l.courseId}`);
     seen.add(l.order);

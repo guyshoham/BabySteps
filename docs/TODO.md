@@ -69,10 +69,9 @@ what is still open.
 
 ## Trust and legal
 
-- [ ] **[T3] P2 — Accessibility: what the statement lists as not done.** `/accessibility` is live
-  and lists the gaps: no captions on the course videos and the teaser (planned), golden tips are
-  images with only the title as alt text, no skip link in the app. Fix these, then update the
-  statement and its date. The React rebuild on `@babysteps/ui` is the place to meet the standard
+- [ ] **[T3] P2 — Accessibility: captions on the videos.** `/accessibility` is live and lists one
+  gap we can fix: the course videos and the teaser have no captions (planned). Add captions, then
+  update the statement and its date. The React rebuild on `@babysteps/ui` is the place to meet the standard
   fully. Never add "עוסק פטור" or a business number (owner decision, 2026-09-26).
 
 ## SEO, speed and analytics

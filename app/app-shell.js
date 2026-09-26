@@ -9,7 +9,8 @@
 export const SITE_NAME = "מתחילים בקטן";
 export const LOGO_SRC = "/assets/logos/logo-peach.png";
 
-// Builds the header and puts it first in <body>. Returns { header, showUser }.
+// Builds the header and puts it first in <body> (after the skip link, if the
+// page has one, and wires that link). Returns { header, showUser }.
 // showUser(email, onSignOut) adds the email and the "יציאה" button; call it
 // once the user is known. Calling it again only updates the email.
 export function mountAppHeader({ doc = document } = {}) {
@@ -35,7 +36,10 @@ export function mountAppHeader({ doc = document } = {}) {
   inner.appendChild(brand);
 
   header.appendChild(inner);
-  doc.body.prepend(header);
+  // The skip link stays first in tab order: the header goes right after it.
+  const skip = doc.querySelector("body > .app-skip-link");
+  if (skip) { skip.after(header); wireSkipLink(skip, doc); }
+  else doc.body.prepend(header);
 
   let emailEl = null;
   function showUser(email, onSignOut) {
@@ -70,6 +74,19 @@ export function mountAppHeader({ doc = document } = {}) {
   }
 
   return { header, showUser };
+}
+
+// The skip link ("דלגי לתוכן") moves focus to the element its href names.
+// It focuses the target itself instead of following "#main", so the URL gets
+// no hash and the lesson page's own link handler never acts on the click.
+export function wireSkipLink(link, doc = document) {
+  link.addEventListener("click", (e) => {
+    const id = (link.getAttribute("href") ?? "").replace(/^#/, "");
+    const target = id ? doc.getElementById(id) : null;
+    if (!target) return;
+    e.preventDefault();
+    target.focus();
+  });
 }
 
 // Show or hide button for a password field (U23). The button says what it

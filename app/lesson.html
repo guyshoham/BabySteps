@@ -30,7 +30,8 @@
   <meta name="apple-mobile-web-app-title" content="מתחילים בקטן" />
 </head>
 <body class="app-page lesson-page">
-  <main class="lesson">
+  <a class="app-skip-link" href="#main">דלגי לתוכן</a>
+  <main id="main" tabindex="-1" class="lesson">
     <header class="lesson-head">
       <a id="back" href="/app/my-courses" class="lesson-back">
         <svg class="app-icon icon--dir" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-back"/></svg>חזרה לקורס
@@ -575,7 +576,8 @@
         // Tips are images: show them instead of the player, and count as done once seen.
         video.hidden = true;
         image.hidden = false;
-        image.setAttribute("alt", s.lesson.title ?? "");
+        // `alt` describes the tip card (photo and text); older docs fall back to the title.
+        image.setAttribute("alt", s.lesson.alt || s.lesson.title || "");
         image.addEventListener("load", () => { loaded(); markDone(s); save(s.id, { completed: true }); }, { signal });
         image.addEventListener("error", loaded, { signal });
         image.setAttribute("src", url);
