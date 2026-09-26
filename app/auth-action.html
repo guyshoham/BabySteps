@@ -18,12 +18,13 @@
   <meta name="apple-mobile-web-app-title" content="מתחילים בקטן" />
 </head>
 <body class="app-page">
+  <a class="app-skip-link" href="#main">דלגי לתוכן</a>
   <!--
     Firebase email action handler (set as the custom action URL in the Firebase
     console). Firebase adds: mode, oobCode, apiKey, continueUrl, lang.
     Only resetPassword is handled here; that is the welcome and reset email.
   -->
-  <main class="app-card app-auth">
+  <main id="main" tabindex="-1" class="app-card app-auth">
     <div class="app-auth-head">
       <h1 id="title" class="app-h1">רגע אחד…</h1>
       <p id="loading" class="app-lead" role="status">בודקות את הקישור</p>

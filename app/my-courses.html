@@ -17,6 +17,8 @@
   <meta name="apple-mobile-web-app-title" content="מתחילים בקטן" />
 </head>
 <body class="app-page">
+  <a class="app-skip-link" href="#main">דלגי לתוכן</a>
+  <main id="main" tabindex="-1" class="app-main">
   <div class="app-wrap app-courses-head">
     <h1 class="app-h1">הקורסים שלי</h1>
     <!-- Only for admins (custom claim admin: true). The API checks it again. -->
@@ -46,7 +48,7 @@
     </div>
   </div>
 
-  <main id="list" class="app-wrap app-course-list"></main>
+  <div id="list" class="app-wrap app-course-list"></div>
 
   <div id="empty" class="app-wrap app-card app-state hidden">
     <p class="app-state-title">עדיין אין לך קורסים כאן.</p>
@@ -62,6 +64,7 @@
       <a href="https://wa.me/972542366243" target="_blank" rel="noopener" class="app-link">כתבי לנו בוואטסאפ</a>
     </p>
   </div>
+  </main>
 
   <script type="module">
     import { requireAuth, db, signOut, collection, getDocs, doc, getDoc } from "/app/firebase-client.js";

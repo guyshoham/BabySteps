@@ -18,7 +18,8 @@
   <meta name="apple-mobile-web-app-title" content="מתחילים בקטן" />
 </head>
 <body class="app-page course-page">
-  <div class="cp-wrap">
+  <a class="app-skip-link" href="#main">דלגי לתוכן</a>
+  <main id="main" tabindex="-1" class="cp-wrap">
     <!-- ?all=1 shows the list even with one course. -->
     <a href="/app/my-courses?all=1" class="cp-back">
       <svg class="app-icon icon--dir" aria-hidden="true"><use href="/assets/icons/sprite.svg#i-chevron-back"/></svg>
@@ -68,7 +69,7 @@
           </div>
         </div>
 
-        <main id="lessons" class="cp-groups" hidden></main>
+        <div id="lessons" class="cp-groups" hidden></div>
 
         <section id="feedback" class="app-card cp-feedback" hidden>
           <div class="cp-feedback-text">
@@ -95,7 +96,7 @@
         </a>
       </div>
     </div>
-  </div>
+  </main>
 
   <script type="module">
     import {
