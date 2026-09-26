@@ -107,6 +107,22 @@ what is still open.
 
 ## Bigger bets
 
+- [ ] **[B5] P2 — Launch the tummy time course with all its assets.** `scripts/course-data.js:27-33`
+  has the course with `published: false` and no lessons. `challenge/tummy-time/index.html` is a
+  "בקרוב" page with a WhatsApp "update me" button. **Fix:**
+  - Content from Yarden: the filmed videos, golden tips images, lesson titles and descriptions, the
+    age range, the price and a cover photo.
+  - Videos: `scripts/prepare-videos.js`, then `scripts/upload-videos.js` to R2.
+  - Data: add the lessons to `scripts/course-data.js`, set `coverImage` and `published: true`, then
+    `scripts/seed.js --dry-run` and a real seed.
+  - Payment: add the price to `lib/prices.js` (then `npm run sync-prices`), create a PayPal link and
+    product, add it to `COURSE_MAP` in Vercel, and add a Make route to `/api/enroll`.
+  - Sales page: turn `challenge/tummy-time/` into a full page like `challenge/rolling/`, with a
+    hero, what's inside, FAQ, testimonials, pay card and a thank-you page. Also update the home page
+    card, the sitemap, the OG image, and the terms and FAQ if the access or refund rules differ.
+  - Emails: returning students who buy it get no welcome email yet (F4).
+  - Test: a tester enrolled in both courses and a real ₪1 payment, like G2.
+
 - [ ] **[B1] P2 — Beta launch for real testimonials.** Before the public launch, give 5 to 10
   followers the course free or at half price in exchange for honest feedback within two weeks and a
   short quote with the baby's age. This tests the whole flow on real phones and fills C2 and C7
