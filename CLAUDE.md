@@ -49,10 +49,10 @@ PayPal ──▶ Make ──▶ POST /api/enroll ──▶ Firebase emails the s
 ## Data model (Firestore)
 
 - `courses/{courseId}` → `{ title, slug, description, coverImage, order, published }`
-- `lessons/{lessonId}` → `{ courseId, title, order, kind, r2Key, durationSec, description }`
+- `lessons/{lessonId}` → `{ courseId, title, order, kind, r2Key, durationSec, description, alt }`
   — **top-level** collection (not a subcollection) so the gatekeeper resolves a lesson in one
   read. `r2Key` is the object key in R2; never store a playable URL. `kind` is `"video"` or
-  `"image"` (the golden tips are images). `durationSec` is set on videos only, and no page reads it.
+  `"image"` (the golden tips are images). `durationSec` is set on videos only, and no page reads it. `alt` (image lessons only, required by `validate`) is the tip image's Hebrew alt text.
 - `users/{uid}` → `{ email, createdAt }`
 - `users/{uid}/enrollments/{courseId}` → `{ grantedAt, source, paymentRef }` (server-written only)
 - `users/{uid}/progress/{lessonId}` → `{ completed, lastPositionSec, updatedAt }` (owner read/write)
