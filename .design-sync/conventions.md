@@ -2,11 +2,11 @@
 
 Hebrew, right-to-left design system for a baby-development coach: landing pages that sell
 courses, and a student app (login, my courses, lesson player). Warm, calm and round:
-cream page, cocoa brown brand, soft pastel sections, terracotta accent.
+cream page, one peach band, brown as the only accent, Rubik only.
 
 ## 1. Always wrap the screen in `BsRoot`
 
-`BsRoot` sets `dir="rtl"`, `lang="he"`, the Rubik and Varela Round fonts, the ink color and
+`BsRoot` sets `dir="rtl"`, `lang="he"`, the Rubik font, the ink color and
 the cream background. Without it text runs left-to-right and components lose their fonts
 and colors. Wrap once, at the top.
 
@@ -25,7 +25,7 @@ Write all copy in Hebrew. "Forward" arrows point left (`icon="arrow"`).
   `cocoa` (dark: its heading and lead turn white; cards inside stay light). Alternate tones
   between sections. Start each section with `SectionHeading` (`eyebrow`, `title`, `lead`).
 - `Divider variant="wave" from="peach" tone="white"` makes a soft wave between two tones.
-- Wrap words of a heading `title` in `<em>` for the terracotta highlight.
+- Wrap words of a heading `title` in `<em>` for the brown highlight.
 - App screens: `AppHeader` on top, content in `Container` (`narrow`, `base`, `wide`).
   Lessons go in `<ol className="bs-lesson-list">` with `LessonListItem` rows
   (`state`: `todo`, `current`, `done`, `locked`).
@@ -48,7 +48,8 @@ There are no utility classes. Style comes from component props. For your own lay
 - Surfaces: `--surface-cream`, `--surface-card`, `--surface-peach`, `--surface-mint`,
   `--surface-sky`, `--surface-blush`, `--surface-cocoa`.
 - Type: `--font-heading`, `--font-body`, `--text-display`, `--text-h2`, `--text-h3`,
-  `--text-lead`, `--text-body`, `--text-caption`. Headings stay weight 400.
+  `--text-lead`, `--text-body`, `--text-caption`, `--text-label`. Headings h1 and h2 are
+  700, h3 is 500. The values come from the site file `assets/css/tokens.css`.
 
 The full token list is in `styles.css` (it imports `_ds_bundle.css`). Each component's
 props are in its `.d.ts`, usage in its `.prompt.md`.

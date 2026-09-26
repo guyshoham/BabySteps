@@ -24,6 +24,7 @@
 .bs-empty-state__title {
   margin: 0;
   font-family: var(--font-heading);
+  font-weight: 500;
   font-size: var(--text-h3);
   line-height: var(--leading-heading);
   color: var(--color-brand-700);

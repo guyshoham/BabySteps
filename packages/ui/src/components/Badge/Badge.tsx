@@ -3,7 +3,7 @@ import { cx } from '../../utils/cx';
 import { Icon, type IconName } from '../Icon/Icon';
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
-  /** tag: white label (hero tags). pill: mint status. highlight: terracotta "most popular". */
+  /** tag: white label (hero tags). pill: mint status. highlight: brown "most popular". */
   variant?: 'tag' | 'pill' | 'highlight';
   icon?: IconName;
 }

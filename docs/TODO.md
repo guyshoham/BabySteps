@@ -88,10 +88,10 @@ what is still open.
   header with the logo, tokens, no Tailwind grays, grouped lessons and progress (WP5 to WP7). What is
   left: get Yarden's feedback on the four app screens, then rebuild them in React with
   `@babysteps/ui` (`AppHeader`, `CourseProgressCard`, `LessonListItem`, `TextField`) as part of A10.
-- [ ] **[U7] P3 — Align the design system tokens with the site.** The site and app now share
-  `assets/css/tokens.css` (art direction, 2026-09-26). `packages/ui/src/tokens.css` still has its own
-  values (e.g. `--color-ink`, `--surface-peach`, radii, Varela Round). **Fix:** make the package
-  tokens match `assets/css/tokens.css` before the React rebuild (A10), rebuild Storybook, re-sync.
+- [ ] **[U7] P3 — Re-sync the design system to Claude Design.** `packages/ui/src/tokens.css` now
+  matches `assets/css/tokens.css` (Rubik only, brown as the only accent, site radii and shadows).
+  Claude Design still has the old look. **Fix:** run the design-sync skill (config in
+  `.design-sync/`) and check a few previews against Storybook.
 
 ## Architecture
 

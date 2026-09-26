@@ -57,7 +57,7 @@
 
 .bs-course-card__meta li {
   padding: 2px var(--space-3);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   background: var(--surface-cream);
   font-size: var(--text-caption);
   color: var(--color-ink-soft);
@@ -75,7 +75,9 @@
 
 .bs-course-card__price {
   font-family: var(--font-heading);
+  font-weight: var(--weight-heading);
   font-size: var(--text-h3);
+  font-variant-numeric: tabular-nums;
   color: var(--color-brand-700);
 }
 

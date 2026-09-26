@@ -253,9 +253,9 @@ most from the rebuild (U6, L1 to L7).
   page has them, and keep `sitemap.xml` and `robots.txt`.
 - **Share previews.** WhatsApp does not run JS. `og:*` tags must be in the prerendered HTML with
   absolute URLs from `VITE_SITE_URL`. Test each page in the debuggers before and after.
-- **Hebrew fonts.** `@babysteps/ui` self-hosts Rubik and Varela Round (Hebrew and Latin subsets).
-  Preload the two main `woff2` files in `root.tsx`, use `font-display: swap`, and drop the Google
-  Fonts link. Varela Round has one Hebrew weight, so headings must not ask for bold.
+- **Hebrew fonts.** `@babysteps/ui` self-hosts Rubik only, weights 300, 400, 500 and 700 (Hebrew
+  and Latin subsets), the same weights the site loads. Preload the two main `woff2` files in
+  `root.tsx`, use `font-display: swap`, and drop the Google Fonts link.
 - **Firebase bundle size.** Auth + Firestore is about 100 to 150 KB gzipped. Load it only in the
   `/app` routes (route code splitting), so marketing pages never download it. Consider
   `firebase/firestore/lite` (much smaller): the app only does one-off reads and `setDoc`, no live

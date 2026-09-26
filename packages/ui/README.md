@@ -29,7 +29,8 @@ export function Page() {
 - Always wrap pages in `BsRoot`. It sets RTL, Hebrew, the fonts and the base colors.
 - Build pages from `Section` (sets the background `tone`) and `SectionHeading`.
 - For your own layout glue, use the tokens: `var(--space-5)`, `var(--radius-lg)`,
-  `var(--surface-mint)`. Never raw colors. The full list is in `src/tokens.css`.
+  `var(--surface-peach)`. Never raw colors. The full list is in `src/tokens.css`,
+  whose values come from the site file `assets/css/tokens.css`.
 - Wrap `LessonListItem` rows in `<ol className="bs-lesson-list">`.
 - A fixed `StickyCTA` shows on phones only. Give the page about 96px of bottom padding.
 

@@ -11,6 +11,7 @@
   inset-block-start: var(--space-2);
   inset-inline-end: var(--space-5);
   font-family: var(--font-heading);
+  font-weight: var(--weight-heading);
   font-size: 5rem;
   line-height: 1;
   color: var(--surface-peach);

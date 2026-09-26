@@ -50,7 +50,9 @@
 
 .bs-price-card__amount {
   font-family: var(--font-heading);
+  font-weight: var(--weight-heading); /* the site loads Rubik up to 700 only */
   font-size: 2.75rem;
+  font-variant-numeric: tabular-nums;
   line-height: 1;
   color: var(--color-brand-700);
 }

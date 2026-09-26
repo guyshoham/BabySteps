@@ -32,6 +32,7 @@
 
 .bs-sitenav__title {
   font-family: var(--font-heading);
+  font-weight: var(--weight-heading);
   font-size: 1.25rem;
   color: var(--color-brand-700);
 }

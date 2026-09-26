@@ -21,6 +21,7 @@
 
 .bs-highlight-box__title {
   font-family: var(--font-heading);
+  font-weight: 500;
   font-size: var(--text-h3);
   color: var(--color-brand-700);
   margin-block-end: var(--space-2);
