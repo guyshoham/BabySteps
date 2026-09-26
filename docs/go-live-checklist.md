@@ -307,6 +307,24 @@ A buyer says she paid but cannot get in. Go down this list in order.
 
 Remember the receipt (TODO F2) for every manual sale.
 
+## Admin page: make Yarden admin
+
+`/app/admin` shows every student's progress. Only users with the Firebase custom claim
+`admin: true` can open it; `/api/admin-progress` checks the claim on every call.
+
+1. Yarden needs an account first (she logged in once, or was enrolled).
+2. Run from the repo root:
+
+       node --env-file=.env scripts/set-admin.js --email <her email> --dry-run
+       node --env-file=.env scripts/set-admin.js --email <her email>
+
+3. She opens `/app/admin` (the page refreshes her login token once), or signs out and in
+   again. After that, "הקורסים שלי" shows a "ניהול" link.
+
+To take admin away: `--remove`. Other custom claims stay as they are. The tester account is
+also admin: `scripts/create-tester.js` sets the claim on every run. The page hides the tester
+by default ("הצגת חשבון הבודק" shows it).
+
 ## After go-live
 
 - [ ] Send one real customer through the full PayPal flow and watch the Make execution.

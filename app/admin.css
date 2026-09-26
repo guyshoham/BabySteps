@@ -1,0 +1,180 @@
+/* Admin page (app/admin.html). Tokens only (assets/css/tokens.css), logical
+   properties only (RTL). The base, header, cards, inputs, icons and skeleton
+   come from app.css (.app-page). A table from 760px, cards below it. */
+
+.admin-page { color: var(--c-ink-soft); }
+.admin-page select { font: inherit; }
+
+.adm-wrap { inline-size: 100%; max-inline-size: 64rem; margin-inline: auto; display: grid; gap: var(--s-4); }
+
+.adm-back {
+  display: inline-flex; align-items: center; gap: var(--s-1); justify-self: start;
+  min-block-size: 44px; font-size: var(--fs-small); font-weight: 500;
+  color: var(--c-brown); text-decoration: none;
+}
+.adm-back:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+.adm-head { display: grid; gap: var(--s-1); }
+.adm-updated { font-size: var(--fs-small); }
+.adm-panel, .adm-loading { display: grid; gap: var(--s-4); }
+
+/* ─── Summary ─── */
+.adm-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-3); }
+.adm-stat { display: grid; gap: var(--s-1); align-content: start; padding: var(--s-4); }
+.adm-stat-num {
+  font-size: var(--fs-h2); font-weight: 700; line-height: 1.1; color: var(--c-brown);
+  font-variant-numeric: tabular-nums;
+}
+.adm-stat-label { font-size: var(--fs-small); line-height: 1.4; color: var(--c-ink-soft); }
+
+/* ─── Controls ─── */
+.adm-controls { display: grid; gap: var(--s-3); }
+.adm-courses { border: 0; margin: 0; padding: 0; min-inline-size: 0; }
+.adm-chips { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.adm-chip { position: relative; display: inline-flex; }
+.adm-chip input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.adm-chip span {
+  display: inline-flex; align-items: center; min-block-size: 44px; padding: 0 var(--s-4);
+  border: 1.5px solid rgba(112, 66, 41, 0.4); border-radius: var(--r-md);
+  background: var(--c-paper); color: var(--c-brown); font-size: var(--fs-small); font-weight: 500;
+}
+.adm-chip input:checked + span { background: var(--c-brown); border-color: var(--c-brown); color: #fff; }
+.adm-chip input:focus-visible + span { outline: 2px solid var(--c-brown); outline-offset: 2px; }
+.adm-chip:hover input:not(:checked) + span { background: var(--c-peach); }
+
+.adm-control-row { display: grid; grid-template-columns: 1fr; gap: var(--s-3); }
+.adm-search, .adm-sort { display: grid; gap: var(--s-1); }
+.adm-sort { grid-template-columns: auto 1fr; align-items: center; column-gap: var(--s-3); }
+.adm-sort-label { font-size: var(--fs-small); font-weight: 500; color: var(--c-ink); }
+.adm-sort .app-input { cursor: pointer; }
+
+.adm-toggle {
+  display: inline-flex; align-items: center; gap: var(--s-2); justify-self: start;
+  min-block-size: 44px; font-size: var(--fs-small); color: var(--c-ink); cursor: pointer;
+}
+.adm-toggle input { inline-size: 20px; block-size: 20px; margin: 0; accent-color: var(--c-brown); }
+
+.adm-count { font-size: var(--fs-small); }
+
+/* ─── Table / cards ─── */
+.adm-table-card { overflow: hidden; }
+.adm-table { inline-size: 100%; border-collapse: collapse; font-size: var(--fs-small); }
+.adm-table thead { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }
+.adm-table th, .adm-table td { text-align: start; font-weight: 400; }
+.adm-none { padding: var(--s-5); }
+
+/* Phones: each student is a small card, the cells are label + value lines. */
+.adm-row { display: grid; gap: var(--s-2); padding: var(--s-4); }
+.adm-row + .adm-detail + .adm-row, .adm-detail + .adm-row { border-block-start: 1px solid var(--c-line); }
+.adm-row > td { display: grid; grid-template-columns: 8.5rem 1fr; gap: var(--s-3); align-items: start; color: var(--c-ink-soft); }
+.adm-row > td::before { content: attr(data-label); color: var(--c-ink-muted); }
+.adm-detail { display: block; }
+.adm-detail[hidden] { display: none; }
+.adm-detail > td { display: block; padding: 0 var(--s-4) var(--s-4); }
+
+.adm-cell-email { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); min-inline-size: 0; }
+.adm-expand {
+  display: inline-flex; align-items: center; gap: var(--s-2); min-block-size: 44px; min-inline-size: 0;
+  max-inline-size: 100%; padding: 0; border: 0; background: none; cursor: pointer;
+  color: var(--c-ink); font-size: var(--fs-body); font-weight: 500; text-align: start;
+}
+.adm-expand:hover .adm-email { text-decoration: underline; text-underline-offset: 3px; }
+.adm-email { overflow-wrap: anywhere; }
+.adm-caret { color: var(--c-brown); inline-size: 18px; block-size: 18px; }
+.adm-expand[aria-expanded="true"] .adm-caret { transform: rotate(-90deg); }
+[dir="rtl"] .adm-expand[aria-expanded="true"] .adm-caret.icon--dir { transform: scaleX(-1) rotate(-90deg); }
+.adm-badge {
+  font-size: var(--fs-label); font-weight: 500; line-height: 1.4;
+  color: var(--c-brown); background: var(--c-peach);
+  padding: 2px var(--s-2); border-radius: var(--r-sm);
+}
+
+.adm-cell-progress { gap: var(--s-2); }
+.adm-progress {
+  display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: var(--s-2);
+  min-inline-size: 0;
+}
+.adm-progress + .adm-progress { margin-block-start: var(--s-2); }
+.adm-progress-course { grid-column: 1 / -1; font-size: var(--fs-label); color: var(--c-ink-muted); }
+.adm-progress-count {
+  font-weight: 500; color: var(--c-brown); font-variant-numeric: tabular-nums; min-inline-size: 3.2em;
+}
+.adm-bar {
+  display: block; block-size: 6px; min-inline-size: 4rem; max-inline-size: 9rem;
+  border-radius: 3px; background: rgba(112, 66, 41, 0.12); overflow: hidden;
+}
+.adm-bar-fill { display: block; block-size: 100%; background: var(--c-brown); border-radius: 3px; }
+.adm-progress.is-done .adm-bar-fill { background: var(--c-done); }
+.adm-progress.is-done .adm-progress-count { color: #1d6b47; }
+.adm-last-title { color: var(--c-ink); }
+
+/* ─── Lesson list (open row) ─── */
+.adm-lessons { display: grid; gap: var(--s-4); padding: var(--s-4); background: var(--c-cream); border-radius: var(--r-md); }
+.adm-lesson-group { display: grid; gap: var(--s-2); }
+.adm-lesson-head { display: grid; gap: 2px; }
+.adm-lesson-course { font-size: var(--fs-body); font-weight: 700; line-height: 1.3; color: var(--c-ink); }
+.adm-lesson-meta { font-size: var(--fs-small); color: var(--c-ink-muted); }
+.adm-lesson-list {
+  margin: 0; padding: 0; list-style: none; display: grid;
+  background: var(--c-paper); border-radius: var(--r-md); overflow: hidden;
+}
+.adm-lesson {
+  display: flex; align-items: center; gap: var(--s-3); min-block-size: 40px;
+  padding: var(--s-2) var(--s-3); font-size: var(--fs-small); color: var(--c-ink);
+}
+.adm-lesson + .adm-lesson { border-block-start: 1px solid var(--c-line); }
+.adm-lesson-icon { inline-size: 20px; block-size: 20px; color: var(--c-done); stroke-width: 2; }
+.adm-lesson-dot {
+  inline-size: 20px; block-size: 20px; flex-shrink: 0; border-radius: 50%;
+  border: 1.5px solid rgba(112, 66, 41, 0.35);
+}
+.adm-lesson.is-done .adm-lesson-title { color: var(--c-ink-soft); }
+.adm-lesson-title { flex: 1 1 auto; min-inline-size: 0; }
+.adm-here {
+  flex-shrink: 0; font-size: var(--fs-label); font-weight: 500; line-height: 1.4;
+  color: var(--c-brown); background: var(--c-peach); padding: 2px var(--s-2); border-radius: var(--r-sm);
+}
+
+.adm-state { justify-items: start; }
+
+/* ─── Skeleton sizes ─── */
+.adm-sk-num { inline-size: 2.5rem; block-size: 1.6em; }
+.adm-sk-label { inline-size: 70%; }
+.adm-sk-table { display: grid; gap: var(--s-4); padding: var(--s-5); }
+
+@media (max-width: 520px) {
+  .adm-stats { gap: var(--s-2); }
+  .adm-stat { padding: var(--s-3); }
+  .adm-stat-num { font-size: var(--fs-h3); }
+  .adm-stat-label { font-size: var(--fs-label); }
+  .adm-row > td { grid-template-columns: 7rem 1fr; }
+}
+
+@media (min-width: 640px) {
+  .adm-control-row { grid-template-columns: 1fr 16rem; align-items: end; }
+}
+
+/* Desktop: a real table. */
+@media (min-width: 760px) {
+  .adm-table thead { position: static; inline-size: auto; block-size: auto; overflow: visible; clip-path: none; }
+  .adm-table thead th {
+    padding: var(--s-3) var(--s-4); font-size: var(--fs-label); font-weight: 500;
+    color: var(--c-ink-muted); border-block-end: 1px solid var(--c-line); white-space: nowrap;
+  }
+  .adm-row { display: table-row; padding: 0; }
+  .adm-row > th, .adm-row > td { display: table-cell; padding: var(--s-2) var(--s-4); vertical-align: middle; }
+  .adm-row > td::before { content: none; }
+  .adm-row + .adm-detail + .adm-row > *, .adm-detail + .adm-row > * { border-block-start: 1px solid var(--c-line); }
+  .adm-row + .adm-detail + .adm-row, .adm-detail + .adm-row { border-block-start: 0; }
+  .adm-cell-email { display: table-cell; }
+  .adm-cell-email .adm-badge { margin-inline-start: var(--s-2); }
+  .adm-detail { display: table-row; }
+  .adm-detail > td { display: table-cell; padding: 0 var(--s-4) var(--s-4); }
+  .adm-lessons { grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); align-items: start; }
+  .adm-row:hover > * { background: rgba(252, 231, 214, 0.35); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .adm-caret { transition: transform var(--dur-state) var(--ease-out); }
+  .adm-chip span { transition: background-color var(--dur-state) var(--ease-out); }
+}
