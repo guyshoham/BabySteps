@@ -36,12 +36,13 @@ function TokenSheet() {
       <div style={row}>{surfaces.map((t) => <Swatch key={t} token={t} />)}</div>
       <h2 style={{ marginBottom: 16 }}>טיפוגרפיה</h2>
       <div style={{ marginBottom: 32 }}>
-        <p style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-display)', color: 'var(--color-brand-700)' }}>כותרת ראשית</p>
-        <p style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-h2)', color: 'var(--color-brand-700)' }}>כותרת סקשן</p>
-        <p style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-h3)', color: 'var(--color-brand-700)' }}>כותרת כרטיס</p>
-        <p style={{ fontSize: 'var(--text-lead)', color: 'var(--color-ink-soft)' }}>טקסט מוביל, 18 פיקסלים</p>
-        <p>טקסט רגיל, 16 פיקסלים, גובה שורה 1.7</p>
-        <p style={{ fontSize: 'var(--text-caption)', color: 'var(--color-ink-muted)' }}>טקסט קטן, 13 פיקסלים</p>
+        <p style={{ fontWeight: 700, fontSize: 'var(--text-display)', lineHeight: 1.15 }}>כותרת ראשית, 34/48 פיקסלים, 700</p>
+        <p style={{ fontWeight: 700, fontSize: 'var(--text-h2)', lineHeight: 1.2 }}>כותרת סקשן, 26/34 פיקסלים, 700</p>
+        <p style={{ fontWeight: 500, fontSize: 'var(--text-h3)', lineHeight: 1.3 }}>כותרת כרטיס, 20/22 פיקסלים, 500</p>
+        <p style={{ fontWeight: 300, fontSize: 'var(--text-lead)', color: 'var(--color-ink-soft)' }}>טקסט מוביל, 18/20 פיקסלים, 300</p>
+        <p style={{ color: 'var(--color-ink-soft)' }}>טקסט רגיל, 16/17 פיקסלים, גובה שורה 1.7</p>
+        <p style={{ fontSize: 'var(--text-caption)', color: 'var(--color-ink-muted)' }}>טקסט קטן, 14 פיקסלים</p>
+        <p style={{ fontSize: 'var(--text-label)', fontWeight: 500, color: 'var(--color-ink-muted)' }}>תווית, 13 פיקסלים, הרצפה</p>
       </div>
       <h2 style={{ marginBottom: 16 }}>פינות וצללים</h2>
       <div style={row}>

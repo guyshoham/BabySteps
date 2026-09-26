@@ -102,6 +102,8 @@ PayPal ──▶ Make ──▶ POST /api/enroll ──▶ Firebase emails the s
   Spec: `docs/superpowers/specs/2026-09-24-ui-design-system-design.md`.
 - TypeScript + plain `bs-` prefixed CSS that reads only `src/tokens.css` variables.
   Logical CSS properties only (RTL). No Tailwind.
+- Token values come from the site file `assets/css/tokens.css` (the source of truth). Change
+  it first, then copy the values into `packages/ui/src/tokens.css`.
 - `npm run ui:storybook` for the style guide, `npm run ui:build` for `dist/`.
 - The live site does not use it yet. A later phase rebuilds the site in React on top of it.
 - Synced to Claude Design with the design-sync skill (config in `.design-sync/`).

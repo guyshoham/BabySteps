@@ -7,7 +7,7 @@ import { Container } from '../Container/Container';
 export interface HeroProps extends Omit<HTMLAttributes<HTMLElement>, 'title'> {
   /** Small white label above the title. */
   tag?: ReactNode;
-  /** The page h1. Wrap words in <em> for a terracotta highlight. */
+  /** The page h1. Wrap words in <em> for a brown highlight. */
   title: ReactNode;
   subtitle?: ReactNode;
   /** Usually one or two Buttons. */

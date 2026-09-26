@@ -32,62 +32,75 @@ with it. This round sets a new, refined look.
 ## 2. Brand direction: "Warm Nest"
 
 Chosen from three directions. It is the current brand, grown up: cream and cocoa brown,
-soft peach, a terracotta accent, very round shapes, soft deep shadows, a rounded heading
-font. Warm, safe, trustworthy.
+soft peach, round shapes, soft shadows. Warm, safe, trustworthy. Since 2026-09-26 the
+tokens follow the site's "On the mat" art direction: brown is the only accent, Rubik is the
+only font, and there are two shadows.
 
 ## 3. Tokens (`tokens.css`)
 
 All components use only these CSS variables. No raw hex values inside component CSS.
 
+**Source of truth (2026-09-26):** the site file `assets/css/tokens.css` (art direction:
+`docs/design/2026-09-26-art-direction.md`). `packages/ui/src/tokens.css` copies its tokens
+with the same names (`--c-*`, `--fs-*`, `--s-*`, `--r-*`, `--shadow-1/2`, `--ease-*`,
+`--dur-*`), then maps the package names below onto them. Change the site file first, then
+copy the values into the package.
+
 ### Colors
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `--color-ink` | `#3b2213` | main text |
-| `--color-ink-soft` | `#6b4a36` | secondary text |
-| `--color-ink-muted` | `#8a6a55` | captions, hints |
-| `--color-brand-700` | `#5b3320` | headings, hover of brand |
-| `--color-brand-600` | `#704229` | brand, primary buttons |
-| `--color-brand-500` | `#8a5438` | lighter brand |
-| `--color-accent` | `#e07a5f` | terracotta highlights, badges |
-| `--color-whatsapp` | `#25d366` | WhatsApp button |
-| `--color-success` | `#2f9e6b` | done, success alerts |
-| `--color-warning` | `#e3a008` | warning alerts |
-| `--color-error` | `#d14343` | errors |
-| `--color-on-brand` | `#ffffff` | text on brand and cocoa |
+| `--color-ink` | `--c-ink` `#2d1a0e` | headings, main text |
+| `--color-ink-soft` | `--c-ink-soft` `#5a3820` | body and secondary text |
+| `--color-ink-muted` | `--c-ink-muted` `#7a5a48` | small print only |
+| `--color-brand-700` | `#5b3320` | pressed brown (no site token) |
+| `--color-brand-600` | `--c-brown` `#704229` | brand, primary buttons, links |
+| `--color-brand-500` | `--c-brown-hover` `#8a5438` | hover on brown |
+| `--color-accent` | `--c-brown` | brown is the only accent (no terracotta) |
+| `--color-whatsapp` | `--c-brown` | WhatsApp buttons are brand buttons with the glyph |
+| `--color-success` | `--c-done` `#2f9e6b` | done checks, success alerts |
+| `--color-warning` | `#e3a008` | warning alerts only (not in the site palette) |
+| `--color-error` | `--c-error` `#dc2626` | errors |
+| `--color-on-brand` | `--c-paper` `#ffffff` | text on brown |
+| `--color-border` | `--c-line` | hairlines and card borders |
 
 ### Surfaces
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `--surface-cream` | `#fdf6f0` | page background |
-| `--surface-card` | `#ffffff` | cards |
-| `--surface-peach` | `#fce1cc` | section tone |
-| `--surface-mint` | `#e8f3ef` | section tone |
-| `--surface-sky` | `#e3f2fd` | section tone |
-| `--surface-blush` | `#fdf2f8` | section tone |
-| `--surface-cocoa` | `#5b3320` | footer, dark section |
+| `--surface-cream` | `--c-cream` `#fdf6f0` | page background |
+| `--surface-card` | `--c-paper` `#ffffff` | cards, forms, rows |
+| `--surface-peach` | `--c-peach` `#FCE7D6` | one warm band per page |
+| `--surface-mint` | 12% `--c-done` on white | light "done" tint |
+| `--surface-sky` | `--c-peach` | kept so old props work; the site has no sky |
+| `--surface-blush` | `--c-peach` | kept so old props work; the site has no blush |
+| `--surface-cocoa` | `--c-brown` | footer, dark section |
 
 ### Type
 
-- Headings: **Varela Round**. Body: **Rubik** (400, 500, 700). Both support Hebrew.
-- Sizes: `--text-display` 44px, `--text-h2` 32px, `--text-h3` 22px, `--text-lead` 18px,
-  `--text-body` 16px, `--text-caption` 13px. Display and h2 shrink on mobile through
-  `clamp()`.
-- Body line height 1.7, headings 1.15.
+- **Rubik only**, weights 300, 400, 500, 700 (as on the site). `--font-heading` and
+  `--font-body` both point at `--font-sans`.
+- Headings h1 and h2 are 700 (`--weight-heading`), h3 and h4 are 500.
+- Sizes, mobile / desktop from 1024px: `--text-display` 34/48px, `--text-h2` 26/34px,
+  `--text-h3` 20/22px, `--text-lead` 18/20px, `--text-body` 16/17px,
+  `--text-caption` 14px (`--fs-small`), `--text-label` 13px (badges only, the floor).
+- Body line height 1.7, headings 1.15. No letter spacing on Hebrew.
 
 ### Shape, shadow, spacing, motion
 
-- Radius: `--radius-sm` 8px, `--radius-md` 14px, `--radius-lg` 22px, `--radius-xl` 32px,
-  `--radius-pill` 999px.
-- Shadows (brown tinted): `--shadow-sm`, `--shadow-md`, `--shadow-lg`, `--shadow-brand`
-  (values as shown in the brainstorm token sheet: `0 2px 8px`, `0 10px 30px`,
-  `0 22px 50px` of `rgba(91,51,32, .08/.12/.18)`, and `0 8px 20px rgba(112,66,41,.30)`).
+- Radius: `--radius-sm` 8px (badges, chips), `--radius-md` 14px (buttons, inputs, rows),
+  `--radius-lg` 22px (cards, photos, video), `--radius-xl` 32px (the one hero photo),
+  `--radius-pill` 999px (thin bars only).
+- Shadows: the site has two, tinted brown. `--shadow-sm` and `--shadow-md` are
+  `--shadow-1` (resting cards); `--shadow-lg` and `--shadow-brand` are `--shadow-2` (the one
+  raised thing).
 - Spacing on a 4px grid: `--space-1` 4px up to `--space-9` 96px
-  (4, 8, 12, 16, 24, 32, 48, 64, 96).
-- Motion: `--ease-soft`, `--duration-fast` 150ms, `--duration-base` 250ms. Gentle hover
-  lift on cards and buttons. All motion is off under `prefers-reduced-motion`.
-- Light theme only.
+  (4, 8, 12, 16, 24, 32, 48, 64, 96), the same as `--s-1` to `--s-9`.
+- Motion: `--ease-soft` is `--ease-out`, `--duration-fast` is `--dur-press` 120ms,
+  `--duration-base` is `--dur-state` 200ms. `--dur-enter`, `--dur-draw` and `--rise` are
+  there too. All motion is off under `prefers-reduced-motion`.
+- Layout: `--container-base` is the site `--container` 1120px.
+- Light theme only (`color-scheme: light`).
 
 ## 4. Components (30)
 
@@ -186,8 +199,9 @@ packages/ui/
 
 ## 7. Fonts
 
-Self-hosted through `@fontsource/rubik` and `@fontsource/varela-round`, imported in
-`base.css`. Hebrew and Latin subsets only. The font files ship in `dist/`.
+Self-hosted through `@fontsource/rubik` (weights 300, 400, 500, 700), imported in
+`base.css`. Hebrew and Latin subsets only. The font files ship in `dist/`. Varela Round was
+dropped on 2026-09-26 to match the site.
 
 ## 8. Build
 
@@ -232,5 +246,5 @@ Self-hosted through `@fontsource/rubik` and `@fontsource/varela-round`, imported
 - **Vercel deploy:** the root is served as static files, so `packages/ui/` source would
   be public. It holds no secrets, so this is accepted for now. The later React phase
   replaces the deploy setup anyway.
-- **Hebrew in Varela Round:** it supports Hebrew, but its Hebrew weights are limited
-  (one weight). Headings use that weight only.
+- **Hebrew fonts:** Rubik has real Hebrew weights from 300 to 900. The package ships only
+  the four weights the site loads.

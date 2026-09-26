@@ -28,6 +28,7 @@
 
 .bs-footer__title {
   font-family: var(--font-heading);
+  font-weight: var(--weight-heading);
   font-size: var(--text-h3);
 }
 

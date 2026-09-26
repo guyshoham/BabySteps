@@ -4,7 +4,7 @@
   justify-content: center;
   gap: var(--space-2);
   border: 2px solid transparent;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-md);
   font-family: var(--font-body);
   font-weight: 700;
   line-height: 1.2;
@@ -48,11 +48,11 @@
   background: color-mix(in srgb, var(--color-brand-600) 8%, transparent);
 }
 
-/* Dark ink on WhatsApp green: white text fails contrast. */
+/* A brand button with the WhatsApp glyph (the site has no green second accent). */
 .bs-button--whatsapp {
   background: var(--color-whatsapp);
-  color: var(--color-ink);
-  box-shadow: 0 8px 20px color-mix(in srgb, var(--color-whatsapp) 35%, transparent);
+  color: var(--color-on-brand);
+  box-shadow: var(--shadow-brand);
 }
 .bs-button--whatsapp:hover {
   transform: translateY(-2px);

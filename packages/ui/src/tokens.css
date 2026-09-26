@@ -1,72 +1,164 @@
-/* Warm Nest tokens. Components read only these variables. */
+/* Warm Nest tokens. Components read only these variables.
+ *
+ * Part 1 is a copy of the site tokens in assets/css/tokens.css (the source of truth,
+ * spec: docs/design/2026-09-26-art-direction.md). Keep the two in step: change the site
+ * file first, then copy the values here.
+ *
+ * Part 2 keeps the package's own names, which the components use. Each one points at a
+ * site token, so the components follow the site without a rename.
+ */
 :root {
-  /* Colors */
-  --color-ink: #3b2213;
-  --color-ink-soft: #6b4a36;
-  --color-ink-muted: #7e614e;
-  --color-brand-700: #5b3320;
-  --color-brand-600: #704229;
-  --color-brand-500: #8a5438;
-  --color-accent: #e07a5f;
-  --color-whatsapp: #25d366;
-  --color-success: #2f9e6b;
-  --color-warning: #e3a008;
-  --color-error: #c23a3a;
-  --color-on-brand: #ffffff;
-  --color-border: rgba(112, 66, 41, 0.14);
+  color-scheme: light;
 
-  /* Surfaces */
-  --surface-cream: #fdf6f0;
-  --surface-card: #ffffff;
-  --surface-peach: #fce1cc;
-  --surface-mint: #e8f3ef;
-  --surface-sky: #e3f2fd;
-  --surface-blush: #fdf2f8;
-  --surface-cocoa: #5b3320;
+  /* ═══ Part 1: site tokens (same names and values as assets/css/tokens.css) ═══ */
+
+  /* Color and surface */
+  --c-cream: #fdf6f0;
+  --c-paper: #ffffff;
+  --c-peach: #FCE7D6;
+  --c-brown: #704229;
+  --c-brown-hover: #8a5438;
+  --c-ink: #2d1a0e;
+  --c-ink-soft: #5a3820;
+  --c-ink-muted: #7a5a48;
+  --c-line: rgba(112, 66, 41, 0.14);
+  --c-done: #2f9e6b;
+  --c-error: #dc2626;
+
+  /* Type (Rubik only) */
+  --font-sans: 'Rubik', system-ui, sans-serif;
+  --fs-display: 34px;
+  --fs-h2: 26px;
+  --fs-h3: 20px;
+  --fs-lead: 18px;
+  --fs-body: 16px;
+  --fs-small: 14px;
+  --fs-label: 13px;
+  --measure: 36rem;
+
+  /* Spacing (4px base) */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 96px;
+  --section-y: clamp(56px, 9vw, 96px);
+  --gutter: 16px;
+  --container: 1120px;
+  --nav-h: 56px;
+
+  /* Radii (4 steps) */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 22px;
+  --r-xl: 32px;
+
+  /* Shadows (2, tinted brown, never black) */
+  --shadow-1: 0 1px 2px rgba(112, 66, 41, .06), 0 6px 20px rgba(112, 66, 41, .08);
+  --shadow-2: 0 2px 4px rgba(112, 66, 41, .08), 0 16px 40px rgba(112, 66, 41, .14);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-press: 120ms;
+  --dur-state: 200ms;
+  --dur-enter: 360ms;
+  --dur-draw: 600ms;
+  --rise: 12px;
+
+  /* ═══ Part 2: package names, mapped onto the site tokens ═══ */
+
+  /* Colors */
+  --color-ink: var(--c-ink);
+  --color-ink-soft: var(--c-ink-soft);
+  --color-ink-muted: var(--c-ink-muted);
+  --color-brand-700: #5b3320;             /* pressed brown; the site has no token for it */
+  --color-brand-600: var(--c-brown);
+  --color-brand-500: var(--c-brown-hover);
+  --color-accent: var(--c-brown);         /* brown is the only accent (no terracotta) */
+  --color-whatsapp: var(--c-brown);       /* WhatsApp buttons are brand buttons */
+  --color-success: var(--c-done);
+  --color-warning: #e3a008;               /* not in the site palette; warning alerts only */
+  --color-error: var(--c-error);
+  --color-on-brand: var(--c-paper);
+  --color-border: var(--c-line);
+
+  /* Surfaces. The site dropped mint, sky and blush. The names stay so the components
+     keep working: mint is a light "done" tint, sky and blush fall back to peach. */
+  --surface-cream: var(--c-cream);
+  --surface-card: var(--c-paper);
+  --surface-peach: var(--c-peach);
+  --surface-mint: color-mix(in srgb, var(--c-done) 12%, var(--c-paper));
+  --surface-sky: var(--c-peach);
+  --surface-blush: var(--c-peach);
+  --surface-cocoa: var(--c-brown);        /* the footer is brand brown */
 
   /* Type */
-  --font-heading: 'Varela Round', 'Rubik', system-ui, sans-serif;
-  --font-body: 'Rubik', system-ui, sans-serif;
-  --text-display: clamp(2rem, 1.35rem + 2.6vw, 2.75rem);
-  --text-h2: clamp(1.625rem, 1.3rem + 1.3vw, 2rem);
-  --text-h3: 1.375rem;
-  --text-lead: 1.125rem;
-  --text-body: 1rem;
-  --text-caption: 0.8125rem;
+  --font-heading: var(--font-sans);
+  --font-body: var(--font-sans);
+  --weight-heading: 700;
+  --text-display: var(--fs-display);
+  --text-h2: var(--fs-h2);
+  --text-h3: var(--fs-h3);
+  --text-lead: var(--fs-lead);
+  --text-body: var(--fs-body);
+  --text-caption: var(--fs-small);
+  --text-label: var(--fs-label);
   --leading-body: 1.7;
   --leading-heading: 1.15;
 
-  /* Shape */
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 22px;
-  --radius-xl: 32px;
+  /* Shape. Buttons and inputs use md, badges and chips sm. The pill is for thin bars only. */
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --radius-xl: var(--r-xl);
   --radius-pill: 999px;
 
-  /* Shadows (brown tinted) */
-  --shadow-sm: 0 2px 8px rgba(91, 51, 32, 0.08);
-  --shadow-md: 0 10px 30px rgba(91, 51, 32, 0.12);
-  --shadow-lg: 0 22px 50px rgba(91, 51, 32, 0.18);
-  --shadow-brand: 0 8px 20px rgba(112, 66, 41, 0.3);
+  /* Shadows: the site has two. Resting things use 1, raised things use 2. */
+  --shadow-sm: var(--shadow-1);
+  --shadow-md: var(--shadow-1);
+  --shadow-lg: var(--shadow-2);
+  --shadow-brand: var(--shadow-2);
 
   /* Spacing, 4px grid */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 24px;
-  --space-6: 32px;
-  --space-7: 48px;
-  --space-8: 64px;
-  --space-9: 96px;
+  --space-1: var(--s-1);
+  --space-2: var(--s-2);
+  --space-3: var(--s-3);
+  --space-4: var(--s-4);
+  --space-5: var(--s-5);
+  --space-6: var(--s-6);
+  --space-7: var(--s-7);
+  --space-8: var(--s-8);
+  --space-9: var(--s-9);
 
   /* Motion */
-  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
-  --duration-fast: 150ms;
-  --duration-base: 250ms;
+  --ease-soft: var(--ease-out);
+  --duration-fast: var(--dur-press);
+  --duration-base: var(--dur-state);
 
   /* Layout */
   --container-narrow: 720px;
-  --container-base: 1040px;
+  --container-base: var(--container);
   --container-wide: 1240px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: 24px;
+    --nav-h: 64px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --fs-display: 48px;
+    --fs-h2: 34px;
+    --fs-h3: 22px;
+    --fs-lead: 20px;
+    --fs-body: 17px;
+  }
 }

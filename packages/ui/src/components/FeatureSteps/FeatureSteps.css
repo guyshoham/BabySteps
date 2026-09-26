@@ -27,6 +27,7 @@
   background: var(--color-brand-600);
   color: var(--color-on-brand);
   font-family: var(--font-heading);
+  font-weight: var(--weight-heading);
   font-size: var(--text-h3);
   box-shadow: var(--shadow-brand);
 }

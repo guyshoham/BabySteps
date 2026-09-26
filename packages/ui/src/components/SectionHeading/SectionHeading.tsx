@@ -4,7 +4,7 @@ import { cx } from '../../utils/cx';
 export interface SectionHeadingProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   /** Small label above the title. */
   eyebrow?: ReactNode;
-  /** Wrap words in <em> for a terracotta highlight. */
+  /** Wrap words in <em> for a brown highlight. */
   title: ReactNode;
   lead?: ReactNode;
   align?: 'center' | 'start';
